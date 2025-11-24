@@ -1,13 +1,70 @@
 @import "tailwindcss";
+@plugin "flowbite-react/plugin/tailwindcss";
+@source "../../.flowbite-react/class-list.json";
+@tailwind utilities;
 
-
-.animated-gradient {
-  background: linear-gradient(to left, #32c36c 0%, transparent 100%);
-  background-size: 0% 100%;
-  background-repeat: no-repeat;
-  transition: background-size 0.5s ease;
+:root {
+  --light-primary: #6E8CFB;
+  --primary: #636CCB;
+  --dark-primary: #50589C;
+  --darkest-primary: #3C467B;
 }
 
-.animated-gradient:hover {
-  background-size: 100% 100%;
+
+body {
+  background-color: #fff;
 }
+
+@font-face {
+  font-family: "DigitalNumbers";
+  src: url("/fonts/digital_number/DigitalNumbers-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+.digital-number {
+  font-family: "DigitalNumbers", sans-serif;
+}
+
+.num-stork{
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  font-size: 50px;
+  font-weight: 700;
+  color: rgba(31, 34, 48, 0.1);
+  -webkit-text-fill-color: white;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: rgba(31, 34, 48, 0.1);
+  line-height: 1;
+  transition: all 0.42s ease;
+}
+
+.features:hover  .num-stork{
+  -webkit-text-stroke-color: #6c2bd9;
+}
+
+
+/*  */
+.border-animate {
+  position: relative;
+  /* display: inline-block; */
+  padding-bottom: 4px;
+}
+
+.border-animate::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 0;
+  background: #6c2bd9;
+  transition: width 0.4s ease;
+}
+
+.border-animate:hover::after {
+  width: 100%;
+}
+/*  */
