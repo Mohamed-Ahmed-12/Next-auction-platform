@@ -1,0 +1,8 @@
+.swiper-category .swiper-slide {
+      /* Center slide text vertically */
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+

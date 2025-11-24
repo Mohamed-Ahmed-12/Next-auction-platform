@@ -1,0 +1,1 @@
+export const AuctionStatus = ["live" , "upcoming" , "ended"]

@@ -1,26 +1,70 @@
 @import "tailwindcss";
+@plugin "flowbite-react/plugin/tailwindcss";
+@source "../../.flowbite-react/class-list.json";
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --light-primary: #6E8CFB;
+  --primary: #636CCB;
+  --dark-primary: #50589C;
+  --darkest-primary: #3C467B;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #fff;
 }
+
+@font-face {
+  font-family: "DigitalNumbers";
+  src: url("/fonts/digital_number/DigitalNumbers-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+.digital-number {
+  font-family: "DigitalNumbers", sans-serif;
+}
+
+.num-stork{
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  font-size: 50px;
+  font-weight: 700;
+  color: rgba(31, 34, 48, 0.1);
+  -webkit-text-fill-color: white;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: rgba(31, 34, 48, 0.1);
+  line-height: 1;
+  transition: all 0.42s ease;
+}
+
+.features:hover  .num-stork{
+  -webkit-text-stroke-color: #6c2bd9;
+}
+
+
+/*  */
+.border-animate {
+  position: relative;
+  /* display: inline-block; */
+  padding-bottom: 4px;
+}
+
+.border-animate::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 0;
+  background: #6c2bd9;
+  transition: width 0.4s ease;
+}
+
+.border-animate:hover::after {
+  width: 100%;
+}
+/*  */
