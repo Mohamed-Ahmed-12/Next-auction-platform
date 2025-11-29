@@ -44,7 +44,7 @@ const Notifications = () => {
                 <BiBell className="text-2xl bg-indigo-50 rounded-xl" />
                 <Badge className="rounded-full absolute -top-1.5 -right-1 px-1 py-0" color="failure">2</Badge>
             </div>}>
-            <DropdownItem>Earnings</DropdownItem>
+            <DropdownItem>Notifications</DropdownItem>
         </Dropdown>
     )
 }

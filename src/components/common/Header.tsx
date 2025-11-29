@@ -61,11 +61,15 @@ const NavBar = () => {
                                     <Notifications />
                                 </li>
                                 <li>
+                                    <Link href={"#"} className="cursor-pointer">
+                                        Dashboard
+                                    </Link>
+                                </li>
+                                <li>
                                     <button className="cursor-pointer" onClick={logout}>
                                         Logout
                                     </button>
                                 </li>
-
                             </>
 
                             :
