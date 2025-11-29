@@ -27,7 +27,7 @@ body {
   font-family: "DigitalNumbers", sans-serif;
 }
 
-.num-stork{
+.num-stork {
   position: absolute;
   top: 30px;
   left: 30px;
@@ -41,7 +41,7 @@ body {
   transition: all 0.42s ease;
 }
 
-.features:hover  .num-stork{
+.features:hover .num-stork {
   -webkit-text-stroke-color: #6c2bd9;
 }
 
@@ -67,4 +67,25 @@ body {
 .border-animate:hover::after {
   width: 100%;
 }
+
 /*  */
+.modal-overlay {
+  background-color: rgba(10, 10, 10, 0.8);
+  /* backdrop-filter: blur(4px) !important; */
+
+}
+
+.gradient-text {
+  /* 1. Define the gradient */
+  background: linear-gradient(90deg, #ff007e, #00fff2);
+  
+  /* 2. Clip the background to the text shape (Vendor prefixes are crucial for compatibility) */
+  -webkit-background-clip: text;
+  background-clip: text;
+  
+  /* 3. Make the actual text transparent so the background can show through */
+  color: transparent;
+  
+  /* Optional: Ensure the background color doesn't repeat */
+  -webkit-text-fill-color: transparent; /* Alternative for older WebKit browsers */
+}

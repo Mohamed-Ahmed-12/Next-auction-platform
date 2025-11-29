@@ -5,7 +5,7 @@ import TrustedBy from "@/components/home/TrustedBy";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
 export default function Home() {
   return (
-    <div className="container mx-auto px-4 sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl">
+    <div className="container mx-auto px-4 sm:max-w-screen-sm md:max-w-3xl lg:max-w-5xl xl:max-w-7xl">
       <Hero />
       <Categories />
       <Auctions status={'live'} />

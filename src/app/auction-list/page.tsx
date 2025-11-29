@@ -6,34 +6,32 @@ import React, { useEffect, useState } from "react";
 import { useFetch } from "../../../hooks/useFetcher";
 import { Badge, Button, Checkbox, Label, Tooltip } from "flowbite-react";
 import { filterAuction } from "@/services/AuctionService";
-import { AuctionStatus } from "@/lib/data";
+import { AUCTION_STATUS } from "@/lib/data";
 import { AuctionFilterFields } from "@/types/filters";
 import AuctionListSkelton from "@/components/skeltons/AuctionListSkelton";
 
 
 export default function Page() {
-    const { data, error, loading } = useFetch<Auction[]>("auction/?status=live");
-    const { data: categories, error: errorCategories, loading: loadingCategories } =
-        useFetch<Category[]>("category/");
-
-    const [filteredData, setFilteredData] = useState<Auction[] | null>(null);
+    const { data, error, loading } = useFetch<Auction[]>("auction/");
+    const { data: categories, error: errorCategories, loading: loadingCategories } = useFetch<Category[]>("category/");
+    const [filteredData, setFilteredData] = useState<Auction[]>([]);
     const [displayAdvFilters, setDisplayAdvFilters] = useState<boolean>(false);
     const [filtersData, setFiltersData] = useState<AuctionFilterFields>({
         category: [],
-        status: ['live'],
+        status: [],
     });
     const [loadingData, setIsLoadingData] = useState(false);
-    
-    //💥 delete it in future
-    useEffect(() => {
-        setIsLoadingData(true);
-        const timer = setTimeout(() => setIsLoadingData(false), 2000);
-        return () => clearTimeout(timer);
-    }, []);
 
-    // Initialize filtered data
+    //💥 delete it in future
+    // useEffect(() => {
+    //     setIsLoadingData(true);
+    //     const timer = setTimeout(() => setIsLoadingData(false), 2000);
+    //     return () => clearTimeout(timer);
+    // }, []);
+
     useEffect(() => {
-        if (data?.length) {
+        // Set filteredData to the fetched data if available
+        if (data) {
             setFilteredData(data);
         }
     }, [data]);
@@ -68,7 +66,8 @@ export default function Page() {
         )
     };
     if (error) return <h2>Error: {error}</h2>;
-    if (!data || !filteredData) return <h2>No Auction available.</h2>;
+    if (!data) return <h2>No Auction available.</h2>; // Check if the fetched data is null/undefined
+    if (data.length === 0 && filteredData.length === 0) return <h2>No Auction available.</h2>; // Check if the arrays are empty after loading
 
     return (
         <div className="container mx-auto px-4 sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl my-20">
@@ -154,7 +153,7 @@ export default function Page() {
                             <div>
                                 <h4 className="mb-4">Status</h4>
                                 <div className="flex max-w-md flex-col gap-4" id="checkbox">
-                                    {AuctionStatus.map((stat) => (
+                                    {AUCTION_STATUS.map((stat) => (
                                         <div className="flex items-center gap-2" key={stat}>
                                             <Checkbox
                                                 id={stat}

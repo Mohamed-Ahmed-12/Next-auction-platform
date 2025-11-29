@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Category } from "@/types/main";
-import { fetchCategories } from "@/lib/api";
+import { fetchCategories } from "@/services/AuctionService";
 
 const Categories = () => {
     const [categories, setCategories] = useState<Category[] | null>(null);

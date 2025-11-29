@@ -1,0 +1,27 @@
+import { useAuth } from "@/context/authContext";
+import { Alert } from "flowbite-react";
+import React from "react";
+import { HiInformationCircle } from "react-icons/hi";
+
+export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
+    const { isAuthenticated, isLoading } = useAuth();
+
+    // 1. Show loading state while checking authentication status
+    if (isLoading) {
+        return <>loading ....</>;
+    }
+
+    // 2. If authenticated, render the child components (the protected content)
+    if (isAuthenticated) {
+        return <>{children}</>;
+    }
+
+    // 3. If not authenticated and loading is complete, show the error message
+    return (
+        <div className="">
+            <Alert color="failure" icon={HiInformationCircle}>
+                <span className="font-medium">Sorry, you must be logged in to access that page.</span>
+            </Alert>
+        </div>
+    )
+}

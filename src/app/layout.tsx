@@ -3,6 +3,8 @@ import ProgressArrow from "@/components/common/Arrow";
 import "./globals.css";
 import NavBar from "@/components/common/Header";
 import { Quicksand } from 'next/font/google';
+import { AuthProvider } from "@/context/authContext";
+import { ToastContainer } from "react-toastify";
 
 
 const quicksand = Quicksand({
@@ -19,12 +21,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={quicksand.className}>
       <body>
-        <NavBar />
-        {children}
-        <ProgressArrow />
+        <AuthProvider>
+          <NavBar />
+          {children}
+          <ProgressArrow />
+          <ToastContainer autoClose={false} position="bottom-right"/>
+        </AuthProvider>
       </body>
     </html>
-
-
   );
 }
