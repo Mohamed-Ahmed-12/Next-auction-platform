@@ -3,7 +3,7 @@
 import { AuctionCard } from "@/components/auction/AuctionCard";
 import { Auction, Category } from "@/types/main";
 import React, { useEffect, useState } from "react";
-import { useFetch } from "../../../hooks/useFetcher";
+import { useFetch } from "@/hooks/useFetcher";
 import { Badge, Button, Checkbox, Label, Tooltip } from "flowbite-react";
 import { filterAuction } from "@/services/AuctionService";
 import { AUCTION_STATUS } from "@/lib/data";

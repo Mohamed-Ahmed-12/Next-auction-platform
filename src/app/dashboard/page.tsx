@@ -1,0 +1,79 @@
+"use client"
+import { useDashboardSSE } from '@/hooks/useDashboardSSE'
+import { getDashboardData } from '@/services/DashboardService'
+import { DashboardData } from '@/types/dashboard'
+import { Card } from 'flowbite-react'
+import React, { useEffect, useState } from 'react'
+import { BsCurrencyDollar } from 'react-icons/bs'
+import { GoPeople } from 'react-icons/go'
+import { IoGridOutline } from 'react-icons/io5'
+import { RiAuctionLine } from 'react-icons/ri'
+import { toast } from 'react-toastify'
+
+export default function Dashboard() {
+    const cardStyle = "shadow-none hover:shadow-indigo-100 hover:shadow-md hover:border-indigo-300 relative"
+    const [loading, setIsLoading] = useState(false);
+    const [data, setData] = useState<DashboardData | null>(null);
+    const dataSSE = useDashboardSSE(data);
+    useEffect(() => {
+        setIsLoading(true)
+        getDashboardData()
+            .then((data) => {
+                setData(data)
+            })
+            .catch((err) => {
+                toast.error(err)
+            })
+            .finally(() => {
+                setIsLoading(false)
+            })
+    }, [])
+    useEffect(() => {
+        if (dataSSE) {
+            setData(dataSSE)
+        }
+    }, [dataSSE])
+    return (
+        <>
+            <h1 className='text-indigo-600 font-bold text-2xl'>Dashboard</h1>
+            <div className='grid grid-cols-4 gap-3'>
+                <Card className={cardStyle}>
+                    <div className=' absolute right-5 top-5 rounded-lg bg-indigo-50 p-1'>
+                        <IoGridOutline className="text-5xl text-indigo-600" />
+                    </div>
+                    <h5 className="font-bold">
+                        Total Auctions
+                    </h5>
+                    <span className='font-semibold'>{data?.auction_count ?? 0} </span>
+                </Card>
+                <Card className={cardStyle}>
+                    <div className=' absolute right-5 top-5 rounded-lg bg-amber-50 p-1'>
+                        <GoPeople className="text-5xl text-amber-600" />
+                    </div>
+                    <h5 className="font-bold">
+                        Total Users
+                    </h5>
+                    <span className='font-semibold'>{data?.user_count ?? 0}</span>
+                </Card>
+                <Card className={cardStyle}>
+                    <div className=' absolute right-5 top-5 rounded-lg bg-green-50 p-1'>
+                        <RiAuctionLine className="text-5xl text-green-600" />
+                    </div>
+                    <h5 className="font-bold">
+                        Total Bids Today
+                    </h5>
+                    <span className='font-semibold'>{data?.bids_today ?? 0}</span>
+                </Card>
+                <Card className={cardStyle}>
+                    <div className=' absolute right-5 top-5 rounded-lg bg-red-50 p-1'>
+                        <BsCurrencyDollar className="text-5xl text-red-600" />
+                    </div>
+                    <h5 className="font-bold">
+                        Revenue
+                    </h5>
+                    <span className='font-semibold'>12</span>
+                </Card>
+            </div>
+        </>
+    )
+}

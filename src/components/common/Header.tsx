@@ -61,7 +61,7 @@ const NavBar = () => {
                                     <Notifications />
                                 </li>
                                 <li>
-                                    <Link href={"#"} className="cursor-pointer">
+                                    <Link href={"/dashboard"} className="cursor-pointer">
                                         Dashboard
                                     </Link>
                                 </li>

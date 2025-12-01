@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react'
-import { useFetch } from '../../../hooks/useFetcher'
+import { useFetch } from "@/hooks/useFetcher";
 import { Item } from '@/types/main';
 import { Avatar, Button, Card, createTheme, HelperText, Label, TextInput, Tooltip } from 'flowbite-react';
 import { FiTag } from 'react-icons/fi';

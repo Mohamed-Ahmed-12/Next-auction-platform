@@ -2,7 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import { Category } from "@/types/main";
-import { useFetch } from "../../../hooks/useFetcher";
+import { useFetch } from "@/hooks/useFetcher";
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';

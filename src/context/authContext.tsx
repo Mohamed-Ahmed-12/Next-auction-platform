@@ -46,9 +46,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             setUser(response.data)
             const user = JSON.stringify(response.data);
             localStorage.setItem("user", user);
-        } catch (error) {
-            console.error('Login failed:', error);
-            throw new Error('Authentication failed.');
+        } catch (error:any) {
+            if (error.response) {
+                // Server responded with a status other than 2xx
+                console.error("Server Error:", error.response.data);
+                throw new Error(error.response.data?.detail || "Authentication Failed");
+            } else if (error.request) {
+                // Request was made but no response
+                console.error("Network Error:", error.request);
+                throw new Error("Network error. Please check your connection.");
+            } else {
+                // Something else happened
+                console.error("Unexpected Error:", error.message);
+                throw new Error("Unexpected error occurred.");
+            }
         } finally {
             setIsLoading(false)
         }
