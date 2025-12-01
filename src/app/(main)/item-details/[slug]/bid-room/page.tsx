@@ -8,7 +8,7 @@ import { HiInformationCircle } from "react-icons/hi";
 import { RiAuctionLine } from "react-icons/ri";
 import { SlEnergy } from "react-icons/sl";
 import { FiActivity } from "react-icons/fi";
-import { useFetch } from "../../../../../hooks/useFetcher";
+import { useFetch } from "@/hooks/useFetcher";
 import { useAuth } from "@/context/authContext";
 import { useFormik } from "formik";
 import { formatTimestamp } from "@/lib/dates";

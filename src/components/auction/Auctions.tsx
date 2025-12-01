@@ -1,7 +1,7 @@
 "use client"
 import { Auction } from "@/types/main";
 import React from "react";
-import { useFetch } from "../../../hooks/useFetcher";
+import { useFetch } from "@/hooks/useFetcher";
 import Link from "next/link";
 import { Button } from "flowbite-react";
 import { AuctionCard } from "./AuctionCard";

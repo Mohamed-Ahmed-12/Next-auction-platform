@@ -18,7 +18,7 @@ interface LoginModalProps {
 export function LoginModal({ isOpen, onClose }: LoginModalProps) {
     const [loading, setLoading] = useState(false);
     const { login } = useAuth();
-    
+
     // Form State
     const { register, handleSubmit, reset, formState: { errors } } = useForm<LoginCredentials>();
 
@@ -31,7 +31,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
             })
             .catch((err) => {
                 console.error(err); // Changed to console.error for better visibility
-                toast.error('Login Failed');
+                toast.error(err.message || 'Login Failed');
             })
             .finally(() => {
                 setLoading(false);
@@ -56,27 +56,27 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
                         <div className="mb-2 block">
                             <Label htmlFor="username">Username *</Label>
                         </div>
-                        <TextInput 
-                            {...register("username", { required: "Username is required" })} 
-                            id="username" 
-                            type="text" 
-                            placeholder="Your Username" 
-                            color={errors.username ? "failure" : "gray"} 
+                        <TextInput
+                            {...register("username", { required: "Username is required" })}
+                            id="username"
+                            type="text"
+                            placeholder="Your Username"
+                            color={errors.username ? "failure" : "gray"}
                         />
                         {errors.username && <HelperText>{errors.username.message}</HelperText>}
                     </div>
-                    
+
                     {/* Password Input */}
                     <div>
                         <div className="mb-2 block">
                             <Label htmlFor="password">Password *</Label>
                         </div>
-                        <TextInput 
-                            {...register("password", { required: "Password is required" })} 
+                        <TextInput
+                            {...register("password", { required: "Password is required" })}
                             id="password" // Renamed from password1 for consistency
-                            type="password" 
-                            placeholder="Your Password" 
-                            color={errors.password ? "failure" : "gray"} 
+                            type="password"
+                            placeholder="Your Password"
+                            color={errors.password ? "failure" : "gray"}
                         />
                         {errors.password && <HelperText>{errors.password.message}</HelperText>}
                     </div>

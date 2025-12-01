@@ -1,5 +1,5 @@
 import React from 'react'
-import { useFetch } from '../../../hooks/useFetcher'
+import { useFetch } from "@/hooks/useFetcher";
 import { Auction } from '@/types/main';
 import {  createTheme} from 'flowbite-react';
 import { FiTag } from 'react-icons/fi';
@@ -78,7 +78,7 @@ export default function AuctionDetails({ slug }: { slug: string }) {
                             </div>
                         </div>
                         <div className='col-span-2 flex justify-end'>
-                            <AuctionStatusBadge status={data.status} />
+                            <AuctionStatusBadge stat={data.status} />
                         </div>
                     </div>
                     {data.desc
