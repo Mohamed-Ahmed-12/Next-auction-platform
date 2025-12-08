@@ -14,7 +14,7 @@ export function ItemCard({ item }: { item: Item }) {
         >
             {item.category &&
                 <div className="absolute top-0 left-0 p-2">
-                    <Badge color="indigo" size="sm" >{item.category.name}</Badge>
+                    <Badge color="indigo" size="sm" >{item.category.title}</Badge>
                 </div>
             }
 

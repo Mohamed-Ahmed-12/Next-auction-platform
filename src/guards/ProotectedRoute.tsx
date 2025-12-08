@@ -1,5 +1,5 @@
 import { useAuth } from "@/context/authContext";
-import { Alert } from "flowbite-react";
+import { Alert, Spinner } from "flowbite-react";
 import React from "react";
 import { HiInformationCircle } from "react-icons/hi";
 
@@ -8,7 +8,13 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
 
     // 1. Show loading state while checking authentication status
     if (isLoading) {
-        return <>loading ....</>;
+        return (
+            <>
+                {/* <div className="flex justify-center items-center w-full h-full absolute top-0">
+                <Spinner color="purple" aria-label="loading" />
+            </div> */}
+            </>
+        );
     }
 
     // 2. If authenticated, render the child components (the protected content)

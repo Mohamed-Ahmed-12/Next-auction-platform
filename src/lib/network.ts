@@ -30,3 +30,31 @@ axiosInstance.interceptors.request.use((config) => {
 
     return config;
 });
+
+axiosInstance.interceptors.response.use(
+    // Success Handler
+    (response) => {
+        return response;
+    },
+    // Error Handler
+    (error) => {
+        const status = error.response ? error.response.status : null;
+
+        if (status === 401) {
+            // **ACTION FOR AUTHENTICATION FAILURE (Expired/Invalid Token)**
+            console.log('401 Unauthorized received. Initiating logout...');
+            
+            // 1. Clear invalid tokens
+            localStorage.removeItem('user');
+            
+        } else if (status === 403) {
+            // **ACTION FOR AUTHORIZATION FAILURE (Permission Denied)**
+            console.log('403 Forbidden received. User is denied access to this resource.');
+
+        }
+
+        // Return a rejected Promise for all errors (401, 403, 500, etc.)
+        // so the calling function/component can still handle the failure.
+        return Promise.reject(error);
+    }
+);

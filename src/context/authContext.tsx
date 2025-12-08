@@ -29,7 +29,7 @@ export const useAuth = (): AuthContextType => {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [user, setUser] = useState<Tokens | null>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const isAuthenticated = useMemo(() => user !== null, [user]);
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
@@ -37,7 +37,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             const userData: Tokens = JSON.parse(storedUser);
             setUser(userData);
         }
+        setIsLoading(false)
     }, []);
+
+    useEffect(()=>{
+        console.log(isAuthenticated)
+    },[isAuthenticated])
 
     const login = async (data: LoginCredentials): Promise<void> => {
         setIsLoading(true)

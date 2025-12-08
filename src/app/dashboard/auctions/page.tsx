@@ -4,15 +4,20 @@ import React, { useEffect, useMemo, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { Auction } from "@/types/main";
 import { AllCommunityModule, ModuleRegistry, RowSelectionOptions } from 'ag-grid-community';
-import { Spinner } from "flowbite-react";
-import { actionsColumn } from "@/tableSchemas/actionsColumn";
-import { fetchAuctions } from "@/services/AuctionService";
-import { auctionColumns } from "@/tableSchemas/auctionsSchema";
+import { Button, Spinner } from "flowbite-react";
+import { actionsColumn } from "@/schemas/tableSchemas/actionsColumn";
+import { auctionColumns } from "@/schemas/tableSchemas/auctionsSchema";
+import Link from "next/link";
+import PageHeader from "@/components/dashboard/PageHeader";
+import { useFetch } from "@/hooks/useFetcher";
+import { useRouter } from "next/navigation";
 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 export default function AuctionsPage() {
+    const { data, error, loading } = useFetch<Auction[]>(`auction/`);
+    const router = useRouter();
     const defaultColDef = useMemo(() => ({
         editable: true, // Enable editing on all cells
     }), [])
@@ -21,12 +26,12 @@ export default function AuctionsPage() {
             mode: 'multiRow',
         };
     }, []);
-    const [data, setData] = useState<Auction[]>([])
-    const [loading, setLoading] = useState(false)
+
 
     const handleEdit = (data: Auction) => {
-        console.log(data)
+        router.push(`/dashboard/auctions/edit/${data.slug}`)
     }
+
     const handleDelete = (data: Auction) => {
         console.log(data)
     }
@@ -41,41 +46,26 @@ export default function AuctionsPage() {
         }),
     ];
 
-    useEffect(() => {
-        setLoading(true)
-        fetchAuctions()
-            .then((data) => {
-                console.log(data)
-                setData(data)
-            })
-            .finally(() => {
-                setLoading(false)
-            })
-    }, [])
     return (
         <>
-            <h1 className="text-indigo-600 font-bold text-2xl mb-4">
-                Auctions
-            </h1>
+            <PageHeader title={'Auctions'}>
+                <Link href="/dashboard/auctions/create">
+                    <Button>
+                        Create New Auction
+                    </Button>
+                </Link>
+            </PageHeader>
 
-            <div className="h-full">
+
+            <div className="ag-theme-quartz" style={{ height: "100%", width: '100%' }}>
                 <AgGridReact
                     rowData={data}
                     columnDefs={auctionColumnsWithActions}
                     loading={loading}
-                    loadingOverlayComponent={Spinner}
+                    // loadingOverlayComponent={Spinner}
                     pagination={true}
                     defaultColDef={defaultColDef}
                     rowSelection={rowSelection}
-                // onCellValueChanged={event => {
-                //     updateCategory(event.data)
-                //         .then(() => {
-                //             toast.success("Updated Successfully")
-                //         })
-                //         .catch((err) => {
-                //             toast.error(err.message ?? "Failed to update")
-                //         })
-                // }}
                 />
             </div>
         </>

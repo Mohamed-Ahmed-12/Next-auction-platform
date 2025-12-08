@@ -30,7 +30,7 @@ const NavBar = () => {
         <header className="flex items-center justify-between bg-white shadow-md mb-1">
             <div className="p-4 ">
                 <Link href={'/'} className="flex items-center">
-                    <Image src={'/imgs/auction.png'} alt="auction logo" width={50} height={50} />
+                    <Image src={'/imgs/e-Auction.png'} alt="auction logo" width={50} height={50} />
                     <span className="text-4xl font-extrabold text-indigo-300 ms-2 font-sans">BidRoom</span>
                 </Link>
             </div>

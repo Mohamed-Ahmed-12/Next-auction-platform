@@ -14,7 +14,7 @@ import { Pagination } from 'swiper/modules';
 import Image from 'next/image';
 import { ItemCard } from './ItemCard';
 import AuctionStatusBadge from '../common/AuctionStatusBadge';
-import { formatTimestamp } from '@/lib/dates';
+import { formatTimestamp } from '@/helpers/dates';
 
 // Customize card
 const cardTheme = createTheme({
@@ -66,7 +66,7 @@ export default function AuctionDetails({ slug }: { slug: string }) {
                                 <div className='flex items-center gap-1'>
                                     <FiTag className='text-lg' />
                                     <span className='font-medium'>
-                                        {data.category.name}
+                                        {data.category?.title}
                                     </span>
                                 </div>
                                 <div className='flex items-center gap-1'>

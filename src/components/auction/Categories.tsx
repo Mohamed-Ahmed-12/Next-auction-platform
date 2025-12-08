@@ -55,12 +55,12 @@ const Categories = () => {
                     >
                         <Image
                             src={cate.icon ?? "/imgs/car.svg"}
-                            alt={cate.name ?? "Category"}
+                            alt={cate.title ?? "Category"}
                             width={50}
                             height={75}
                             className="mb-2"
                         />
-                        <p className="text-md font-semibold">{cate.name ?? "Unnamed Category"}</p>
+                        <p className="text-md font-semibold">{cate.title ?? "Unnamed Category"}</p>
                     </SwiperSlide>
                 ))}
 

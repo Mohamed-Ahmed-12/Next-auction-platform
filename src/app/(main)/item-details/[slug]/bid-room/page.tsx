@@ -11,7 +11,7 @@ import { FiActivity } from "react-icons/fi";
 import { useFetch } from "@/hooks/useFetcher";
 import { useAuth } from "@/context/authContext";
 import { useFormik } from "formik";
-import { formatTimestamp } from "@/lib/dates";
+import { formatTimestamp } from "@/helpers/dates";
 import ProtectedRoute from "@/guards/ProotectedRoute";
 
 export default function ItemPage() {

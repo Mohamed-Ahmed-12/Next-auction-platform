@@ -14,7 +14,7 @@ export function AuctionCard({ auction }: { auction: Auction }) {
         >
             {auction.category &&
                 <div className="absolute top-0 left-0 p-2">
-                    <Badge color="indigo" size="sm" >{auction.category.name}</Badge>
+                    <Badge color="indigo" size="sm" >{auction.category.title}</Badge>
                 </div>
             }
 

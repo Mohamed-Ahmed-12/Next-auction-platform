@@ -17,7 +17,7 @@ import { RiAuctionLine } from 'react-icons/ri';
 import { FaArrowTrendUp } from 'react-icons/fa6';
 import { BiLogIn } from 'react-icons/bi';
 import Link from 'next/link';
-import { formatTimestamp } from '@/lib/dates';
+import { formatTimestamp } from '@/helpers/dates';
 import { useAuth } from '@/context/authContext';
 import { LoginModal } from '../users/LoginModal';
 // Customize card
@@ -52,7 +52,6 @@ export default function ItemDetails({ slug }: { slug: string }) {
     if (!data) {
         return <h2 className="text-center my-20">No Item available.</h2>;
     }
-    console.log(data)
     const placeholderImages: GalleryImage[] = [
         { "src": "/imgs/car.jpg" },
         { "src": "/imgs/car.jpg" },
@@ -70,7 +69,7 @@ export default function ItemDetails({ slug }: { slug: string }) {
                         <div className='flex items-center gap-1'>
                             <FiTag className='text-lg' />
                             <span className='font-medium'>
-                                {data.category.name}
+                                {data.category.title}
                             </span>
                         </div>
                         <div className='flex items-center gap-1'>
@@ -155,16 +154,16 @@ export default function ItemDetails({ slug }: { slug: string }) {
 
                     {/* Place Bid  */}
                     <Card className="max-w-sm shadow-none">
-                        <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                        <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                             Place Your Bid
-                        </h5>
+                        </h2>
 
                         <form className="flex flex-col gap-4">
                             <div>
                                 <div className="mb-2 block">
                                     <Label htmlFor="bid">Your Bid Amount</Label>
                                 </div>
-                                <TextInput id="bid" type="number" placeholder="$" required />
+                                <TextInput id="bid" type="number" placeholder="$" required disabled={!isAuthenticated}/>
                                 <HelperText>
                                     Minimum bid: <span className='font-bold'>$
                                         {
@@ -191,6 +190,7 @@ export default function ItemDetails({ slug }: { slug: string }) {
                                     <button
                                         className="cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                                         onClick={handleOpen}
+                                        type='button'
                                     >
                                         Login to bid
                                     </button>
@@ -205,14 +205,14 @@ export default function ItemDetails({ slug }: { slug: string }) {
                     </Card>
 
                     {/* Bid History */}
-                    {data.bids.length > 0 && isAuthenticated &&
+                    {isAuthenticated &&
                         < Card className="max-w-sm shadow-none">
-                            <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                            <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                                 Bid History
-                            </h5>
+                            </h2>
                             <div className='flex flex-col gap-3'>
 
-                                {
+                                {data.bids.length > 0 ?
                                     data.bids.map((bid, index) => (
                                         index === 0 ? (
 
@@ -267,6 +267,8 @@ export default function ItemDetails({ slug }: { slug: string }) {
 
                                         )
                                     ))
+                                    :
+                                    <h5 className='text-gray-700 text-center text-md'>No bids yet. Be the first to bid!</h5>
                                 }
 
                             </div>

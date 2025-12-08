@@ -2,7 +2,7 @@ import { AuctionStatus } from "@/lib/data";
 
 export type Category = {
     id: number;
-    name: string;
+    title: string;
     icon: string;
     desc: string;
     slug: string;

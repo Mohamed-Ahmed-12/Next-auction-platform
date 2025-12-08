@@ -12,7 +12,7 @@ const Notifications = () => {
     const [notifications , setNotifications] = useState<Notification[]>([])
     const socketRef = useRef<WebSocket | null>(null);
     const { user } = useAuth();
-    const token = user?.access;
+    const token = user?.access || null;
 
     // Setup WebSocket
     useEffect(() => {

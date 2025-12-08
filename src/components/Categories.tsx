@@ -27,7 +27,7 @@ const Categories = () => {
                     categories.map((cate, _) => (
                         <div key={cate.id} className="animated-gradient flex flex-col items-center shadow rounded-br-4xl rounded-tl-4xl">
                             <Image src={cate.icon ?? "imgs/car.svg"} alt="cate" width={75} height={100} />
-                            <h2>{cate.name}</h2>
+                            <h2>{cate.title}</h2>
                         </div>
                     ))
 

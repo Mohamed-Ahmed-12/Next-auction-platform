@@ -65,10 +65,23 @@ export default function Page() {
             </div>
         )
     };
-    if (error) return <h2>Error: {error}</h2>;
-    if (!data) return <h2>No Auction available.</h2>; // Check if the fetched data is null/undefined
-    if (data.length === 0 && filteredData.length === 0) return <h2>No Auction available.</h2>; // Check if the arrays are empty after loading
+    if (error) {
+        return (
+            <div className="container mx-auto px-4 sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl my-20">
+                <h1 className="font-bold text-3xl mb-5">Auction List</h1>
+                <h5>Error: {error}</h5>
+            </div>
+        )
+    }
 
+    if (!data || (data.length === 0 && filteredData.length === 0)) {
+        return (
+            <div className="container mx-auto px-4 sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl my-20">
+                <h1 className="font-bold text-3xl mb-5">Auction List</h1>
+                <h2>No Auction available..</h2>
+            </div>
+        )
+    }
     return (
         <div className="container mx-auto px-4 sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl my-20">
             <h1 className="font-bold text-3xl mb-5">Auction List</h1>
@@ -130,7 +143,7 @@ export default function Page() {
                                     {categories?.map((cate) => (
                                         <div className="flex items-center gap-2" key={cate.id}>
                                             <Checkbox
-                                                id={cate.name}
+                                                id={cate.title}
                                                 value={cate.slug}
                                                 checked={filtersData.category.includes(cate.slug)}
                                                 onChange={(e) => {
@@ -143,7 +156,7 @@ export default function Page() {
                                                     });
                                                 }}
                                             />
-                                            <Label htmlFor={cate.name}>{cate.name}</Label>
+                                            <Label htmlFor={cate.title}>{cate.title}</Label>
                                         </div>
                                     ))}
                                 </div>
