@@ -1,9 +1,8 @@
 import { FormFieldGroup } from "@/types/formfield";
 
-export const categoryFormFiels: FormFieldGroup[] = [
+export const categoryFormFields: FormFieldGroup[] = [
     {
         groupKey: 'g1',
-        groupTitle: '',
         fields: [
             {
                 id: 'title',

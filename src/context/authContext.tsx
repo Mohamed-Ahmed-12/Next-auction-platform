@@ -36,13 +36,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         if (storedUser) {
             const userData: Tokens = JSON.parse(storedUser);
             setUser(userData);
+        }else{
+            setUser(null);
         }
         setIsLoading(false)
     }, []);
 
-    useEffect(()=>{
-        console.log(isAuthenticated)
-    },[isAuthenticated])
 
     const login = async (data: LoginCredentials): Promise<void> => {
         setIsLoading(true)

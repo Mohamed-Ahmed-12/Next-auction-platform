@@ -4,7 +4,7 @@ import PageHeader from "@/components/dashboard/PageHeader";
 import { useFetch } from "@/hooks/useFetcher";
 import { Auction } from "@/types/main";
 import { useParams } from "next/navigation"
-import { AuctionFormFiels } from "@/schemas/formSchemas/AuctionForm";
+import { AuctionFormFields } from "@/schemas/formSchemas/auctionForm";
 import { updateAuction } from "@/services/AuctionService";
 
 export default function EditAuctionPage() {
@@ -27,14 +27,14 @@ export default function EditAuctionPage() {
     }
 
     if (!auction) {
-        return <p>Category not found.</p>
+        return <p>auction not found.</p>
     }
 
     // Now you have the 'category' object to use in a form
     return (
         <>
             <PageHeader title={`Edit Auction: ${auction.title}`} />
-            <FormBuilder formFields={AuctionFormFiels} onSubmit={updateAuction} defaultValues={auction} successRedirect="/dashboard/auctions" />
+            <FormBuilder formFields={AuctionFormFields} onSubmit={updateAuction} defaultValues={auction} successRedirect="/dashboard/auctions" />
         </>
     )
 }

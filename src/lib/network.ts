@@ -31,30 +31,110 @@ axiosInstance.interceptors.request.use((config) => {
     return config;
 });
 
+interface ErrorData {
+    detail: string;
+    [key: string]: any; // Allow other properties like 'errors', 'code', etc.
+}
+/**
+ * Asynchronously reads the content of an error Blob (which is expected to contain a JSON string), 
+ * parses it, and returns the resulting object, or a default error object on failure.
+ * * @param errorBlob The Blob object containing the error response body.
+ * @returns A Promise that resolves to an ErrorData object.
+ */
+async function readBlobError(errorBlob: Blob): Promise<ErrorData> {
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+
+        // 1. Error Handler: Called if the file reading itself fails
+        reader.onerror = () => {
+            // Resolve with a guaranteed ErrorData shape
+            resolve({ detail: "Failed to read error details from blob." });
+        };
+
+        // 2. Load Handler: Called when the Blob content is successfully read
+        reader.onload = () => {
+            try {
+                // FileReader.result can be string or ArrayBuffer depending on read method.
+                // Since we use readAsText, we expect a string.
+                const resultText = reader.result as string; 
+
+                if (resultText) {
+                    // Attempt to parse the text content
+                    const errorData: ErrorData = JSON.parse(resultText);
+                    resolve(errorData);
+                } else {
+                     // Handle case where result is empty string but reading was successful
+                    resolve({ detail: "Server returned an empty error response." });
+                }
+            } catch (e) {
+                // If JSON parsing fails, return a generic error message
+                resolve({ detail: "Server returned a non-JSON or invalid error response." });
+            }
+        };
+
+        // Start reading the blob content as text
+        reader.readAsText(errorBlob);
+    });
+}
+
 axiosInstance.interceptors.response.use(
-    // Success Handler
-    (response) => {
-        return response;
-    },
-    // Error Handler
-    (error) => {
-        const status = error.response ? error.response.status : null;
+    // Success Handler (Status 2xx)
+    (response) => response,
 
-        if (status === 401) {
-            // **ACTION FOR AUTHENTICATION FAILURE (Expired/Invalid Token)**
-            console.log('401 Unauthorized received. Initiating logout...');
-            
-            // 1. Clear invalid tokens
-            localStorage.removeItem('user');
-            
-        } else if (status === 403) {
-            // **ACTION FOR AUTHORIZATION FAILURE (Permission Denied)**
-            console.log('403 Forbidden received. User is denied access to this resource.');
+    // Error Handler (Status 4xx/5xx or network issues)
+    async (error) => {
+        const originalRequest = error.config;
 
+        if (error.response) {
+            const status = error.response.status;
+            
+            let responseData = error.response.data;
+            let detail = "Server error occurred";
+            
+            // --- 1. HANDLE BLOB ERROR RESPONSE (e.g., Failed File Download) ---
+            if (responseData instanceof Blob) {
+                // If the response is a Blob, we must await reading its JSON content
+                responseData = await readBlobError(responseData);
+            }
+            
+            // Now that responseData is a parsed object (or an error object from readBlobError)
+            detail = responseData?.detail || responseData?.message || responseData?.error || detail;
+            
+            console.log("Response Status:", status);
+            console.log("Response Detail:", detail);
+            
+            // --- 2. HANDLE SPECIFIC STATUS CODES (401/403) ---
+            if (status === 401) {
+                // **ACTION FOR AUTHENTICATION FAILURE**
+                console.log('401 Unauthorized: Initiating logout...');
+                localStorage.removeItem('user');
+                // Optional: window.location.href = '/login';
+                
+                return Promise.reject(new Error("Session expired. Please log in again."));
+
+            } else if (status === 403) {
+                // **ACTION FOR AUTHORIZATION FAILURE**
+                console.log('403 Forbidden: Access denied.');
+                return Promise.reject(new Error("You do not have permission to perform this action."));
+
+            } 
+            
+            // --- 3. HANDLE OTHER SERVER ERRORS (4xx, 5xx) ---
+            else {
+                // This covers 400 Bad Request, 500 Internal Server Error, etc.
+                console.error(`General Server Error (${status}):`, responseData);
+                return Promise.reject(new Error(detail));
+            }
+
+        } else if (error.request) {
+            // --- 4. HANDLE NETWORK ERRORS (Request made but no response received) ---
+            console.error("Network Error: No response received.", error.request);
+            return Promise.reject(new Error("Network error. Please check your connection or server status."));
+            
+        } else {
+            // --- 5. HANDLE UNEXPECTED ERRORS (Request setup failed) ---
+            console.error("Unexpected Request Error:", error.message);
+            return Promise.reject(new Error("An unexpected error occurred during request setup."));
         }
-
-        // Return a rejected Promise for all errors (401, 403, 500, etc.)
-        // so the calling function/component can still handle the failure.
-        return Promise.reject(error);
     }
 );

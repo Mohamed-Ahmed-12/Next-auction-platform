@@ -1,7 +1,7 @@
 'use client'
 import FormBuilder from "@/components/dashboard/FormBuilder";
 import PageHeader from "@/components/dashboard/PageHeader";
-import { categoryFormFiels } from "@/schemas/formSchemas/categoryForm";
+import { categoryFormFields } from "@/schemas/formSchemas/categoryForm";
 import { useFetch } from "@/hooks/useFetcher";
 import { updateCategory } from "@/services/CategoryService";
 import { Category } from "@/types/main";
@@ -10,7 +10,7 @@ import { useParams } from "next/navigation"
 export default function EditCategoryPage() {
     const { id } = useParams();
     const shouldFetch = id && typeof id === 'string';
-    const { data: category, loading, error, refetch } = useFetch<Category>(shouldFetch ? `category/${id}` : '');
+    const { data: category, loading, error } = useFetch<Category>(shouldFetch ? `category/${id}` : '');
 
     // --- RENDER LOGIC ---
 
@@ -34,7 +34,7 @@ export default function EditCategoryPage() {
     return (
         <>
             <PageHeader title={`Edit Category: ${category.title}`} />
-            <FormBuilder formFields={categoryFormFiels} onSubmit={updateCategory} defaultValues={category} successRedirect="/dashboard/categories" />
+            <FormBuilder formFields={categoryFormFields} onSubmit={updateCategory} defaultValues={category} successRedirect="/dashboard/categories" />
 
         </>
     )

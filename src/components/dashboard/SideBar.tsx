@@ -33,21 +33,24 @@ const menuItems: MenuItem[] = [
     children: [
       { label: "Auctions", href: "/dashboard/auctions", },
       { label: "Items", href: "/dashboard/items", },
-      { label: "Bids", href: "/dashboard/bids", },
-      { label: "Results", href: "/dashboard/results", },
     ],
   },
   {
-    label: "Master Data",
-    icon: HiViewBoards,
-    children: [
-      { label: "Categories", href: "/dashboard/categories", },
-    ],
+    label: "Users",
+    href: "/dashboard/users",
+    icon: FaPeopleGroup,
   },
   {
     label: "Analytics",
     href: "/dashboard/analytics",
     icon: SiGoogleanalytics,
+  },
+    {
+    label: "Master Data",
+    icon: HiViewBoards,
+    children: [
+      { label: "Categories", href: "/dashboard/categories", },
+    ],
   },
 ];
 
@@ -59,12 +62,13 @@ const accountItems: MenuItem[] = [
 
 const pages: MenuItem[] = [
   {
-    label: "Pages", icon: MdMiscellaneousServices, children: [
-      { label: "About", href: "#", icon: IoIosInformationCircle },
-      { label: "Contact", href: "#", icon: MdContactPhone },
-      { label: "Blog", href: "#", icon: ImBlogger },
-      { label: "FAQ", href: "#", icon: FaQuestion },
-      { label: "Career", href: "#", icon: FaPeopleGroup },
+    label: "Pages", icon: MdMiscellaneousServices,
+    children: [
+      { label: "About", href: "#about", icon: IoIosInformationCircle },
+      { label: "Contact", href: "#contact", icon: MdContactPhone },
+      { label: "Blog", href: "#blog", icon: ImBlogger },
+      { label: "FAQ", href: "#faq", icon: FaQuestion },
+      { label: "Career", href: "#career", icon: FaPeopleGroup },
 
     ]
   },

@@ -7,12 +7,14 @@ import { categoryColumns } from "@/schemas/tableSchemas/categoriesSchema";
 import { AllCommunityModule, ModuleRegistry, RowSelectionOptions } from 'ag-grid-community';
 import { deleteCategory, updateCategory } from "@/services/CategoryService"; // Keep updateCategory for inline editing
 import { Button, Spinner } from "flowbite-react";
-import { actionsColumn } from "@/schemas/tableSchemas/actionsColumn";
+import { actionsColumn } from "@/components/dashboard/actionsColumn";
 import { toast } from "react-toastify";
 import PageHeader from "@/components/dashboard/PageHeader";
 import Link from "next/link";
 import { useFetch } from "@/hooks/useFetcher";
 import { useRouter } from "next/navigation";
+import { CSVExport } from "@/components/dashboard/CSVExport";
+import { prepareFilterFileds } from "@/helpers/filters";
 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -88,6 +90,27 @@ export default function CategoriesPage() {
         }
     };
 
+    const handleFilterChange = (event: any) => {
+        // 1. Get the current filter model from the grid API
+        const filterModel = event.api.getFilterModel();
+
+        // 2. Check if the 'title' column has an active filter
+        if (filterModel.title) {
+            // The structure of filterModel.title depends on the filter type (text, number, etc.)
+            // For the default text filter, the value is often nested under 'filter'
+            const titleFilterValue = filterModel.title.filter;
+
+            console.log("Active Title Filter Value:", titleFilterValue);
+
+            // --- PUT YOUR STATE MANAGEMENT OR LOGIC HERE ---
+            // For example, if you wanted to sync this filter to the URL query string:
+            // router.push({ query: { ...router.query, title: titleFilterValue } });
+        } else {
+            console.log("Title filter is cleared.");
+        }
+
+    };
+
     if (loading && rowData.length === 0) {
         return <div className="text-center pt-8"><Spinner size="xl" /> Loading Categories...</div>;
     }
@@ -99,11 +122,14 @@ export default function CategoriesPage() {
     return (
         <>
             <PageHeader title='Categories'>
-                <Link href="/dashboard/categories/create">
-                    <Button size="sm" className="cursor-pointer">
-                        Create New Category
-                    </Button>
-                </Link>
+                <div className="flex gap-2">
+                    <CSVExport columns={categoryColumns} modelLabel={'main.Category'} />
+                    <Link href="/dashboard/categories/create">
+                        <Button size="sm" className="cursor-pointer">
+                            Create New Category
+                        </Button>
+                    </Link>
+                </div>
             </PageHeader>
 
             <div className="ag-theme-quartz" style={{ height: "100%", width: '100%' }}>
@@ -115,6 +141,7 @@ export default function CategoriesPage() {
                     defaultColDef={defaultColDef}
                     rowSelection={rowSelection}
                     onCellValueChanged={handleCellValueChanged}
+                    onFilterChanged={handleFilterChange}
                 />
             </div>
         </>

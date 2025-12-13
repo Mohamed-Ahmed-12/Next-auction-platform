@@ -23,7 +23,6 @@ export const FieldBuilder: React.FC<FieldBuilderProps> = ({ fieldType, ...props 
         case 'file':
             return <FileInput {...combinedProps} accept="image/*" />;
         case 'select':
-            // return <SelectWithOptions {...combinedProps} fetchedData={options}> </SelectWithOptions>;
             return (
                 <Controller
                     name={registrationProps.name}

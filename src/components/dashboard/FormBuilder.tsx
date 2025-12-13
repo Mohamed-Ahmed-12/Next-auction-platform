@@ -2,7 +2,7 @@
 import { Button, HelperText, Label, Spinner } from "flowbite-react";
 import React, { useState } from 'react';
 import { FieldBuilder } from "./FieldBuilder";
-import { FormBuilderProps } from "@/types/formfield";
+import { FormBuilderProps, FormField, FormFieldGroup } from "@/types/formfield";
 import { DefaultValues, FieldValues, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
@@ -53,17 +53,19 @@ export default function FormBuilder<TFormValues extends FieldValues>({
         <form className="flex flex-col gap-2" onSubmit={handleSubmit(onFormSubmit)}>
             {/* each group */}
             {
-                formFields.map((group: any) => (
-                    <fieldset key={group.groupKey} >
+                formFields.map((group: FormFieldGroup) => (
+                    <fieldset key={group.groupKey} className="mb-4">
+                        {group.groupTitle &&
+                            <h2 className="font-semibold text-xl my-2">{group.groupTitle}</h2>
 
-                        <h2 className="font-semibold text-xl mb-4">{group.groupTitle}</h2>
+                        }
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {/* each field in group */}
                             {
-                                group.fields.map((field: any) => {
+                                group.fields.map((field: FormField) => {
                                     const fieldError = errors[field.id as keyof TFormValues];
                                     const errorMsg = fieldError?.message as string | undefined;
-
+                                    const isDisabled = field.disabled ?? false;
                                     return (
                                         <div key={field.id}>
                                             <div className="mb-2 block">
@@ -82,10 +84,11 @@ export default function FormBuilder<TFormValues extends FieldValues>({
                                                 placeholder={field.placeholder}
                                                 required={field.required}
                                                 color={errorMsg ? "failure" : "gray"}
-                                                rules={field.rules}
+                                                // rules={field.rules}
                                                 register={register}
                                                 control={control}
                                                 options={field.options || ""}
+                                                disabled={isDisabled}
                                             />
 
                                             {/* Helper Text (Only show if no error) */}

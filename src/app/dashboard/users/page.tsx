@@ -1,0 +1,88 @@
+"use client";
+
+import React, { useMemo } from "react";
+import { AgGridReact } from "ag-grid-react";
+import { AllCommunityModule, ModuleRegistry, RowSelectionOptions } from 'ag-grid-community';
+import { Button, Spinner } from "flowbite-react";
+import { actionsColumn } from "@/components/dashboard/actionsColumn";
+import PageHeader from "@/components/dashboard/PageHeader";
+import Link from "next/link";
+import { useFetch } from "@/hooks/useFetcher";
+import { useRouter } from "next/navigation";
+import { CSVExport } from "@/components/dashboard/CSVExport";
+import { User } from "@/types/auth";
+import { userColumns } from "@/schemas/tableSchemas/authSchemas";
+
+// Register all Community features
+ModuleRegistry.registerModules([AllCommunityModule]);
+
+export default function UsersPage() {
+    const { data: users, error, loading, refetch } = useFetch<User[]>(`auth/users/`);
+    console.log(users)
+    const rowData = users || []; // Use empty array if data is undefined
+
+    // navigation
+    const router = useRouter();
+    // --- AG-GRID CONFIGURATION MEMOS ---
+
+    const defaultColDef = useMemo(() => ({
+        editable: false, // Enable editing on all cells
+    }), []);
+
+    const rowSelection = useMemo<RowSelectionOptions>(() => {
+        return {
+            mode: 'multiRow',
+        };
+    }, []);
+
+    // --- ACTION HANDLERS ---
+
+    const handleEdit = async (data: User) => {
+        router.push(`/dashboard/users/edit/${data.id}`)
+    };
+
+    // --- COLUMNS WITH ACTIONS ---
+
+    const userColumnsWithActions = [
+        ...userColumns,
+        ...actionsColumn<User>({
+            onEdit: handleEdit,
+        }),
+    ];
+
+    // --- INLINE EDITING LOGIC ---
+
+    if (loading && rowData.length === 0) {
+        return <div className="text-center pt-8"><Spinner size="xl" /> Loading users...</div>;
+    }
+
+    if (error) {
+        return <div className="p-4 text-red-600">Error loading users: {error}</div>;
+    }
+
+    return (
+        <>
+            <PageHeader title='Users'>
+                <div className="flex gap-2">
+                    <CSVExport columns={userColumns} modelLabel={'authen.CustomUser'} />
+                    <Link href="/dashboard/users/create">
+                        <Button size="sm" className="cursor-pointer">
+                            Create New User
+                        </Button>
+                    </Link>
+                </div>
+            </PageHeader>
+
+            <div className="ag-theme-quartz" style={{ height: "100%", width: '100%' }}>
+                <AgGridReact
+                    rowData={rowData}
+                    columnDefs={userColumnsWithActions}
+                    loading={loading} // AG Grid will show its internal loading overlay if this is true
+                    pagination={true}
+                    defaultColDef={defaultColDef}
+                    rowSelection={rowSelection}
+                />
+            </div>
+        </>
+    );
+}

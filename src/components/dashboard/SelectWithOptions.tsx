@@ -1,4 +1,5 @@
 "use client";
+import { fetchAuctionsForSelect } from "@/services/AuctionService";
 import { fetchCategoriesForSelect } from "@/services/CategoryService";
 import { SelectOption } from "@/types/formfield";
 import { Select } from "flowbite-react";
@@ -8,8 +9,15 @@ export default function SelectWithOptions({ fetchedData, ...props }: { fetchedDa
     const [options, setOptions] = useState<SelectOption[]>([])
 
     useEffect(() => {
-        if (fetchedData = 'category') {
+        if (fetchedData == 'category') {
             fetchCategoriesForSelect()
+                .then((data) => {
+                    setOptions(data)
+                }).catch((err) => {
+                    console.log(err)
+                })
+        } else if (fetchedData == 'auction') {
+            fetchAuctionsForSelect()
                 .then((data) => {
                     setOptions(data)
                 }).catch((err) => {

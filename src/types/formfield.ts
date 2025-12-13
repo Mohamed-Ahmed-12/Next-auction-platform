@@ -18,13 +18,14 @@ export interface FormField {
     helpTxt?: string;
     errorMsg?: string;
     options?:string;
+    disabled?:boolean; // used for edit form to disable editing field
     // Add value and onChange handlers later for true dynamic forms
     
 }
 
 export interface FormFieldGroup {
     groupKey: string;
-    groupTitle: string; // Used for the header (e.g., "Basic Info")
+    groupTitle?: string; // Used for the header (e.g., "Basic Info")
     fields: FormField[]; // The array of input fields
 }
 

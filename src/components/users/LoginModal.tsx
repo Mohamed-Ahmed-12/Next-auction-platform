@@ -46,10 +46,8 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
     return (
         <Modal show={isOpen} onClose={onCloseModal} size="lg" popup>
-            <ModalHeader />
-            <ModalBody>
-                <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-4">Sign in to our platform</h3>
-
+            <ModalHeader className="border-b border-gray-200 p-4">Sign in to our platform</ModalHeader>
+            <ModalBody className="p-4">
                 <form className="flex max-w-md flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
                     {/* Username Input */}
                     <div>
@@ -88,7 +86,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
                     </div>
 
                     {/* Login Button with Loading Spinner */}
-                    <Button type="submit" disabled={loading}>
+                    <Button type="submit" disabled={loading} className="my-2">
                         Login
                         {loading && <Spinner size="sm" aria-label="Loading spinner" className="ms-2" light />}
                     </Button>

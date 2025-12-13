@@ -5,8 +5,7 @@ import React, { use, useState } from "react";
 import { LoginModal } from "../users/LoginModal";
 import { useAuth } from "@/context/authContext";
 import { usePathname } from "next/navigation";
-
-import Notifications from "./Notifications";
+import NotificationsComponent from "./Notifications";
 
 const NavBar = () => {
     const { isAuthenticated, logout } = useAuth();
@@ -58,7 +57,7 @@ const NavBar = () => {
                         isAuthenticated ?
                             <>
                                 <li>
-                                    <Notifications />
+                                    <NotificationsComponent />
                                 </li>
                                 <li>
                                     <Link href={"/dashboard"} className="cursor-pointer">

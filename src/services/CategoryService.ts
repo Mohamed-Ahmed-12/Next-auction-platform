@@ -26,8 +26,7 @@ export const fetchCategories = async (): Promise<Category[]> => {
 };
 
 export const updateCategory = async (data: Category): Promise<Category> => {
-    const formData = objectToFormData(data, false)
-    console.log(data, formData)
+    const formData = objectToFormData(data, false);
 
     try {
         const response = await axiosInstance.put<Category>(`category/${data.id}/`, formData,{

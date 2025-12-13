@@ -43,7 +43,9 @@ export type Item = {
     min_increment: number;
     is_active: boolean;
     bids: Bids[];
-    end_at?: string;
+    end_at: string;
+    created_at?: string;
+    updated_at?: string;
     slug: string;
 }
 export { AuctionStatus };

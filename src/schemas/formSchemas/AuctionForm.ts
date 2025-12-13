@@ -1,10 +1,9 @@
 import { fetchCategories } from "@/services/CategoryService";
 import { FormFieldGroup } from "@/types/formfield";
 
-export const AuctionFormFiels: FormFieldGroup[] = [
+export const AuctionFormFields: FormFieldGroup[] = [
     {
         groupKey: 'g1',
-        groupTitle: '',
         fields: [
             {
                 id: 'title',
@@ -30,7 +29,6 @@ export const AuctionFormFiels: FormFieldGroup[] = [
     },
     {
         groupKey: 'g2',
-        groupTitle: '',
         fields: [
             {
                 id: 'start_date',
@@ -56,7 +54,6 @@ export const AuctionFormFiels: FormFieldGroup[] = [
     },
     {
         groupKey: 'g3',
-        groupTitle: '',
         fields: [
             {
                 id: 'desc',

@@ -32,7 +32,6 @@ type GalleryImage = {
 
 export default function AuctionDetails({ slug }: { slug: string }) {
     const { data, error, loading } = useFetch<Auction>(`auction/${slug}`);
-
     if (loading) {
         return <h2 className="text-center my-20">loading...</h2>
     }

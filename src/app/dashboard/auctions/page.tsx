@@ -5,12 +5,13 @@ import { AgGridReact } from "ag-grid-react";
 import { Auction } from "@/types/main";
 import { AllCommunityModule, ModuleRegistry, RowSelectionOptions } from 'ag-grid-community';
 import { Button, Spinner } from "flowbite-react";
-import { actionsColumn } from "@/schemas/tableSchemas/actionsColumn";
+import { actionsColumn } from "@/components/dashboard/actionsColumn";
 import { auctionColumns } from "@/schemas/tableSchemas/auctionsSchema";
 import Link from "next/link";
 import PageHeader from "@/components/dashboard/PageHeader";
 import { useFetch } from "@/hooks/useFetcher";
 import { useRouter } from "next/navigation";
+import { CSVExport } from "@/components/dashboard/CSVExport";
 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -42,18 +43,21 @@ export default function AuctionsPage() {
         ...auctionColumns,
         ...actionsColumn<Auction>({
             onEdit: handleEdit,
-            onDelete: handleDelete,
+            // onDelete: handleDelete,
         }),
     ];
 
     return (
         <>
             <PageHeader title={'Auctions'}>
-                <Link href="/dashboard/auctions/create">
-                    <Button>
-                        Create New Auction
-                    </Button>
-                </Link>
+                <div className="flex gap-2">
+                    <CSVExport columns={auctionColumns} modelLabel={'main.Auction'} />
+                    <Link href="/dashboard/auctions/create">
+                        <Button>
+                            Create New Auction
+                        </Button>
+                    </Link>
+                </div>
             </PageHeader>
 
 
