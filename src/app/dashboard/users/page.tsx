@@ -13,14 +13,17 @@ import { CSVExport } from "@/components/dashboard/CSVExport";
 import { User } from "@/types/auth";
 import { userColumns } from "@/schemas/tableSchemas/authSchemas";
 import { CSVImport } from "@/components/dashboard/CSVImport";
+import { useAgGridFilter } from "@/hooks/useAgGridFilter";
 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 export default function UsersPage() {
     const { data: users, error, loading, refetch } = useFetch<User[]>(`auth/users/`);
-    console.log(users)
     const rowData = users || []; // Use empty array if data is undefined
+
+    // filtering
+    const { filterModel, handleFilterChange } = useAgGridFilter();
 
     // navigation
     const router = useRouter();
@@ -65,7 +68,7 @@ export default function UsersPage() {
         <>
             <PageHeader title='Users'>
                 <div className="flex gap-2">
-                    <CSVExport columns={userColumns} modelLabel={'authen.CustomUser'} />
+                    <CSVExport columns={userColumns} modelLabel={'authen.CustomUser'} filters={filterModel} />
                     <CSVImport columnsTable={userColumns} modelLabel={'authen.CustomUser'} refetch={refetch} />
                     <Link href="/dashboard/users/create">
                         <Button size="sm" className="cursor-pointer">
@@ -83,12 +86,7 @@ export default function UsersPage() {
                     pagination={true}
                     defaultColDef={defaultColDef}
                     rowSelection={rowSelection}
-                    onFilterChanged={
-                        (params) => {
-                            const filterModel = params.api.getFilterModel();
-                            console.log("Current filter model:", filterModel);
-                        }
-                    }
+                    onFilterChanged={handleFilterChange}
                 />
             </div>
         </>

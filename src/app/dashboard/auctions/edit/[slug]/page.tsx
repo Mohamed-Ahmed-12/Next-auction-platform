@@ -4,7 +4,7 @@ import PageHeader from "@/components/dashboard/PageHeader";
 import { useFetch } from "@/hooks/useFetcher";
 import { Auction } from "@/types/main";
 import { useParams } from "next/navigation"
-import { AuctionFormFields } from "@/schemas/formSchemas/auctionForm";
+import { AuctionFormFields } from "@/schemas/formSchemas/AuctionForm";
 import { updateAuction } from "@/services/AuctionService";
 
 export default function EditAuctionPage() {

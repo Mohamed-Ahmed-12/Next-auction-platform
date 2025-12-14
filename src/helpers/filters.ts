@@ -1,4 +1,3 @@
-import { ColDef } from "ag-grid-community";
 
 export function arrayToCommaString(arr: string[]) {
     // To work with django filters when one field can have more than value
@@ -8,15 +7,48 @@ export function arrayToCommaString(arr: string[]) {
     return arr.join(","); // joins elements with commas
 }
 
-export function prepareFilterFileds() {
-    const fields = [{ field: "title", headerName: "Title", flex: 1, filter: true },
-    { field: "slug", headerName: "Slug", flex: 1 },
-    { field: "icon", headerName: "Icon", flex: 1 },
-    { field: "desc", headerName: "Description", flex: 1 },]
-    for (let f = 0; f < fields.length; f++) {
-        if (fields[f].filter) {
-            console.log(fields[f].field)
-        }
+export function buildFilterParams(filters?: Record<string, any>): Record<string, string> {
+  if (!filters || Object.keys(filters).length === 0) {
+    return {}; // no filters
+  }
+
+  const params: Record<string, string> = {};
+
+  Object.entries(filters).forEach(([field, filterObj]) => {
+    if (!filterObj) return;
+
+    // Example: AgGrid filterObj = { type: "contains", filter: "Books" }
+    const { type, filter } = filterObj;
+
+    if (filter == null || filter === "") return; // skip empty
+
+    // Map AgGrid filter types to Django filter suffixes
+    let suffix = "";
+    switch (type) {
+      case "contains":
+        suffix = "__icontains";
+        break;
+      case "equals":
+        suffix = "";
+        break;
+      case "startsWith":
+        suffix = "__istartswith";
+        break;
+      case "endsWith":
+        suffix = "__iendswith";
+        break;
+      case "greaterThan":
+        suffix = "__gt";
+        break;
+      case "lessThan":
+        suffix = "__lt";
+        break;
+      default:
+        suffix = "";
     }
 
+    params[`${field}${suffix}`] = filter;
+  });
+
+  return params;
 }

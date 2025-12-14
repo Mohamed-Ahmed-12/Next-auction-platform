@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { Category } from "@/types/main";
 import { categoryColumns } from "@/schemas/tableSchemas/categoriesSchema";
@@ -14,8 +14,8 @@ import Link from "next/link";
 import { useFetch } from "@/hooks/useFetcher";
 import { useRouter } from "next/navigation";
 import { CSVExport } from "@/components/dashboard/CSVExport";
-import { prepareFilterFileds } from "@/helpers/filters";
 import { CSVImport } from "@/components/dashboard/CSVImport";
+import { useAgGridFilter } from "@/hooks/useAgGridFilter";
 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -23,6 +23,9 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 export default function CategoriesPage() {
     const { data: categories, error, loading, refetch } = useFetch<Category[]>(`category/`);
     const rowData = categories || []; // Use empty array if data is undefined
+
+    // filtering
+    const { filterModel, handleFilterChange } = useAgGridFilter();
 
     // navigation
     const router = useRouter();
@@ -91,27 +94,6 @@ export default function CategoriesPage() {
         }
     };
 
-    const handleFilterChange = (event: any) => {
-        // 1. Get the current filter model from the grid API
-        const filterModel = event.api.getFilterModel();
-
-        // 2. Check if the 'title' column has an active filter
-        if (filterModel.title) {
-            // The structure of filterModel.title depends on the filter type (text, number, etc.)
-            // For the default text filter, the value is often nested under 'filter'
-            const titleFilterValue = filterModel.title.filter;
-
-            console.log("Active Title Filter Value:", titleFilterValue);
-
-            // --- PUT YOUR STATE MANAGEMENT OR LOGIC HERE ---
-            // For example, if you wanted to sync this filter to the URL query string:
-            // router.push({ query: { ...router.query, title: titleFilterValue } });
-        } else {
-            console.log("Title filter is cleared.");
-        }
-
-    };
-
     if (loading && rowData.length === 0) {
         return <div className="text-center pt-8"><Spinner size="xl" /> Loading Categories...</div>;
     }
@@ -124,7 +106,7 @@ export default function CategoriesPage() {
         <>
             <PageHeader title='Categories'>
                 <div className="flex gap-2">
-                    <CSVExport columns={categoryColumns} modelLabel={'main.Category'} />
+                    <CSVExport columns={categoryColumns} modelLabel={'main.Category'} filters={filterModel} />
                     <CSVImport columnsTable={categoryColumns} modelLabel="main.Category" refetch={refetch} />
                     <Link href="/dashboard/categories/create">
                         <Button size="sm" className="cursor-pointer">

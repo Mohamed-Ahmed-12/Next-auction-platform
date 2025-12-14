@@ -31,10 +31,7 @@ const menuItems: MenuItem[] = [
   {
     label: "Auctions",
     icon: RiAuctionLine,
-    children: [
-      { label: "Auctions", href: "/dashboard/auctions", },
-      { label: "Items", href: "/dashboard/items", },
-    ],
+    href: "/dashboard/auctions"
   },
   {
     label: "Users",

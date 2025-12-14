@@ -1,4 +1,3 @@
-import { fetchCategories } from "@/services/CategoryService";
 import { FormFieldGroup } from "@/types/formfield";
 
 export const AuctionFormFields: FormFieldGroup[] = [
@@ -78,5 +77,57 @@ export const AuctionFormFields: FormFieldGroup[] = [
 
         ]
     },
+      {
+        groupKey: 'g4',
+        groupTitle: 'Pricing',
+        fields: [
+            {
+                id: 'start_price',
+                label: 'Start Price',
+                fieldType: 'number',
+                helpTxt: '',
+                errorMsg: '',
+                required: true,
+                placeholder: '',
+            },
+            {
+                id: 'reserve_price',
+                label: 'Reserve Price',
+                fieldType: 'number',
+                helpTxt: 'Minimum price can accept to buy with it',
+                errorMsg: '',
+                required: true,
+                placeholder: '',
+            },
+            {
+                id: 'min_increment',
+                label: 'Minimum Increment',
+                fieldType: 'number',
+                helpTxt: 'Minimum acceptable amount',
+                errorMsg: '',
+                required: true,
+                placeholder: '',
+            },
+
+
+        ]
+    },
+    {
+        groupKey: 'g5',
+        groupTitle: 'Additional Information',
+        fields: [
+            {
+                id: 'desc',
+                label: 'Description',
+                fieldType: 'textarea',
+                helpTxt: '',
+                errorMsg: '',
+                required: false,
+                placeholder: 'Description',
+            },
+
+        ]
+    },
+
 
 ]

@@ -33,8 +33,9 @@ export default function AuctionsPage() {
         router.push(`/dashboard/auctions/edit/${data.slug}`)
     }
 
-    const handleDelete = (data: Auction) => {
-        console.log(data)
+
+    const handleViewDetails = (data: Auction) => {
+        router.push(`/dashboard/auctions/details/${data.slug}`)
     }
 
 
@@ -43,7 +44,8 @@ export default function AuctionsPage() {
         ...auctionColumns,
         ...actionsColumn<Auction>({
             onEdit: handleEdit,
-            // onDelete: handleDelete,
+            onView: handleViewDetails,
+
         }),
     ];
 

@@ -6,7 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import { FaFileCsv } from "react-icons/fa6";
 import { toast } from "react-toastify";
 
-export function CSVExport({ columns, modelLabel }: { columns: any, modelLabel: string }) {
+export function CSVExport({ columns, modelLabel, filters }: { columns: any, modelLabel: string, filters?: any }) {
+    console.log(filters)
     const [openModal, setOpenModal] = useState(false);
     const [selectedCols, setSelectedCols] = useState<string[]>([]);
 
@@ -30,7 +31,7 @@ export function CSVExport({ columns, modelLabel }: { columns: any, modelLabel: s
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            await exportData({ columns: selectedCols, modelLabel })
+            await exportData({ columns: selectedCols, modelLabel , filters })
             setOpenModal(false)
             setSelectedCols([])
             toast.success("Data exported successfully")
