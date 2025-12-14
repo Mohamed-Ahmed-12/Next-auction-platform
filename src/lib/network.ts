@@ -6,6 +6,12 @@ export const axiosInstance = axios.create({
     }
 })
 
+let logoutFn: () => void;
+
+export const setLogoutFunction = (fn: () => void) => {
+    logoutFn = fn;
+};
+
 axiosInstance.interceptors.request.use((config) => {
     const userString = localStorage.getItem("user");
 
@@ -56,14 +62,14 @@ async function readBlobError(errorBlob: Blob): Promise<ErrorData> {
             try {
                 // FileReader.result can be string or ArrayBuffer depending on read method.
                 // Since we use readAsText, we expect a string.
-                const resultText = reader.result as string; 
+                const resultText = reader.result as string;
 
                 if (resultText) {
                     // Attempt to parse the text content
                     const errorData: ErrorData = JSON.parse(resultText);
                     resolve(errorData);
                 } else {
-                     // Handle case where result is empty string but reading was successful
+                    // Handle case where result is empty string but reading was successful
                     resolve({ detail: "Server returned an empty error response." });
                 }
             } catch (e) {
@@ -87,38 +93,36 @@ axiosInstance.interceptors.response.use(
 
         if (error.response) {
             const status = error.response.status;
-            
+
             let responseData = error.response.data;
             let detail = "Server error occurred";
-            
+
             // --- 1. HANDLE BLOB ERROR RESPONSE (e.g., Failed File Download) ---
             if (responseData instanceof Blob) {
                 // If the response is a Blob, we must await reading its JSON content
                 responseData = await readBlobError(responseData);
             }
-            
+
             // Now that responseData is a parsed object (or an error object from readBlobError)
             detail = responseData?.detail || responseData?.message || responseData?.error || detail;
-            
+
             console.log("Response Status:", status);
             console.log("Response Detail:", detail);
-            
+
             // --- 2. HANDLE SPECIFIC STATUS CODES (401/403) ---
             if (status === 401) {
                 // **ACTION FOR AUTHENTICATION FAILURE**
                 console.log('401 Unauthorized: Initiating logout...');
-                localStorage.removeItem('user');
-                // Optional: window.location.href = '/login';
-                
-                return Promise.reject(new Error("Session expired. Please log in again."));
+                logoutFn();
+                return Promise.reject(new Error(detail || "Session expired. Please log in again."));
 
             } else if (status === 403) {
                 // **ACTION FOR AUTHORIZATION FAILURE**
                 console.log('403 Forbidden: Access denied.');
                 return Promise.reject(new Error("You do not have permission to perform this action."));
 
-            } 
-            
+            }
+
             // --- 3. HANDLE OTHER SERVER ERRORS (4xx, 5xx) ---
             else {
                 // This covers 400 Bad Request, 500 Internal Server Error, etc.
@@ -130,7 +134,7 @@ axiosInstance.interceptors.response.use(
             // --- 4. HANDLE NETWORK ERRORS (Request made but no response received) ---
             console.error("Network Error: No response received.", error.request);
             return Promise.reject(new Error("Network error. Please check your connection or server status."));
-            
+
         } else {
             // --- 5. HANDLE UNEXPECTED ERRORS (Request setup failed) ---
             console.error("Unexpected Request Error:", error.message);

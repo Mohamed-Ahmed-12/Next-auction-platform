@@ -34,7 +34,7 @@ export function CSVExport({ columns, modelLabel }: { columns: any, modelLabel: s
             setOpenModal(false)
             setSelectedCols([])
             toast.success("Data exported successfully")
-        } catch (err:any) {
+        } catch (err: any) {
             console.log()
             toast.error(err.message || "an error occurred")
         }
@@ -46,7 +46,7 @@ export function CSVExport({ columns, modelLabel }: { columns: any, modelLabel: s
             <Button color="alternative" className="cursor-pointer" onClick={() => setOpenModal(true)}>
                 <FaFileCsv color="green" size={20} className="me-1" /> Export File
             </Button>
-            <Modal show={openModal} size="lg" popup onClose={() => { setOpenModal(false); setSelectedCols([]) }} >
+            <Modal show={openModal} size="7xl" position="top-center" popup onClose={() => { setOpenModal(false); setSelectedCols([]) }} >
                 <ModalHeader className="m-4 border-b-gray-300 border-b">Export Data</ModalHeader>
                 <ModalBody className="space-y-6">
                     <form className="flex flex-col gap-y-8" onSubmit={handleSubmit}>
@@ -72,7 +72,9 @@ export function CSVExport({ columns, modelLabel }: { columns: any, modelLabel: s
                                 )
                             }
                         </div>
-                        <Button type="submit">Export</Button>
+                        <div>
+                            <Button type="submit" color={'green'}>Export</Button>
+                        </div>
                     </form>
                 </ModalBody>
             </Modal>

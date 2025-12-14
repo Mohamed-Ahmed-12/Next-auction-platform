@@ -15,6 +15,7 @@ import { useFetch } from "@/hooks/useFetcher";
 import { useRouter } from "next/navigation";
 import { CSVExport } from "@/components/dashboard/CSVExport";
 import { prepareFilterFileds } from "@/helpers/filters";
+import { CSVImport } from "@/components/dashboard/CSVImport";
 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -124,6 +125,7 @@ export default function CategoriesPage() {
             <PageHeader title='Categories'>
                 <div className="flex gap-2">
                     <CSVExport columns={categoryColumns} modelLabel={'main.Category'} />
+                    <CSVImport columnsTable={categoryColumns} modelLabel="main.Category" refetch={refetch} />
                     <Link href="/dashboard/categories/create">
                         <Button size="sm" className="cursor-pointer">
                             Create New Category

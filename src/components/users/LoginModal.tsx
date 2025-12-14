@@ -30,7 +30,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 onCloseModal();
             })
             .catch((err) => {
-                console.error(err); // Changed to console.error for better visibility
+                // console.error(err); // Changed to console.error for better visibility
                 toast.error(err.message || 'Login Failed');
             })
             .finally(() => {

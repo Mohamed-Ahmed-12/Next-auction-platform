@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { CSVExport } from "@/components/dashboard/CSVExport";
 import { User } from "@/types/auth";
 import { userColumns } from "@/schemas/tableSchemas/authSchemas";
+import { CSVImport } from "@/components/dashboard/CSVImport";
 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -65,6 +66,7 @@ export default function UsersPage() {
             <PageHeader title='Users'>
                 <div className="flex gap-2">
                     <CSVExport columns={userColumns} modelLabel={'authen.CustomUser'} />
+                    <CSVImport columnsTable={userColumns} modelLabel={'authen.CustomUser'} refetch={refetch} />
                     <Link href="/dashboard/users/create">
                         <Button size="sm" className="cursor-pointer">
                             Create New User
@@ -81,6 +83,12 @@ export default function UsersPage() {
                     pagination={true}
                     defaultColDef={defaultColDef}
                     rowSelection={rowSelection}
+                    onFilterChanged={
+                        (params) => {
+                            const filterModel = params.api.getFilterModel();
+                            console.log("Current filter model:", filterModel);
+                        }
+                    }
                 />
             </div>
         </>

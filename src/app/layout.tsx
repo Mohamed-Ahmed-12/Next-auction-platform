@@ -2,9 +2,10 @@
 import ProgressArrow from "@/components/common/Arrow";
 import "./globals.css";
 import { Quicksand, Noto_Naskh_Arabic } from 'next/font/google';
-import { AuthProvider } from "@/context/authContext";
+import { AuthProvider, useAuth } from "@/context/authContext";
 import { ToastContainer } from "react-toastify";
 import { ThemeInit } from "../../.flowbite-react/init";
+import { useEffect } from "react";
 
 const quicksand = Quicksand({
   subsets: ['latin'],
@@ -20,16 +21,32 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
 
+
   return (
     <html lang="en" className={`${quicksand.className} ${noto.className}`}>
       <body>
         <ThemeInit />
         <AuthProvider>
           {children}
+          <LogoutSetter />
         </AuthProvider>
         <ProgressArrow />
         <ToastContainer autoClose={false} position="bottom-right" />
       </body>
     </html>
   );
+}
+
+const LogoutSetter = () => {
+  const { logout } = useAuth();
+  
+  useEffect(() => {
+    // Set the logout function in the network module
+    import('@/lib/network').then(({ setLogoutFunction }) => {
+      setLogoutFunction(logout);
+    });
+  }
+  , [logout]);
+  
+  return null; // This component does not render anything
 }

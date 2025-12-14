@@ -49,8 +49,7 @@ export function useFetch<T>(url: string): {
     } catch (err: any) {
       console.error("Fetch error:", err);
       // Determine the error message
-      const message = err.response?.data?.message || err.message || "Unknown error during fetch";
-      setError(message); 
+      setError(err.message || "An error occurred while fetching data."); 
     } finally {
       setLoading(false);
     }

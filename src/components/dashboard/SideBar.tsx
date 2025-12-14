@@ -11,6 +11,7 @@ import { MdContactPhone, MdMiscellaneousServices } from "react-icons/md";
 import { FaPeopleGroup, FaQuestion } from "react-icons/fa6";
 import { ImBlogger } from "react-icons/im";
 import { IoIosInformationCircle } from "react-icons/io";
+import { BiCalendar } from "react-icons/bi";
 
 // --- 1. Define the Menu Structure Types ---
 interface MenuItem {
@@ -45,12 +46,17 @@ const menuItems: MenuItem[] = [
     href: "/dashboard/analytics",
     icon: SiGoogleanalytics,
   },
-    {
+  {
     label: "Master Data",
     icon: HiViewBoards,
     children: [
       { label: "Categories", href: "/dashboard/categories", },
     ],
+  },
+  {
+    label: "Calendar",
+    icon: BiCalendar,
+    href: "/dashboard/calendar",
   },
 ];
 
