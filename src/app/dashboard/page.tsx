@@ -1,4 +1,5 @@
 "use client"
+import PageHeader from '@/components/dashboard/PageHeader'
 import { useAuth } from '@/context/authContext'
 import { getDashboardData } from '@/services/DashboardService'
 import { DashboardData } from '@/types/dashboard'
@@ -78,7 +79,7 @@ export default function Dashboard() {
 
     return (
         <>
-            <h1 className='text-indigo-600 font-bold text-2xl'>Dashboard</h1>
+            <PageHeader title='Dashboard' />
             <div className='grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-3'>
 
                 <Card className={cardStyle + " bg-violet-50 hover:border-violet-200 hover:shadow-violet-100"}>
@@ -91,7 +92,7 @@ export default function Dashboard() {
                     <span className='font-semibold'>{data?.auction_count ?? 0} </span>
                 </Card>
 
-                <Card className={cardStyle+ " bg-indigo-50 hover:border-indigo-200 hover:shadow-indigo-100"}>
+                <Card className={cardStyle + " bg-indigo-50 hover:border-indigo-200 hover:shadow-indigo-100"}>
                     <div className=' absolute right-5 top-5 rounded-lg bg-indigo-50 p-1'>
                         <IoGridOutline className="text-5xl text-indigo-600" />
                     </div>
@@ -111,7 +112,7 @@ export default function Dashboard() {
                     <span className='font-semibold'>{data?.user_count ?? 0}</span>
                 </Card>
 
-                <Card className={cardStyle+ " bg-green-50 hover:border-green-200 hover:shadow-green-100"}>
+                <Card className={cardStyle + " bg-green-50 hover:border-green-200 hover:shadow-green-100"}>
                     <div className=' absolute right-5 top-5 rounded-lg bg-green-50 p-1'>
                         <RiAuctionLine className="text-5xl text-green-600" />
                     </div>
@@ -121,7 +122,7 @@ export default function Dashboard() {
                     <span className='font-semibold'>{data?.bids_today ?? 0}</span>
                 </Card>
 
-                <Card className={cardStyle+ " bg-red-50 hover:border-red-200 hover:shadow-red-100"}>
+                <Card className={cardStyle + " bg-red-50 hover:border-red-200 hover:shadow-red-100"}>
                     <div className=' absolute right-5 top-5 rounded-lg bg-red-50 p-1'>
                         <BsCurrencyDollar className="text-5xl text-red-600" />
                     </div>

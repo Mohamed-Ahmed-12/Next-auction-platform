@@ -14,20 +14,23 @@ export const AuctionFormFields: FormFieldGroup[] = [
                 placeholder: 'Auction title',
             },
             {
-                id: 'entry_fee',
-                label: 'Entry Fee',
-                fieldType: 'number',
+                id: 'category',
+                label: 'Category',
+                fieldType: 'select',
                 helpTxt: '',
-                errorMsg: 'must be integer number and positive',
+                errorMsg: '',
                 required: true,
-                placeholder: 'Entry Fee',
+                placeholder: '',
+                options: 'category'
             },
+
 
 
         ]
     },
     {
         groupKey: 'g2',
+        groupTitle: 'Date & Time',
         fields: [
             {
                 id: 'start_date',
@@ -52,35 +55,18 @@ export const AuctionFormFields: FormFieldGroup[] = [
         ]
     },
     {
-        groupKey: 'g3',
-        fields: [
-            {
-                id: 'desc',
-                label: 'Description',
-                fieldType: 'textarea',
-                helpTxt: '',
-                errorMsg: '',
-                required: false,
-                placeholder: 'Description',
-            },
-            {
-                id: 'category',
-                label: 'Category',
-                fieldType: 'select',
-                helpTxt: '',
-                errorMsg: '',
-                required: false,
-                placeholder: '',
-                options:'category'
-            },
-
-
-        ]
-    },
-      {
         groupKey: 'g4',
         groupTitle: 'Pricing',
         fields: [
+            {
+                id: 'entry_fee',
+                label: 'Entry Fee',
+                fieldType: 'number',
+                helpTxt: '',
+                errorMsg: 'must be integer number and positive',
+                required: true,
+                placeholder: 'Entry Fee',
+            },
             {
                 id: 'start_price',
                 label: 'Start Price',
@@ -124,10 +110,9 @@ export const AuctionFormFields: FormFieldGroup[] = [
                 errorMsg: '',
                 required: false,
                 placeholder: 'Description',
+                textEditor:true
             },
 
         ]
     },
-
-
 ]

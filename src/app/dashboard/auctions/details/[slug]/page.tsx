@@ -52,7 +52,7 @@ export default function AuctionFullDetails() {
                 <h2 className="font-bold text-3xl mb-4">{data.title}</h2>
                 <div className="flex items-center space-x-5">
                     <p className="text-gray-500 text-lg">Auction ID: #{data.id}</p>
-                    <AuctionStatusBadge stat={'live'} />
+                    <AuctionStatusBadge stat={data.status} />
                 </div>
 
             </div>
@@ -98,8 +98,7 @@ export default function AuctionFullDetails() {
                             </div>
                             <div className="flex flex-col gap-y-4">
                                 <h3 className="font-semibold mb-2">Description</h3>
-                                <p>
-                                    {data.desc}
+                                <p dangerouslySetInnerHTML={{ __html: data.desc }}>
                                 </p>
                             </div>
 
@@ -120,9 +119,9 @@ export default function AuctionFullDetails() {
                             </div>
                             <div className="flex flex-col gap-y-4">
                                 <h3 className="font-semibold mb-0.5">Schedule</h3>
-                                <FloatingLabel variant="outlined" label="Start Date" disabled={true} value={""} />
-                                <FloatingLabel variant="outlined" label="Expected End Date" disabled={true} value={""} />
-                                <FloatingLabel variant="outlined" label="Ended Date" disabled={true} value={formatTimestamp(data.end_at)} />
+                                <FloatingLabel variant="outlined" label="Start Date" disabled={true} value={formatTimestamp(data.start_date)} />
+                                <FloatingLabel variant="outlined" label="Expected End Date" disabled={true} value={formatTimestamp(data.end_date)} />
+                                <FloatingLabel variant="outlined" label="Ended Date" disabled={true} value={formatTimestamp(data.ended_at)} />
 
                             </div>
 
@@ -155,7 +154,7 @@ export default function AuctionFullDetails() {
                                         <RiAuctionLine size={20} />
                                     </Badge>
                                 </div>
-                                <h3 className="text-3xl font-bold">$24,200.00</h3>
+                                <h3 className="text-3xl font-bold">${data.bids[0]?.amount || 0}</h3>
                             </Card>
                             <Card className="shadow-none bg-white">
                                 <div className="flex justify-between items-center">
@@ -164,7 +163,7 @@ export default function AuctionFullDetails() {
                                         <PiPulse size={20} />
                                     </Badge>
                                 </div>
-                                <h3 className="text-3xl font-bold">24</h3>
+                                <h3 className="text-3xl font-bold">{data.bids.length}</h3>
                             </Card>
                             <Card className="shadow-none bg-white">
                                 <div className="flex justify-between items-center">
@@ -220,19 +219,19 @@ export default function AuctionFullDetails() {
                             <h3 className="text-lg font-semibold mb-6">Transaction Status</h3>
                             <div className="grid grid-cols-1 md:grid-cols-4">
                                 <div className="flex flex-col items-center">
-                                        <FaCheckCircle color="green" size={35}/>
+                                    <FaCheckCircle color="green" size={35} />
                                     <span className="text-green-800 font-semibold">Auction Ended</span>
                                 </div>
                                 <div className="flex flex-col items-center">
-                                        <FaCheckCircle color="green" size={35}/>
+                                    <FaCheckCircle color="green" size={35} />
                                     <span className="text-green-800 font-semibold">Invoice Sent</span>
                                 </div>
                                 <div className="flex flex-col items-center">
-                                        <GoClockFill color="blue" size={35}/>
+                                    <GoClockFill color="blue" size={35} />
                                     <span className="text-blue-800 font-semibold">Payment Pending</span>
                                 </div>
                                 <div className="flex flex-col items-center">
-                                        <FaRegStopCircle color="gray" size={35}/>
+                                    <FaRegStopCircle color="gray" size={35} />
                                     <span className="text-gray-800 font-semibold">Shipment</span>
                                 </div>
                             </div>

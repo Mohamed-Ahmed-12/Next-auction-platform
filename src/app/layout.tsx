@@ -35,7 +35,7 @@ export default function RootLayout({
           <LogoutSetter />
         </AuthProvider>
         <ProgressArrow />
-        <ToastContainer autoClose={false} position="bottom-right" />
+        <ToastContainer autoClose={2000} position="bottom-right" />
       </body>
     </html>
   );

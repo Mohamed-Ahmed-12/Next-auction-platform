@@ -1,4 +1,4 @@
-import { format, parseISO, isValid } from "date-fns";
+import { format, parseISO, isValid, intervalToDuration } from "date-fns";
 
 
 export function formatTimestamp(timestamp: string | null | undefined): string {
@@ -14,7 +14,14 @@ export function formatTimestamp(timestamp: string | null | undefined): string {
         console.warn(`formatTimestamp: Unparseable timestamp received: "${timestamp}"`);
         return ""; // <--- RETURN EMPTY STRING INSTEAD OF NULL
     }
-    
+
     // 3. Format and return the valid date
     return format(date, "MMM dd, yyyy • hh:mm a");
+}
+
+export const durationFromStrings = (djangoStartDateString: string, djangoEndDateString: string) => {
+    return intervalToDuration({
+        start: parseISO(djangoStartDateString),
+        end: parseISO(djangoEndDateString)
+    });
 }

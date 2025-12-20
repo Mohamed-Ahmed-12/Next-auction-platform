@@ -13,6 +13,7 @@ import { useAuth } from "@/context/authContext";
 import { useFormik } from "formik";
 import { formatTimestamp } from "@/helpers/dates";
 import ProtectedRoute from "@/guards/ProotectedRoute";
+import Timer from "@/components/common/Timer";
 
 export default function AuctionBidPage() {
     const { slug } = useParams() as { slug: string };
@@ -27,7 +28,7 @@ export default function AuctionBidPage() {
     const [errorMessage, setErrorMessage] = useState("");
 
     // Compute last bid amount
-    const lastBidAmount:number = useMemo(() => {
+    const lastBidAmount: number = useMemo(() => {
         if (bids.length > 0) return bids[0].amount;
         return data?.bids?.[0]?.amount || data?.start_price || 0;
     }, [bids, data]);
@@ -40,7 +41,7 @@ export default function AuctionBidPage() {
         },
         validate: (values) => {
             const errors: { amount?: string } = {};
-            const minAcceptable =  Number(lastBidAmount) + Number(data?.min_increment);
+            const minAcceptable = Number(lastBidAmount) + Number(data?.min_increment);
 
             if (values.amount < minAcceptable) {
                 errors.amount = `Bid must be at least ${minAcceptable}`;
@@ -195,7 +196,7 @@ export default function AuctionBidPage() {
                                 })}
                             </div>
 
-                                <hr className='text-gray-200 my-4' />
+                            <hr className='text-gray-200 my-4' />
 
                             {/* BID FORM */}
                             {!auctionEnded ? (
@@ -242,7 +243,7 @@ export default function AuctionBidPage() {
                             <h2 className="text-sm font-bold text-indigo-600 flex items-center">
                                 <FiActivity className="text-xl" /> Live Activity
                             </h2>
-
+                            <Timer start_date={data.start_date} end_date={data.end_date} status={data.status} />
                             <div className="flex flex-col gap-3 mt-3">
                                 {bids.map((bid) => (
                                     <div

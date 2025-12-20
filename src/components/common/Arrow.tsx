@@ -40,7 +40,7 @@ export default function ProgressArrow() {
     const safeOffset = Math.max(0, Math.round(offset));
     return (
         <>
-            <Progress progress={progress} size="sm" className="fixed top-0 right-0 z-50 rounded-none" color="indigo"/>
+            <Progress progress={progress} size="sm" className="fixed top-0 right-0 z-50 rounded-none h-1" color="indigo"/>
 
             <div className="fixed right-2 bottom-2">
                 <Button

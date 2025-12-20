@@ -79,7 +79,7 @@ const pages: MenuItem[] = [
 
 
 // --- 3. Sidebar Rendering Component ---
-export function SideBarDashboard({ cls }: { cls: string }) {
+export function SideBarDashboard({ cls }: { cls?: string }) {
   const pathname = usePathname();
 
   // Helper function to check if a path is active
@@ -126,9 +126,9 @@ export function SideBarDashboard({ cls }: { cls: string }) {
 
   return (
     <Sidebar aria-label="Sidebar" className={cls}>
-      <SidebarLogo href="/" img="/imgs/e-Auction.png" imgAlt="BidRoom logo" className="text-indigo-500 text-3xl ">
+      {/* <SidebarLogo href="/" img="/imgs/e-Auction.png" imgAlt="BidRoom logo" className="text-indigo-500 text-3xl ">
         BidRoom
-      </SidebarLogo>
+      </SidebarLogo> */}
       <SidebarItems>
         {/* Primary Group (Data) */}
         <SidebarItemGroup>
@@ -148,3 +148,4 @@ export function SideBarDashboard({ cls }: { cls: string }) {
     </Sidebar>
   );
 }
+

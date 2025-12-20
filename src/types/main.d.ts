@@ -1,3 +1,4 @@
+
 import { AuctionStatus } from "@/lib/data";
 
 export type Category = {
@@ -7,7 +8,14 @@ export type Category = {
     desc: string;
     slug: string;
 }
+export type Bids = {
+    id: number;
+    auction: number;
+    created_by: number;
+    amount: number;
+    created_at: string;
 
+}
 export type Auction = {
     [x: string]: any;
     id: number;
@@ -20,16 +28,16 @@ export type Auction = {
     status: AuctionStatus;
     category: Category;
 
-}
-
-export type Bids = {
-    id: number;
-    auction: number;
+    start_price: number;
+    reserve_price: number;
+    min_increment: number;
+    is_active: boolean;
+    bids: Bids[];
+    ended_at?: string;
     created_by: number;
-    amount: number;
     created_at: string;
+    updated_at: string;
 
 }
 
 export { AuctionStatus };
-

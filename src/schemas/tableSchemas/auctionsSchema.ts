@@ -9,7 +9,7 @@ export const auctionColumns: (ColDef<Auction>)[] = [
 
     // --- Primary Descriptive Fields ---
     { field: "title", headerName: "Title", flex: 1.5, filter: true },
-    { field: "desc", headerName: "Description", flex: 1.5 },
+    // { field: "desc", headerName: "Description", flex: 1.5 },
     { field: "slug", headerName: "Slug", flex: 1 },
     // --- Key Relational/Status Fields ---
     // { field: "category", headerName: 'Category', flex: 1 },

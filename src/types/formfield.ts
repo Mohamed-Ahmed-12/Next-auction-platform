@@ -19,7 +19,7 @@ export interface FormField {
     errorMsg?: string;
     options?:string;
     disabled?:boolean; // used for edit form to disable editing field
-    // Add value and onChange handlers later for true dynamic forms
+    textEditor?:boolean
     
 }
 

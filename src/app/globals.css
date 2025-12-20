@@ -78,14 +78,28 @@ body {
 .gradient-text {
   /* 1. Define the gradient */
   background: linear-gradient(90deg, #ff007e, #00fff2);
-  
+
   /* 2. Clip the background to the text shape (Vendor prefixes are crucial for compatibility) */
   -webkit-background-clip: text;
   background-clip: text;
-  
+
   /* 3. Make the actual text transparent so the background can show through */
   color: transparent;
-  
+
   /* Optional: Ensure the background color doesn't repeat */
-  -webkit-text-fill-color: transparent; /* Alternative for older WebKit browsers */
+  -webkit-text-fill-color: transparent;
+  /* Alternative for older WebKit browsers */
+}
+
+
+/* Text editor */
+/* github.com/megahertz/react-simple-wysiwyg */
+.rsw-ce ul {
+  list-style: disc;
+  padding-left: 2em;
+}
+
+.rsw-ce ol {
+  list-style: decimal;
+  padding-left: 2em;
 }

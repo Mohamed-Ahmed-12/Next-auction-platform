@@ -9,9 +9,10 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 
 // Import Swiper styles
 import 'swiper/css';
-import 'swiper/css/pagination';
+import 'swiper/css/navigation';
+
 // import required modules
-import { Pagination } from 'swiper/modules';
+import { Autoplay, Navigation } from 'swiper/modules';
 
 import "@/public/css/category.css"
 import { Button } from "flowbite-react";
@@ -39,13 +40,16 @@ const Categories = () => {
                 <Button color={"alternative"}>View All</Button>
             </div>
             <Swiper
+                navigation={true}
+                modules={[Navigation, Autoplay]}
                 slidesPerView={5}
                 spaceBetween={50}
                 centeredSlides={false}
-                pagination={{
-                    clickable: true,
+                loop={true}
+                autoplay={{
+                    delay: 2500,
+                    disableOnInteraction: false,
                 }}
-                modules={[Pagination]}
                 className="swiper-category"
             >
                 {data.map((cate) => (

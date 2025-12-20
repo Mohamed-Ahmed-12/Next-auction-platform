@@ -131,7 +131,7 @@ export function CSVImport({ columnsTable, modelLabel, refetch }: CSVImportProps)
                     Import Data
                 </ModalHeader>
                 <ModalBody className="space-y-6">
-                    <form className="flex flex-col gap-y-6 mt-3" onSubmit={handleSubmit}>
+                    <form className="flex flex-col gap-y-6 mt-3 px-8" onSubmit={handleSubmit}>
                         {/* Timeline */}
                         <Timeline horizontal>
                             <TimelineItem>
