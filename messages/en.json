@@ -1,0 +1,28 @@
+{
+    "dashboard": {
+        "dashboard": "Dashboard",
+        "totalAuction": "Total Auction",
+        "totalCategories": "Total Categories",
+        "totalUsers": "Total Users",
+        "totalBidsToday": "Total Bids Today",
+        "revenue": "Revenue",
+        "auctions": "Auctions",
+        "users": "Users",
+        "analytics": "Analytics",
+        "masterData": "Master Data",
+        "categories": "Categories",
+        "calendar": "Calendar",
+        "pages": "Pages",
+        "about": "About Us",
+        "contact": "Contact",
+        "blog": "Blog",
+        "faq": "FAQ",
+        "career": "Careers",
+        "profile": "Profile",
+        "settings": "Settings",
+        "logout": "Logout",
+        "export": "Export Data",
+        "import": "Import Data",
+        "createNew": "Create New"
+    }
+}

@@ -16,7 +16,7 @@ import Image from 'next/image';
 import { RiAuctionLine } from 'react-icons/ri';
 import { FaArrowTrendUp } from 'react-icons/fa6';
 import { BiCalendar, BiLogIn, BiMoney } from 'react-icons/bi';
-import Link from 'next/link';
+import {Link} from "@/i18n/navigation";
 import { durationFromStrings, formatTimestamp } from '@/helpers/dates';
 import { useAuth } from '@/context/authContext';
 import { LoginModal } from '../users/LoginModal';

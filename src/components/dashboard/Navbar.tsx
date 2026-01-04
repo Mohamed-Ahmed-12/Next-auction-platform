@@ -14,37 +14,37 @@ import {
 } from "flowbite-react";
 import { useState } from "react";
 import { SidebarDrawer } from "./SidebarDrawer";
+import LanguageSwitch from "../common/LanguageSwitch";
+import NotificationsComponent from "../common/Notifications";
+import { UserComponent } from "../users/UserDropdown";
 
 export function NavBarDashboard() {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Navbar fluid rounded className="bg-gray-50">
-      <NavbarBrand href="https://flowbite-react.com">
+      <NavbarBrand href="/">
         <img src="/imgs/e-Auction.png" className="mr-3 h-6 sm:h-9" alt="BidRoom Logo" />
         <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">BidRoom</span>
       </NavbarBrand>
-      <div className="flex md:order-2">
-        <Dropdown
-          arrowIcon={false}
-          inline
-          label={
-            <Avatar alt="User settings" img="https://flowbite.com/docs/images/people/profile-picture-5.jpg" rounded />
-          }
-        >
-          <DropdownHeader>
-            <span className="block text-sm">Bonnie Green</span>
-            <span className="block truncate text-sm font-medium">name@flowbite.com</span>
-          </DropdownHeader>
-          <DropdownItem>Dashboard</DropdownItem>
-          <DropdownItem>Settings</DropdownItem>
-          <DropdownItem>Earnings</DropdownItem>
-          <DropdownDivider />
-          <DropdownItem>Sign out</DropdownItem>
-        </Dropdown>
+      <ul className="flex items-center gap-1 md:gap-4">
+        <li>
+          <LanguageSwitch />
 
-        <NavbarToggle onClick={() => setIsOpen(!isOpen)} />
-      </div>
+        </li>
+        <li>
+          <NotificationsComponent />
+
+        </li>
+        <li>
+          <UserComponent />
+
+        </li>
+        <li>
+          <NavbarToggle onClick={() => setIsOpen(!isOpen)} />
+
+        </li>
+      </ul>
       <SidebarDrawer isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </Navbar>
   );

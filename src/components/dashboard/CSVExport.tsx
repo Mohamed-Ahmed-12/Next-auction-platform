@@ -2,12 +2,13 @@
 
 import { exportData } from "@/services/ExportDataService";
 import { Button, Checkbox, Label, Modal, ModalBody, ModalHeader, TextInput } from "flowbite-react";
-import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { FaFileCsv } from "react-icons/fa6";
 import { toast } from "react-toastify";
 
 export function CSVExport({ columns, modelLabel, filters }: { columns: any, modelLabel: string, filters?: any }) {
-    console.log(filters)
+    const t = useTranslations('dashboard')
     const [openModal, setOpenModal] = useState(false);
     const [selectedCols, setSelectedCols] = useState<string[]>([]);
 
@@ -45,7 +46,7 @@ export function CSVExport({ columns, modelLabel, filters }: { columns: any, mode
     return (
         <>
             <Button color="alternative" className="cursor-pointer" onClick={() => setOpenModal(true)}>
-                <FaFileCsv color="green" size={20} className="me-1" /> Export File
+                <FaFileCsv color="green" size={20} className="me-1" /> {t("export")}
             </Button>
             <Modal show={openModal} size="7xl" position="top-center" popup onClose={() => { setOpenModal(false); setSelectedCols([]) }} >
                 <ModalHeader className="m-4 border-b-gray-300 border-b">Export Data</ModalHeader>

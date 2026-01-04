@@ -1,5 +1,5 @@
 import React from 'react';
-import Link from 'next/link'; // Assuming you are using Next.js/React Router for navigation
+import {Link} from '@/i18n/navigation';
 
 export default function NotFound() {
   return (

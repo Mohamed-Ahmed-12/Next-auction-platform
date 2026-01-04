@@ -18,11 +18,13 @@ import { GiTrophyCup } from "react-icons/gi";
 import { FaCheck } from "react-icons/fa6";
 import { FaCheckCircle, FaRegStopCircle } from "react-icons/fa";
 import { GoClockFill } from "react-icons/go";
+import { useLocale } from "next-intl";
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 export default function AuctionFullDetails() {
     const { slug } = useParams();
+    const locale = useLocale();
     const { data, error, loading } = useFetch<Auction>(`auction/${slug}`);
     console.log(data)
     // --- AG-GRID CONFIGURATION MEMOS ---
@@ -141,6 +143,7 @@ export default function AuctionFullDetails() {
                                     pagination={true}
                                     defaultColDef={defaultColDef}
                                     rowSelection={rowSelection}
+                                    enableRtl={locale=="ar"}
                                 />
                             </div>
                         </div>

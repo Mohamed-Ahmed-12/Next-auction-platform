@@ -6,7 +6,7 @@ import { AllCommunityModule, ModuleRegistry, RowSelectionOptions } from 'ag-grid
 import { Button, Spinner } from "flowbite-react";
 import { actionsColumn } from "@/components/dashboard/actionsColumn";
 import PageHeader from "@/components/dashboard/PageHeader";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useFetch } from "@/hooks/useFetcher";
 import { useRouter } from "next/navigation";
 import { CSVExport } from "@/components/dashboard/CSVExport";
@@ -14,11 +14,14 @@ import { User } from "@/types/auth";
 import { userColumns } from "@/schemas/tableSchemas/authSchemas";
 import { CSVImport } from "@/components/dashboard/CSVImport";
 import { useAgGridFilter } from "@/hooks/useAgGridFilter";
+import { useLocale, useTranslations } from "next-intl";
 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 export default function UsersPage() {
+    const locale = useLocale()
+    const t = useTranslations('dashboard')
     const { data: users, error, loading, refetch } = useFetch<User[]>(`auth/users/`);
     const rowData = users || []; // Use empty array if data is undefined
 
@@ -66,13 +69,13 @@ export default function UsersPage() {
 
     return (
         <>
-            <PageHeader title='Users'>
+            <PageHeader title={t('users')}>
                 <div className="flex gap-2">
                     <CSVExport columns={userColumns} modelLabel={'authen.CustomUser'} filters={filterModel} />
                     <CSVImport columnsTable={userColumns} modelLabel={'authen.CustomUser'} refetch={refetch} />
                     <Link href="/dashboard/users/create">
                         <Button size="sm" className="cursor-pointer">
-                            Create New User
+                            {t("createNew")}
                         </Button>
                     </Link>
                 </div>
@@ -87,6 +90,8 @@ export default function UsersPage() {
                     defaultColDef={defaultColDef}
                     rowSelection={rowSelection}
                     onFilterChanged={handleFilterChange}
+                    enableRtl={locale=="ar"}
+
                 />
             </div>
         </>
