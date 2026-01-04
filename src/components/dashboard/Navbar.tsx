@@ -16,7 +16,7 @@ import { useState } from "react";
 import { SidebarDrawer } from "./SidebarDrawer";
 
 export function NavBarDashboard() {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Navbar fluid rounded className="bg-gray-50">
@@ -45,7 +45,7 @@ export function NavBarDashboard() {
 
         <NavbarToggle onClick={() => setIsOpen(!isOpen)} />
       </div>
-      <SidebarDrawer isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <SidebarDrawer isOpen={isOpen} onClose={() => setIsOpen(false)}/>
     </Navbar>
   );
 }
