@@ -1,9 +1,9 @@
 "use client"
 import Image from 'next/image'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import hero from "@/public/imgs/hero.jpg"
 import { Button } from 'flowbite-react'
-import Link from 'next/link'
+import {Link} from "@/i18n/navigation";
 
 export default function Hero() {
     return (

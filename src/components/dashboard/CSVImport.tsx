@@ -23,6 +23,7 @@ import { AgGridReact } from "ag-grid-react";
 import { toast } from "react-toastify";
 import { importData } from "@/services/ImportDataService";
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { useTranslations } from "next-intl";
 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule ]);
@@ -34,6 +35,7 @@ type CSVImportProps = {
 };
 
 export function CSVImport({ columnsTable, modelLabel, refetch }: CSVImportProps) {
+    const t = useTranslations('dashboard')
     const [openModal, setOpenModal] = useState(false);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -117,7 +119,7 @@ export function CSVImport({ columnsTable, modelLabel, refetch }: CSVImportProps)
     return (
         <>
             <Button color="alternative" onClick={() => setOpenModal(true)}>
-                <FaFileCsv color="green" size={20} className="me-1" /> Import File
+                <FaFileCsv color="green" size={20} className="me-1" /> {t("import")}
             </Button>
 
             <Modal

@@ -3,7 +3,7 @@ import { Alert, Spinner } from "flowbite-react";
 import React from "react";
 import { HiInformationCircle } from "react-icons/hi";
 
-export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
+export default function ProtectedRoute({ children,cls }: { children: React.ReactNode ,cls?:string}) {
     const { isAuthenticated, isLoading } = useAuth();
 
     // 1. Show loading state while checking authentication status
@@ -24,7 +24,7 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
 
     // 3. If not authenticated and loading is complete, show the error message
     return (
-        <div className="">
+        <div className={cls}>
             <Alert color="failure" icon={HiInformationCircle}>
                 <span className="font-medium">Sorry, you must be logged in to access that page.</span>
             </Alert>

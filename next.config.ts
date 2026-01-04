@@ -1,18 +1,23 @@
 import type { NextConfig } from "next";
 import withFlowbiteReact from "flowbite-react/plugin/nextjs";
+import createNextIntlPlugin from 'next-intl/plugin';
+
+// 1. Initialize the next-intl plugin
+const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'http', // Use 'http' since your URL starts with http://
-        hostname: '127.0.0.1', // The specific hostname from your error
-        port: '8000', // The port used by your media server
-        pathname: '/media/**', // Allow images from the /media/ path and its subdirectories
+        protocol: 'http',
+        hostname: '127.0.0.1',
+        port: '8000',
+        pathname: '/media/**',
       },
     ],
   },
-  /* config options here */
+  /* other config options here */
 };
 
-export default withFlowbiteReact(nextConfig);
+// 2. Wrap the Flowbite config with the NextIntl config
+export default withNextIntl(withFlowbiteReact(nextConfig));

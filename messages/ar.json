@@ -1,0 +1,28 @@
+{
+    "dashboard": {
+        "dashboard": "لوحة التحكم",
+        "totalAuction": "إجمالي المزادات",
+        "totalCategories": "إجمالي الفئات",
+        "totalUsers": "إجمالي المستخدمين",
+        "totalBidsToday": "إجمالي عدد المزايدات",
+        "revenue": "الربح",
+        "auctions": "المزادات",
+        "users": "المستخدمين",
+        "analytics": "التحليلات",
+        "masterData": "البيانات الأساسية",
+        "categories": "الفئات",
+        "calendar": "التقويم",
+        "pages": "الصفحات",
+        "about": "من نحن",
+        "contact": "اتصل بنا",
+        "blog": "المدونة",
+        "faq": "الأسئلة الشائعة",
+        "career": "الوظائف",
+        "profile": "الملف الشخصي",
+        "settings": "الإعدادات",
+        "logout": "تسجيل الخروج",
+        "export": "تصدير البيانات",
+        "import": "استيراد البيانات",
+        "createNew":"إنشاء جديد"
+    }
+}

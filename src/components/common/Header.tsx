@@ -1,14 +1,16 @@
 "use client";
 import Image from "next/image";
-import Link from "next/link";
-import React, { use, useState } from "react";
+import {Link} from "@/i18n/navigation";
+import React, { useState } from "react";
 import { LoginModal } from "../users/LoginModal";
 import { useAuth } from "@/context/authContext";
 import { usePathname } from "next/navigation";
 import NotificationsComponent from "./Notifications";
+import { UserComponent } from "../users/UserDropdown";
+import LanguageSwitch from "./LanguageSwitch";
 
 const NavBar = () => {
-    const { isAuthenticated, logout } = useAuth();
+    const { isAuthenticated } = useAuth();
     // Login Modal
     const [openModal, setOpenModal] = useState(false);
     const handleOpen = () => setOpenModal(true);
@@ -53,6 +55,9 @@ const NavBar = () => {
                             <span className="text-lg">+20 011 49 228 665</span>
                         </a>
                     </li> */}
+                    <li>
+                        <LanguageSwitch/>
+                    </li>
                     {
                         isAuthenticated ?
                             <>
@@ -60,15 +65,9 @@ const NavBar = () => {
                                     <NotificationsComponent />
                                 </li>
                                 <li>
-                                    <Link href={"/dashboard"} className="cursor-pointer">
-                                        Dashboard
-                                    </Link>
+                                    <UserComponent/>
                                 </li>
-                                <li>
-                                    <button className="cursor-pointer" onClick={logout}>
-                                        Logout
-                                    </button>
-                                </li>
+
                             </>
 
                             :
@@ -96,3 +95,4 @@ const NavBar = () => {
 };
 
 export default NavBar;
+
