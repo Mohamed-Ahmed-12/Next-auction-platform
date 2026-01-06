@@ -24,5 +24,14 @@
         "export": "Export Data",
         "import": "Import Data",
         "createNew": "Create New"
+    },
+    "header": {
+        "home": "Home"
+    },
+    "categories": {
+        "title": "Title",
+        "slug":"Slug",
+        "icon":"Icon",
+        "description":"Description"
     }
 }

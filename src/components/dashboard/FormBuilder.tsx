@@ -80,7 +80,7 @@ export default function FormBuilder<TFormValues extends FieldValues>({
                                 group.fields.map((field: FormField) => {
                                     const fieldError = errors[field.id as keyof TFormValues];
                                     const errorMsg = fieldError?.message as string | undefined;
-                                    const isDisabled = field.disabled ?? false;
+                                    const isDisabled = isEditing && Boolean(field.disabled);
                                     return (
                                         <div key={field.id} >
                                             <div className="mb-2 block">

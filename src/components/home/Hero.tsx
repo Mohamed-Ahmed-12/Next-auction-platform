@@ -15,7 +15,7 @@ export default function Hero() {
                     className="w-full h-full object-cover "
                 />
                 <div className='absolute top-0 w-full h-full' style={{ background: "linear-gradient(90deg, rgba(255,255,255,1), rgba(255,255,255,0))" }}>
-                    <div className='absolute top-1/4 flex flex-col gap-10 items-start'>
+                    <div className='absolute top-1/4 flex flex-col gap-10 items-start p-2'>
                         <div className='flex flex-col gap-2'>
                             <p className='text-5xl font-extrabold gradient-text'>Bid on Unique Items</p>
                             <p className='text-3xl w-2/3 '>Join thousands of collectors bidding on rare and valuable auctions </p>

@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { Category } from "@/types/main";
-import { categoryColumns } from "@/schemas/tableSchemas/categoriesSchema";
+import { getCategoryColumns } from "@/schemas/tableSchemas/categoriesSchema";
 import { AllCommunityModule, ModuleRegistry, RowSelectionOptions } from 'ag-grid-community';
 import { deleteCategory, updateCategory } from "@/services/CategoryService"; // Keep updateCategory for inline editing
 import { Button, Spinner } from "flowbite-react";
@@ -24,6 +24,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 export default function CategoriesPage() {
     const locale = useLocale()
     const t = useTranslations('dashboard')
+    const tCategory = useTranslations('categories')
     const { data: categories, error, loading, refetch } = useFetch<Category[]>(`category/`);
     const rowData = categories || []; // Use empty array if data is undefined
 
@@ -66,7 +67,7 @@ export default function CategoriesPage() {
     };
 
     // --- COLUMNS WITH ACTIONS ---
-
+    const categoryColumns = useMemo(() => getCategoryColumns(tCategory), [tCategory]);
     const categoryColumnsWithActions = [
         ...categoryColumns,
         ...actionsColumn<Category>({

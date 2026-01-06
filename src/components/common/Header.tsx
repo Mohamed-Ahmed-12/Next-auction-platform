@@ -8,8 +8,10 @@ import { usePathname } from "next/navigation";
 import NotificationsComponent from "./Notifications";
 import { UserComponent } from "../users/UserDropdown";
 import LanguageSwitch from "./LanguageSwitch";
+import { useTranslations } from "next-intl";
 
 const NavBar = () => {
+    const t = useTranslations()
     const { isAuthenticated } = useAuth();
     // Login Modal
     const [openModal, setOpenModal] = useState(false);
@@ -18,13 +20,13 @@ const NavBar = () => {
     // route
     const pathname = usePathname();
     const NavLinks = [
-        { 'label': 'Home', 'href': '/' },
-        { 'label': 'Auctions', 'href': '/auction-list' },
-        { 'label': 'About', 'href': '#' },
-        { 'label': 'Contact', 'href': '#' },
-        { 'label': 'FAQ', 'href': '#' },
-        { 'label': 'Blog', 'href': '#' },
-        { 'label': 'Career', 'href': '#' },
+        { 'label': t('header.home'), 'href': '/' },
+        { 'label': t('dashboard.auctions'), 'href': '/auction-list' },
+        { 'label': t('dashboard.about'), 'href': '#' },
+        { 'label': t('dashboard.contact'), 'href': '#' },
+        { 'label': t('dashboard.faq'), 'href': '#' },
+        { 'label': t('dashboard.blog'), 'href': '#' },
+        { 'label': t('dashboard.career'), 'href': '#' },
     ]
     const activeLink = "underline decoration-wavy text-indigo-500 font-bold"
     return (
