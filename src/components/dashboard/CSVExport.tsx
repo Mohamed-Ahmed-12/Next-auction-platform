@@ -1,14 +1,14 @@
 "use client";
 
 import { exportData } from "@/services/ExportDataService";
-import { Button, Checkbox, Label, Modal, ModalBody, ModalHeader, TextInput } from "flowbite-react";
+import { Button, Checkbox, Label, Modal, ModalBody, ModalHeader } from "flowbite-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { FaFileCsv } from "react-icons/fa6";
 import { toast } from "react-toastify";
 
-export function CSVExport({ columns, modelLabel, filters }: { columns: any, modelLabel: string, filters?: any }) {
-    const t = useTranslations('dashboard')
+export function CSVExport({ columns, modelLabel, filters, disabled }: { columns: any, modelLabel: string, filters?: any, disabled: boolean }) {
+    const t = useTranslations('dashboard');
     const [openModal, setOpenModal] = useState(false);
     const [selectedCols, setSelectedCols] = useState<string[]>([]);
 
@@ -32,12 +32,11 @@ export function CSVExport({ columns, modelLabel, filters }: { columns: any, mode
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            await exportData({ columns: selectedCols, modelLabel , filters })
+            await exportData({ columns: selectedCols, modelLabel, filters })
             setOpenModal(false)
             setSelectedCols([])
             toast.success("Data exported successfully")
         } catch (err: any) {
-            console.log()
             toast.error(err.message || "an error occurred")
         }
 
@@ -45,7 +44,7 @@ export function CSVExport({ columns, modelLabel, filters }: { columns: any, mode
 
     return (
         <>
-            <Button color="alternative" className="cursor-pointer" onClick={() => setOpenModal(true)}>
+            <Button color="alternative" className="cursor-pointer" onClick={() => setOpenModal(true)} disabled={disabled}>
                 <FaFileCsv color="green" size={20} className="me-1" /> {t("export")}
             </Button>
             <Modal show={openModal} size="7xl" position="top-center" popup onClose={() => { setOpenModal(false); setSelectedCols([]) }} >

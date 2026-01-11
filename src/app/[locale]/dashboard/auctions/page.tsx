@@ -51,12 +51,15 @@ export default function AuctionsPage() {
 
         }),
     ];
+    const isExportDisabled = loading || !data || data.length === 0;
+
+    if (error) return <div>Error loading auctions.</div>;
 
     return (
         <>
             <PageHeader title={t('auctions')}>
                 <div className="flex gap-2">
-                    <CSVExport columns={auctionColumns} modelLabel={'main.Auction'} />
+                    <CSVExport disabled={isExportDisabled} columns={auctionColumns} modelLabel={'main.Auction'} />
                     <Link href="/dashboard/auctions/create">
                         <Button>
                             {t("createNew")}

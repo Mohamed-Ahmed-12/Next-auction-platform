@@ -7,9 +7,11 @@ export interface AuthProviderProps {
     children: ReactNode;
 }
 
-export interface Tokens {
+export interface User {
     access: string;
     refresh: string;
+    username:string;
+    email?:string;
 }
 export interface User {
     id:number

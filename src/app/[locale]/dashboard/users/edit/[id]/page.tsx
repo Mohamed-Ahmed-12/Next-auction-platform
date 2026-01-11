@@ -35,9 +35,7 @@ export default function EditUserPage() {
     // Now you have the 'category' object to use in a form
     return (
         <>
-            <PageHeader title={`Edit User: ${user.username}`} />
-            <FormBuilder formFields={UserFormFields} onSubmit={updateUser} defaultValues={user} successRedirect="/dashboard/users" />
-
+            <FormBuilder title={`Edit User: ${user.username}`} formFields={UserFormFields} onSubmit={updateUser} defaultValues={user} successRedirect="/dashboard/users" />
         </>
     )
 }

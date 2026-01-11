@@ -33,8 +33,7 @@ export default function EditAuctionPage() {
     // Now you have the 'category' object to use in a form
     return (
         <>
-            <PageHeader title={`Edit Auction: ${auction.title}`} />
-            <FormBuilder formFields={AuctionFormFields} onSubmit={updateAuction} defaultValues={auction} successRedirect="/dashboard/auctions" />
+            <FormBuilder title={`Edit Auction: ${auction.slug}`} formFields={AuctionFormFields} onSubmit={updateAuction} defaultValues={auction} successRedirect="/dashboard/auctions" />
         </>
     )
 }

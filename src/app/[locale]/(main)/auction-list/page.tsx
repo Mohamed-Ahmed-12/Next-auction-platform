@@ -13,6 +13,7 @@ import AuctionListSkelton from "@/components/skeltons/AuctionListSkelton";
 
 export default function Page() {
     const { data, error, loading } = useFetch<Auction[]>("auction/");
+    console.log(data)
     const { data: categories, error: errorCategories, loading: loadingCategories } = useFetch<Category[]>("category/");
     const [filteredData, setFilteredData] = useState<Auction[]>([]);
     const [displayAdvFilters, setDisplayAdvFilters] = useState<boolean>(false);
@@ -59,7 +60,7 @@ export default function Page() {
 
     if (loading || loadingData) {
         return (
-            <div className="container mx-auto px-4 sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl my-20">
+            <div className="container mx-auto px-4 sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl my-10">
                 <h1 className="font-bold text-3xl mb-5">Auction List</h1>
                 <AuctionListSkelton />
             </div>
@@ -67,7 +68,7 @@ export default function Page() {
     };
     if (error) {
         return (
-            <div className="container mx-auto px-4 sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl my-20">
+            <div className="container mx-auto px-4 sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl my-10">
                 <h1 className="font-bold text-3xl mb-5">Auction List</h1>
                 <h5>Error: {error}</h5>
             </div>
@@ -76,14 +77,14 @@ export default function Page() {
 
     if (!data || (data.length === 0 && filteredData.length === 0)) {
         return (
-            <div className="container mx-auto px-4 sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl my-20">
+            <div className="container mx-auto px-4 sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl my-10">
                 <h1 className="font-bold text-3xl mb-5">Auction List</h1>
                 <h2>No Auction available..</h2>
             </div>
         )
     }
     return (
-        <div className="container mx-auto px-4 sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl my-20">
+        <div className="container mx-auto px-4 sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl m-10">
             <h1 className="font-bold text-3xl mb-5">Auction List</h1>
 
             <div className="flex justify-between items-center mb-6">

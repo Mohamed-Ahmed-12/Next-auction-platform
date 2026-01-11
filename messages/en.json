@@ -1,5 +1,6 @@
 {
     "dashboard": {
+        "welcome": "Welcome",
         "dashboard": "Dashboard",
         "totalAuction": "Total Auction",
         "totalCategories": "Total Categories",
@@ -26,12 +27,32 @@
         "createNew": "Create New"
     },
     "header": {
-        "home": "Home"
+        "home": "Home",
+        "login": "Log In"
     },
     "categories": {
         "title": "Title",
-        "slug":"Slug",
-        "icon":"Icon",
-        "description":"Description"
+        "slug": "Slug",
+        "icon": "Icon",
+        "description": "Description"
+    },
+    "Timer": {
+        "upcoming": "Starts In",
+        "live": "Ends In",
+        "ended": "Auction Ended",
+        "days": "Days",
+        "hours": "Hrs",
+        "minutes": "Min",
+        "seconds": "Sec"
+    },
+    "Status": {
+        "live": "Live",
+        "ended": "Ended",
+        "upcoming": "Upcoming"
+    },
+    "AuctionCard": {
+        "category": "Category",
+        "entryFee": "Entry Fee",
+        "currency": "EGP"
     }
 }

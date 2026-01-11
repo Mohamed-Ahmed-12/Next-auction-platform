@@ -1,10 +1,9 @@
 "use client";
 import Image from "next/image";
-import {Link} from "@/i18n/navigation";
+import {Link , usePathname} from "@/i18n/navigation";
 import React, { useState } from "react";
 import { LoginModal } from "../users/LoginModal";
 import { useAuth } from "@/context/authContext";
-import { usePathname } from "next/navigation";
 import NotificationsComponent from "./Notifications";
 import { UserComponent } from "../users/UserDropdown";
 import LanguageSwitch from "./LanguageSwitch";
@@ -30,7 +29,7 @@ const NavBar = () => {
     ]
     const activeLink = "underline decoration-wavy text-indigo-500 font-bold"
     return (
-        <header className="flex items-center justify-between bg-white shadow-md mb-1">
+        <header className="sticky top-0 z-50 bg-white shadow-md mb-1 flex items-center justify-between">
             <div className="p-4 ">
                 <Link href={'/'} className="flex items-center">
                     <Image src={'/imgs/e-Auction.png'} alt="auction logo" width={50} height={50} />
@@ -79,7 +78,7 @@ const NavBar = () => {
                                     className="cursor-pointer"
                                     onClick={handleOpen}
                                 >
-                                    Log In
+                                    {t('header.login')}
                                 </button>
 
                                 {/* The Login Modal */}

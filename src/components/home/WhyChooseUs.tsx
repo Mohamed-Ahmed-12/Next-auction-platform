@@ -54,7 +54,7 @@ export default function WhyChooseUs() {
             <div className="flex justify-between items-center mb-10">
                 <span className="w-[70%]">Explore on the world's best & largest Bidding marketplace with our beautiful Bidding products. We want to be a part of your smile, success and future growth.</span>
             </div>
-            <div className='grid grid-cols-3 gap-8'>
+            <div className='grid md:grid-cols-3 grid-cols-1 gap-8'>
                 {features.map((item) => (
                     <div
                         key={item.id}

@@ -3,7 +3,8 @@ import {ThemeInit} from "../../../.flowbite-react/init"
 import { AuthProvider, useAuth } from "@/context/authContext";
 import { ToastContainer } from "react-toastify";
 import { useEffect } from "react";
-import ProgressArrow from "@/components/common/Arrow";
+import { ProgressBar } from "../common/ProgressBar";
+import WebSiteActions from "../common/WebsiteActions";
 
 const LogoutSetter = () => {
     const { logout } = useAuth();
@@ -19,11 +20,13 @@ export default function ClientWrapper({ children }: { children: React.ReactNode 
     return (
         <>
             <ThemeInit />
+            <WebSiteActions /> 
+            <ProgressBar /> 
             <AuthProvider>
                 {children}
                 <LogoutSetter />
             </AuthProvider>
-            <ProgressArrow />
+            
             <ToastContainer autoClose={2000} position="bottom-right" />
         </>
     );

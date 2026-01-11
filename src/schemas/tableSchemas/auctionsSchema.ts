@@ -1,7 +1,7 @@
 import { Auction } from "@/types/main";
 import { ColDef } from "ag-grid-community";
-import { StatusBadgeRenderer } from "../../components/dashboard/actionsColumn";
 import { formatTimestamp } from "@/helpers/dates";
+import { StatusBadgeRenderer } from "@/components/common/Status";
 
 
 // Base Columns configuration

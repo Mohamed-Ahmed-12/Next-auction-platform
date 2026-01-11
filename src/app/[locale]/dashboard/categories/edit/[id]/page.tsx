@@ -33,9 +33,7 @@ export default function EditCategoryPage() {
     // Now you have the 'category' object to use in a form
     return (
         <>
-            <PageHeader title={`Edit Category: ${category.title}`} />
-            <FormBuilder formFields={categoryFormFields} onSubmit={updateCategory} defaultValues={category} successRedirect="/dashboard/categories" />
-
+            <FormBuilder title={`Edit Category: ${category.title}`} formFields={categoryFormFields} onSubmit={updateCategory} defaultValues={category} successRedirect="/dashboard/categories" />
         </>
     )
 }

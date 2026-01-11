@@ -25,6 +25,7 @@ export type Auction = {
     entry_fee: number;
     start_date: string;
     end_date: string;
+    ended_at: string;
     status: AuctionStatus;
     category: Category;
 
@@ -33,7 +34,6 @@ export type Auction = {
     min_increment: number;
     is_active: boolean;
     bids: Bids[];
-    ended_at?: string;
     created_by: number;
     created_at: string;
     updated_at: string;

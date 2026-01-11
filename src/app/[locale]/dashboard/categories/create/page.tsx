@@ -8,8 +8,7 @@ import { Category } from "@/types/main"
 export default function CreateCategoryPage() {
     return (
         <>
-            <PageHeader title="New Category" />
-            <FormBuilder<Category> formFields = {categoryFormFields} onSubmit={createCategory} successRedirect="/dashboard/categories"/>
+            <FormBuilder<Category> title="New Category" formFields = {categoryFormFields} onSubmit={createCategory} successRedirect="/dashboard/categories"/>
         </>
     )
 }

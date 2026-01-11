@@ -1,5 +1,6 @@
+import { useRouter } from '@/i18n/navigation';
 import { axiosInstance } from '@/lib/network';
-import { AuthProviderProps, LoginCredentials, Tokens } from '@/types/auth';
+import { AuthProviderProps, LoginCredentials, User } from '@/types/auth';
 import React, {
     createContext,
     useContext,
@@ -11,7 +12,7 @@ import React, {
 } from 'react';
 
 interface AuthContextType {
-    user: Tokens | null;
+    user: User | null;
     isAuthenticated: boolean;
     isLoading: boolean;
     login: (data: LoginCredentials) => Promise<void>;
@@ -28,13 +29,14 @@ export const useAuth = (): AuthContextType => {
 };
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-    const [user, setUser] = useState<Tokens | null>(null);
+    const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const isAuthenticated = useMemo(() => user !== null, [user]);
+    const router = useRouter();
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
         if (storedUser) {
-            const userData: Tokens = JSON.parse(storedUser);
+            const userData: User = JSON.parse(storedUser);
             setUser(userData);
         } else {
             setUser(null);
@@ -45,7 +47,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     const login = async (data: LoginCredentials): Promise<void> => {
         setIsLoading(true)
-        const response = await axiosInstance.post<Tokens>('auth/login/', data);
+        const response = await axiosInstance.post<User>('auth/login/', data);
         setUser(response.data)
         const user = JSON.stringify(response.data);
         localStorage.setItem("user", user);
@@ -57,6 +59,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         try {
             localStorage.removeItem('user')
             setUser(null)
+            router.push('/');
         } catch {
             throw new Error('Logout failed.');
 

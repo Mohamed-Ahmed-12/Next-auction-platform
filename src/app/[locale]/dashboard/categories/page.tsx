@@ -110,7 +110,7 @@ export default function CategoriesPage() {
         <>
             <PageHeader title={t('categories')}>
                 <div className="flex gap-2">
-                    <CSVExport columns={categoryColumns} modelLabel={'main.Category'} filters={filterModel} />
+                    <CSVExport disabled={!(!!rowData.length)} columns={categoryColumns} modelLabel={'main.Category'} filters={filterModel} />
                     <CSVImport columnsTable={categoryColumns} modelLabel="main.Category" refetch={refetch} />
                     <Link href="/dashboard/categories/create">
                         <Button size="sm" className="cursor-pointer">

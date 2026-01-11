@@ -1,388 +1,278 @@
-"use client"
-import React, { useState } from 'react'
+"use client";
+
+import React, { useState, useMemo } from 'react';
 import { useFetch } from "@/hooks/useFetcher";
 import { Auction } from '@/types/main';
-import { Avatar, Button, Card, createTheme, HelperText, Label, TextInput, Tooltip } from 'flowbite-react';
-import { FiTag } from 'react-icons/fi';
-import { CiLocationOn } from 'react-icons/ci';
+import { Avatar, Button, Label, TextInput } from 'flowbite-react';
+import { FiClock, FiInfo, FiTrendingUp, FiMapPin } from 'react-icons/fi';
 import { Swiper, SwiperSlide } from 'swiper/react';
-
-// Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/pagination';
-// import required modules
-import { Pagination } from 'swiper/modules';
+import { Pagination, Navigation, Autoplay } from 'swiper/modules';
 import Image from 'next/image';
 import { RiAuctionLine } from 'react-icons/ri';
-import { FaArrowTrendUp } from 'react-icons/fa6';
-import { BiCalendar, BiLogIn, BiMoney } from 'react-icons/bi';
-import {Link} from "@/i18n/navigation";
+import { BiLogIn, BiMoney, BiTrophy } from 'react-icons/bi';
+import { Link, useRouter } from "@/i18n/navigation";
 import { durationFromStrings, formatTimestamp } from '@/helpers/dates';
 import { useAuth } from '@/context/authContext';
 import { LoginModal } from '../users/LoginModal';
 import Timer from '../common/Timer';
 import AuctionStatusBadge from '../common/AuctionStatusBadge';
-import { IconType } from 'react-icons';
-// Customize card
-const cardTheme = createTheme({
-    card: {
-        root: {
-            children: "p-2 justify-between items-center flex-row",
-        },
-    },
-});
+import { toast } from 'react-toastify';
 
-type GalleryImage = {
-    src: string;
-    alt?: string;
-};
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 
 export default function AuctionDetails({ slug }: { slug: string }) {
-    const { data, error, loading } = useFetch<Auction>(`auction/${slug}`);
+    const { data, error, loading } = useFetch<Auction>(`auction/${slug}/`);
     const { isAuthenticated } = useAuth();
-    // Login Modal
     const [openModal, setOpenModal] = useState(false);
+    const [bidAmount, setBidAmount] = useState<string>("");
+    const router = useRouter();
 
-    const handleOpen = () => setOpenModal(true);
-    const handleClose = () => setOpenModal(false);
+    // Calculate highest bid safely
+    const highestBid = useMemo(() => {
+        if (!data) return 0;
+        const lastBid = data.bids && data.bids.length > 0 ? data.bids[0].amount : 0;
+        return Math.max(Number(lastBid), Number(data.start_price));
+    }, [data]);
 
-    if (loading) {
-        return <h2 className="text-center my-20">loading...</h2>
-    }
-    if (error) {
-        return <h2 className="text-center my-20 text-red-600">Error: {error}</h2>
-    }
-    if (!data) {
-        return ;
-    }
-    console.log(data)
-    const placeholderImages: GalleryImage[] = [
-        { "src": "/imgs/car.jpg" },
-        { "src": "/imgs/car.jpg" },
-        { "src": "/imgs/car.jpg" },
-        { "src": "/imgs/car.jpg" },
-    ];
+
+    const handleQuickBid = () => {
+        const minRequired = highestBid + Number(data?.min_increment || 0);
+        const bidValue = Number(bidAmount);
+
+        if (bidValue < minRequired) {
+            toast.error(`Minimum bid is $${minRequired}`);
+            return;
+        }
+
+        // approach: Pass the intended bid via URL query parameters
+        // This allows the Live Room to "pick up" the bid automatically or pre-fill the form
+        router.push(`/auction-details/${slug}/bid-room?prefill=${bidValue}`);
+    };
+
+    if (loading) return (
+        <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+            <div className="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+            <p className="text-gray-500 font-medium">Loading Auction Details...</p>
+        </div>
+    );
+
+    if (error || !data) return <div className="text-center my-20 text-red-600 font-bold">Auction not found.</div>;
 
     return (
-        <div className="container mx-auto px-4 sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl my-20">
-            {/* Title */}
-            <div className='flex justify-between items-center mb-8'>
-                <div className=''>
-                    <h1 className="font-bold text-3xl mb-3">{data.title}</h1>
-                    <div className='flex gap-5 text-gray-600'>
-                        <div className='flex items-center gap-1'>
-                            <FiTag className='text-lg' />
-                            <span className='font-medium'>
-                                {data.category.title}
-                            </span>
-                        </div>
-                        <div className='flex items-center gap-1'>
-                            <CiLocationOn className='text-lg' />
-                            <span className='font-medium'>
-                                New York, NY
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <AuctionStatusBadge stat={data.status} />
-                </div>
-            </div>
-
-            <div className='grid grid-cols-1 lg:grid-cols-3 gap-10'>
-                <div className='lg:col-span-2 flex flex-col gap-10'>
-                    <div className=''>
-                        <Gallary images={placeholderImages} />
-                    </div>
-                    {
-                        data.desc &&
-                        <div className=''>
-                            <h2 className='font-semibold text-xl mb-2'>Description</h2>
-                            <p dangerouslySetInnerHTML={{ __html: data.desc }}></p>
-                        </div>
-                    }
-
-                    <div className=''>
-                        <h2 className='font-semibold text-xl mb-2'>Auction Details</h2>
-                        <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
-                            {
-                                data.start_date && data.end_date &&
-                                (
-                                    <DetailCard
-                                        Icon={BiCalendar}
-                                        title='Duration'
-                                        iconSize={50}
-                                        value={`${durationFromStrings(data.start_date, data.end_date).days ?? 0} Days `}
-                                    />
-                                )
-                            }
-                            {
-                                data.start_price &&
-                                (
-                                    <DetailCard
-                                        Icon={BiMoney}
-                                        title='Start Price'
-                                        iconSize={50}
-                                        value={`$ ${data.start_price.toLocaleString()}`}
-                                    />
-                                )
-                            }
-                            {
-                                data.min_increment &&
-                                (
-                                    <DetailCard
-                                        Icon={BiMoney}
-                                        title='Minimum Increment'
-                                        iconSize={50}
-                                        value={`$ ${data.min_increment.toLocaleString()}`}
-                                    />
-                                )
-                            }
-
-
-                        </div>
-                    </div>
-
-                </div>
-                <div className='col-span-1 flex flex-col gap-10'>
-                    <Card className="max-w-sm shadow-none">
-                        <Timer start_date={data.start_date} end_date={data.end_date} status={data.status} />
-                    </Card>
-                    <Card className="max-w-sm shadow-none border-blue-200 bg-blue-50">
-                        <div className='flex justify-between'>
-                            {data.bids.length > 0 ?
-                                <div className=''>
-                                    <h4 className="text-lg font-semibold tracking-tight text-gray-700 dark:text-white">
-                                        Current Highest Bid
-                                    </h4>
-                                    <div className='flex justify-between items-center'>
-                                        <h4 className='text-2xl font-bold text-blue-800'>
-                                            ${Number(data.bids[0].amount).toLocaleString()}
-                                        </h4>
-                                        <FaArrowTrendUp className='text-xl ms-2 text-blue-800' />
-                                    </div>
+        <div className="bg-gray-50/50 min-h-screen pb-20">
+            {/* Header Section */}
+            <div className="bg-white border-b border-gray-200 pt-10 pb-6 mb-8">
+                <div className="container mx-auto px-4 max-w-7xl">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+                        <div>
+                            <div className="flex items-center gap-3 mb-3">
+                                <AuctionStatusBadge stat={data.status} />
+                                <span className="text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+                                    {data.category?.title || 'General'}
+                                </span>
+                            </div>
+                            <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
+                                {data.title}
+                            </h1>
+                            <div className="flex items-center gap-4 mt-3 text-slate-500 text-sm font-medium">
+                                <div className="flex items-center gap-1.5">
+                                    <FiMapPin className="text-indigo-500" />
+                                    <span>Verified Auction</span>
                                 </div>
-                                :
-                                <div className=''>
-                                    <h4 className="text-lg font-semibold tracking-tight text-gray-700 dark:text-white">
-                                        Start Price
-                                    </h4>
-                                    <div className='flex justify-between items-center'>
-                                        <h4 className='text-2xl font-bold text-blue-800'>
-                                            {Number(data.start_price).toLocaleString()}
-                                        </h4>
-                                        <FaArrowTrendUp className='text-xl ms-2 text-blue-800' />
-                                    </div>
+                                <div className="flex items-center gap-1.5">
+                                    <FiInfo className="text-indigo-500" />
+                                    <span>ID: #{data.id.toString().slice(0, 8).toUpperCase()}</span>
                                 </div>
-                            }
-
-                            <div className=''>
-                                <h4 className="text-lg font-semibold tracking-tight text-gray-700 dark:text-white">
-                                    Total Bids
-                                </h4>
-                                <h4 className='text-xl font-bold'>
-                                    {data.bids.length}
-                                </h4>
                             </div>
                         </div>
-                    </Card>
-
-
-
-
-                    {/* Place Bid  */}
-                    {data.status === 'live' && isAuthenticated &&
-                        (
-                            <>
-                                <Card className="max-w-sm shadow-none">
-                                    <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                                        Place Your Bid
-                                    </h2>
-
-                                    <form className="flex flex-col gap-4">
-                                        <div>
-                                            <div className="mb-2 block">
-                                                <Label htmlFor="bid">Your Bid Amount</Label>
-                                            </div>
-                                            <TextInput id="bid" type="number" placeholder="$" required disabled={!isAuthenticated} />
-                                            <HelperText>
-                                                Bids must be at least ${data.min_increment} higher than the current bid.
-                                            </HelperText>
-
-                                        </div>
-                                        {isAuthenticated ? (
-                                            <>
-                                                <Button type='submit'>
-                                                    <RiAuctionLine className='text-xl me-1.5 transform-[scaleX(-1)]' /> Place Bid
-                                                </Button>
-                                                <Link href={`/auction-details/${slug}/bid-room`}>
-                                                    <Button color={"alternative"} className='w-full'>
-                                                        <BiLogIn className='text-2xl me-1.5' /> Enter Live
-                                                    </Button>
-                                                </Link>
-                                            </>
-                                        ) : <>
-                                            {/* The Trigger Button - can be a simple button, an icon, or any styled component */}
-                                            <button
-                                                className="cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                                                onClick={handleOpen}
-                                                type='button'
-                                            >
-                                                Login to bid
-                                            </button>
-
-                                            {/* The Login Modal, controlled by state */}
-                                            <LoginModal
-                                                isOpen={openModal}
-                                                onClose={handleClose} />
-                                        </>}
-                                    </form>
-                                </Card>
-                                <Card className="max-w-sm shadow-none">
-                                    <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                                        Bid History
-                                    </h2>
-                                    <div className='flex flex-col gap-3'>
-
-                                        {data.bids.length > 0 ?
-                                            data.bids.map((bid: any, index: React.Key | null | undefined) => (
-                                                index === 0 ? (
-
-                                                    // CURRENT HIGH
-                                                    <Card
-                                                        key={index}
-                                                        theme={cardTheme.card}
-                                                        applyTheme={{ root: { children: "merge" } }}
-                                                        className="shadow-none border-green-200 bg-green-50"
-                                                    >
-                                                        <Avatar rounded className="p-0 justify-start">
-                                                            <div className="font-medium dark:text-white">
-                                                                <div>{bid.created_by}</div>
-                                                                <div className="text-sm text-gray-500 dark:text-gray-400">
-                                                                    {formatTimestamp(bid.created_at)}
-                                                                </div>
-                                                            </div>
-                                                        </Avatar>
-
-                                                        <div>
-                                                            <h4 className="text-lg font-bold text-green-600 dark:text-white">
-                                                                ${bid.amount}
-                                                            </h4>
-                                                            <p className="text-xs font-semibold text-green-600">
-                                                                Current High
-                                                            </p>
-                                                        </div>
-                                                    </Card>
-
-                                                ) : (
-
-                                                    // OTHER BIDS
-                                                    <Card
-                                                        key={index}
-                                                        theme={cardTheme.card}
-                                                        applyTheme={{ root: { children: "merge" } }}
-                                                        className="shadow-none"
-                                                    >
-                                                        <Avatar rounded className="p-0 justify-start">
-                                                            <div className="font-medium dark:text-white">
-                                                                <div>{bid.created_by}</div>
-                                                                <div className="text-sm text-gray-500 dark:text-gray-400">
-                                                                    {formatTimestamp(bid.created_at)}
-                                                                </div>
-                                                            </div>
-                                                        </Avatar>
-
-                                                        <div className="text-lg font-bold text-gray-900 dark:text-white">
-                                                            ${bid.amount}
-                                                        </div>
-                                                    </Card>
-
-                                                )
-                                            ))
-                                            :
-                                            <h5 className='text-gray-700 text-center text-md'>No bids yet. Be the first to bid!</h5>}
-                                    </div>
-                                </Card>
-                            </>
-                        )
-                    }
+                    </div>
                 </div>
             </div>
-        </div >
-    );
-}
 
-function Gallary({ images }: { images: GalleryImage[] }) {
-    return (
-        <>
-            <Swiper
-                pagination={{ clickable: true }}
-                modules={[Pagination]}
-                className="item-gallary w-full rounded-xl"
-                loop={true}
-            >
-                {images && images.map((image, index) => (
-                    <SwiperSlide key={image.src + index}>
-                        <div className='relative w-full h-[550px] bg-gray-200 flex items-center justify-center'>
-                            <Image
-                                src={image.src}
-                                alt={`Auction Image ${index + 1}`}
-                                fill
-                                priority={index === 0}
-                                objectFit='cover'
-                            />
+            <div className="container mx-auto px-4 max-w-7xl">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+                    {/* LEFT COLUMN: Media & Content */}
+                    <div className="lg:col-span-8 flex flex-col gap-8">
+                        {/* Gallery */}
+                        <div className="bg-white p-2 rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                            <Gallery images={data.images && data.images.length > 0 ? data.images : [{ image: "/imgs/placeholder.jpg" }]} />
                         </div>
-                    </SwiperSlide>
-                ))}
-            </Swiper>
-        </>
+
+                        {/* Description Box */}
+                        <section className="bg-white p-8 rounded-2xl border border-gray-200">
+                            <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                                <FiInfo className="text-indigo-600" /> Item Description
+                            </h3>
+                            <div
+                                className="prose prose-slate max-w-none text-slate-600 leading-relaxed"
+                                dangerouslySetInnerHTML={{ __html: data.desc }}
+                            />
+                        </section>
+
+                        {/* Technical Specs Grid */}
+                        <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <DetailTile
+                                icon={FiClock}
+                                label="Total Duration"
+                                value={`${durationFromStrings(data.start_date, data.end_date).days ?? 0} Days`}
+                            />
+                            <DetailTile
+                                icon={BiMoney}
+                                label="Starting At"
+                                value={`$${Number(data.start_price).toLocaleString()}`}
+                            />
+                            <DetailTile
+                                icon={FiTrendingUp}
+                                label="Min Increment"
+                                value={`$${Number(data.min_increment).toLocaleString()}`}
+                            />
+                        </section>
+                    </div>
+
+                    {/* RIGHT COLUMN: Bidding & Sidebar */}
+                    <div className="lg:col-span-4 flex flex-col gap-6">
+
+                        {/* THE ACTION CARD */}
+                        <div className="sticky top-24 z-10">
+                            <div className="bg-white rounded-2xl shadow-xl shadow-indigo-100/50 border-2 border-indigo-600/10 overflow-hidden">
+                                {/* Timer Header - Fixed visibility */}
+                                <div className="bg-slate-50 p-5">
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-400 mb-2">Time Remaining</p>
+                                    <Timer start_date={data.start_date} end_date={data.ended_at ?? data.end_date} status={data.status} />
+                                </div>
+
+                                <div className="p-6">
+                                    <div className="flex justify-between items-center mb-6 pb-6 border-b border-gray-100">
+                                        <div>
+                                            <p className="text-sm font-semibold text-slate-500 mb-1">
+                                                {data.bids.length > 0 ? "Current Bid" : "Starting Price"}
+                                            </p>
+                                            <h2 className="text-4xl font-black text-slate-900">
+                                                ${highestBid.toLocaleString()}
+                                            </h2>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-sm font-semibold text-slate-500 mb-1">Total Bids</p>
+                                            <span className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full font-bold">
+                                                {data.bids.length}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    {/* Bidding Form */}
+                                    {data.status === 'live' ? (
+                                        isAuthenticated ? (
+                                            <div className="space-y-4">
+                                                <div>
+                                                    <Label className="mb-2 block text-xs font-bold uppercase text-slate-500">Your Offer</Label>
+                                                    <TextInput
+                                                        type="number"
+                                                        value={bidAmount}
+                                                        onChange={(e) => setBidAmount(e.target.value)}
+                                                        placeholder={`Min: $${highestBid + Number(data.min_increment)}`}
+                                                        className="mb-1"
+                                                    />
+                                                    <p className="text-[10px] text-slate-400">
+                                                        Required increment: <span className="text-slate-900 font-bold">${data.min_increment}</span>
+                                                    </p>
+                                                </div>
+                                                <Button onClick={handleQuickBid} className="w-full bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-200">
+                                                    <RiAuctionLine className="mr-2 h-5 w-5" /> Place Bid
+                                                </Button>
+                                                <Link href={`/auction-details/${slug}/bid-room`} className="block">
+                                                    <Button color="alternative" className="w-full">
+                                                        <BiLogIn className="mr-2 h-5 w-5" /> Enter Live Bidding Room
+                                                    </Button>
+                                                </Link>
+                                            </div>
+                                        ) : (
+                                            <Button size="lg" className="w-full bg-slate-900" onClick={() => setOpenModal(true)}>
+                                                Sign In to Place Bid
+                                            </Button>
+                                        )
+                                    ) : (
+                                        <div className="text-center p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                            <p className="text-slate-500 font-bold">Bidding is closed for this item.</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Recent Bids List */}
+                            <div className="mt-6 bg-white rounded-2xl border border-gray-200 p-6">
+                                <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                                    <BiTrophy className="text-yellow-500" /> Recent Activity
+                                </h3>
+                                <div className="space-y-4">
+                                    {data.bids.slice(0, 5).map((bid: any, i: number) => (
+                                        <div key={i} className={`flex items-center justify-between p-3 rounded-xl border ${i === 0 ? 'bg-indigo-50/50 border-indigo-100' : 'border-transparent'}`}>
+                                            <div className="flex items-center gap-3">
+                                                <Avatar size="sm" rounded placeholderInitials={bid.created_by[0]} />
+                                                <div>
+                                                    <p className="text-xs font-bold text-slate-800">{bid.created_by}</p>
+                                                    <p className="text-[10px] text-slate-400">{formatTimestamp(bid.created_at)}</p>
+                                                </div>
+                                            </div>
+                                            <p className={`text-sm font-black ${i === 0 ? 'text-indigo-600' : 'text-slate-700'}`}>
+                                                ${Number(bid.amount).toLocaleString()}
+                                            </p>
+                                        </div>
+                                    ))}
+                                    {data.bids.length === 0 && <p className="text-center text-slate-400 text-sm py-4 italic">Be the first to bid!</p>}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <LoginModal isOpen={openModal} onClose={() => setOpenModal(false)} />
+        </div>
     );
 }
 
+/* UI COMPONENTS */
 
-// Define props for the new component
-interface DetailCardProps {
-    // The icon component itself, e.g., BiCalendar
-    Icon: IconType;
-    // The main title/label, e.g., "Duration"
-    title: string;
-    // The value to display, e.g., "25-2-2025 - 20-3-2025"
-    value: string;
-    // Icon configuration (optional)
-    iconSize?: string | number;
-    iconColor?: string;
-    iconClassName?: string;
-}
-
-const DetailCard: React.FC<DetailCardProps> = ({
-    Icon,
-    title,
-    value,
-    // Use default values matching your original code
-    iconSize = 45,
-    iconColor = 'red',
-    iconClassName = 'border border-gray-200 rounded p-1 h-auto'
-}) => {
+function DetailTile({ icon: Icon, label, value }: { icon: any, label: string, value: string }) {
     return (
-        // Outer flex container for the entire card detail block
-        <div className='flex gap-4 items-start'>
-
-            {/* 1. Icon component */}
-            <Icon
-                size={iconSize}
-                color={iconColor}
-                className={iconClassName}
-            />
-
-            {/* 2. Text container (title and value) */}
-            <div className='flex flex-col gap-1'>
-
-                {/* Title/Label */}
-                <span className='font-semibold'>{title}</span>
-
-                {/* Value */}
-                <span>{value}</span>
+        <div className="bg-white p-5 rounded-2xl border border-gray-200 flex items-center gap-4 hover:border-indigo-300 transition-colors">
+            <div className="bg-indigo-50 p-3 rounded-xl">
+                <Icon className="text-indigo-600 text-xl" />
+            </div>
+            <div>
+                <p className="text-[10px] uppercase font-bold tracking-wider text-slate-400">{label}</p>
+                <p className="text-sm font-bold text-slate-900">{value}</p>
             </div>
         </div>
     );
-};
+}
+
+function Gallery({ images }: { images: any[] }) {
+    return (
+        <Swiper
+            pagination={{ clickable: true, dynamicBullets: true }}
+            navigation={true}
+            modules={[Pagination, Navigation, Autoplay]}
+            autoplay={{ delay: 5000 }}
+            className="rounded-xl aspect-[16/9]"
+            loop={images.length > 1}
+        >
+            {images.map((img, index) => (
+                <SwiperSlide key={index}>
+                    <div className='relative w-full h-full bg-slate-100'>
+                        <Image
+                            src={img.image || img.src} // Handle different API response shapes
+                            alt="Product Image"
+                            fill
+                            className="object-cover"
+                            priority={index === 0}
+                        />
+                    </div>
+                </SwiperSlide>
+            ))}
+        </Swiper>
+    );
+}

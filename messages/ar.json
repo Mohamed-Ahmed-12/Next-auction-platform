@@ -1,5 +1,6 @@
 {
     "dashboard": {
+        "welcome": "مرحبا بك",
         "dashboard": "لوحة التحكم",
         "totalAuction": "إجمالي المزادات",
         "totalCategories": "إجمالي الفئات",
@@ -26,12 +27,32 @@
         "createNew": "إنشاء جديد"
     },
     "header": {
-        "home": "الصفحة الرئيسية"
+        "home": "الصفحة الرئيسية",
+        "login": "تسجيل الدخول"
     },
     "categories": {
         "title": "الإسم",
         "slug": "المعرف",
         "icon": "الأيقونة",
         "description": "الوصف"
+    },
+    "Timer": {
+        "upcoming": "يبدأ خلال",
+        "live": "ينتهي خلال",
+        "ended": "انتهى المزاد",
+        "days": "يوم",
+        "hours": "ساعة",
+        "minutes": "دقيقة",
+        "seconds": "ثانية"
+    },
+    "Status": {
+        "live": "مباشر",
+        "ended": "منتهي",
+        "upcoming": "قادم"
+    },
+    "AuctionCard": {
+        "category": "الفئة",
+        "entryFee": "رسوم الدخول",
+        "currency": "ج.م"
     }
 }

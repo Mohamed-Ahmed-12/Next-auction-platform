@@ -17,37 +17,37 @@ export const setLogoutFunction = (fn: () => void) => {
     logoutFn = fn;
 };
 
-// --- REQUEST INTERCEPTOR: Add Authorization Token ---
+// REQUEST INTERCEPTOR
 axiosInstance.interceptors.request.use((config) => {
-    const userString = localStorage.getItem("user");
+    const userString = typeof window !== "undefined" ? localStorage.getItem("user") : null;
+    const userLang = localStorage.getItem("currentLang")
+        ?? document.documentElement.lang
+        ?? "en";
 
+    // Ensure headers exist
+    if (!config.headers) {
+        config.headers = new AxiosHeaders();
+    }
+
+    // Set Accept-Language (Matches Django's LocaleMiddleware)
+    config.headers.set("Accept-Language", userLang);
+
+    // Set Authorization if user exists
     if (userString) {
         try {
             const { access: token } = JSON.parse(userString);
-
             if (token) {
-                // Ensure headers exist in a TS-safe way
-                if (!config.headers) {
-                    config.headers = new AxiosHeaders();
-                }
-
-                // Set the Authorization header
-                if (config.headers instanceof AxiosHeaders) {
-                    config.headers.set("Authorization", `Bearer ${token}`);
-                } else {
-                    (config.headers as any)["Authorization"] = `Bearer ${token}`;
-                }
+                config.headers.set("Authorization", `Bearer ${token}`);
             }
         } catch (e) {
-            console.error("Error parsing user data from localStorage:", e);
-            // Optionally clear storage or log out if user data is corrupted
+            console.error("Error parsing user data:", e);
         }
     }
 
     return config;
 });
 
-// --- RESPONSE INTERCEPTOR: Handle Errors and Rejections ---
+// RESPONSE INTERCEPTOR: Handle Errors and Rejections
 axiosInstance.interceptors.response.use(
     // Success Handler (Status 2xx)
     (response) => response,

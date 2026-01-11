@@ -5,7 +5,7 @@ import { locales } from "@/i18n/routing";
 import { Dropdown, DropdownItem } from "flowbite-react";
 import { useLocale } from "next-intl";
 import { useParams } from "next/navigation";
-import { useTransition } from "react";
+import { useEffect, useTransition } from "react";
 // Import flag-icons CSS in your layout.tsx or here
 import "flag-icons/css/flag-icons.min.css";
 
@@ -15,6 +15,13 @@ export default function LanguageSwitch() {
   const pathname = usePathname();
   const params = useParams();
   const [isPending, startTransition] = useTransition();
+
+  // Sync Locale to LocalStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("currentLang", locale);
+    // Dispatch a global event that the language has changed
+    window.dispatchEvent(new Event("localeChange"));
+  }, [locale]);
 
   const handleLocaleChange = (nextLocale: string) => {
     startTransition(() => {
@@ -55,7 +62,7 @@ export default function LanguageSwitch() {
         const { label, flag } = getLocaleDetails(lang);
         return (
           <DropdownItem
-            key={lang} 
+            key={lang}
             onClick={() => handleLocaleChange(lang)}
             className="flex items-center gap-1"
           >

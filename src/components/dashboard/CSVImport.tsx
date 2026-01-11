@@ -6,6 +6,7 @@ import {
     Label,
     Modal,
     ModalBody,
+    ModalFooter,
     ModalHeader,
     Timeline,
     TimelineBody,
@@ -26,7 +27,7 @@ import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { useTranslations } from "next-intl";
 
 // Register all Community features
-ModuleRegistry.registerModules([AllCommunityModule ]);
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 type CSVImportProps = {
     columnsTable?: any;
@@ -35,7 +36,8 @@ type CSVImportProps = {
 };
 
 export function CSVImport({ columnsTable, modelLabel, refetch }: CSVImportProps) {
-    const t = useTranslations('dashboard')
+    const t = useTranslations('dashboard');
+    const formId = "import-data-form";
     const [openModal, setOpenModal] = useState(false);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -44,6 +46,36 @@ export function CSVImport({ columnsTable, modelLabel, refetch }: CSVImportProps)
 
     const handleFileSelect = () => {
         fileInputRef.current?.click();
+    };
+
+    const validateHeaders = (sheetData: any[]) => {
+        if (sheetData.length === 0) return false;
+
+        // 1. Get headers from the first row of the uploaded file
+        const fileHeaders = Object.keys(sheetData[0]);
+        console.log(fileHeaders)
+
+        // 2. Get required fields from your Ag-Grid column definitions
+        // We filter out any columns that don't have a 'field' property (like action buttons)
+        const requiredFields = columnsTable
+            .map((col: any) => col.field)
+            .filter((field: string | undefined) => field !== undefined);
+
+        // 3. Find missing columns
+        const missing = requiredFields.filter((field: string) => !fileHeaders.includes(field));
+
+        if (missing.length > 0) {
+            toast.error(
+                <div>
+                    <p className="font-bold">Invalid File Structure</p>
+                    <p className="text-xs">Missing columns: {missing.join(", ")}</p>
+                </div>,
+                { autoClose: 5000 }
+            );
+            return false;
+        }
+
+        return true;
     };
 
     const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,7 +107,18 @@ export function CSVImport({ columnsTable, modelLabel, refetch }: CSVImportProps)
                 const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: "array" });
                 const sheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[sheetName];
-                const json = XLSX.utils.sheet_to_json(worksheet);
+                const json: any[] = XLSX.utils.sheet_to_json(worksheet, {
+                    defval: ""
+                });
+
+                // --- VALIDATION STEP ---
+                if (!validateHeaders(json)) {
+                    setSelectedFile(null);
+                    setData([]);
+                    if (fileInputRef.current) fileInputRef.current.value = "";
+                    return;
+                }
+
                 setData(json);
                 toast.success("File parsed successfully!");
             } catch {
@@ -112,10 +155,6 @@ export function CSVImport({ columnsTable, modelLabel, refetch }: CSVImportProps)
         }
     };
 
-    useEffect(() => {
-        console.log("Data to import:", data);
-    }, [data]);
-
     return (
         <>
             <Button color="alternative" onClick={() => setOpenModal(true)}>
@@ -133,7 +172,7 @@ export function CSVImport({ columnsTable, modelLabel, refetch }: CSVImportProps)
                     Import Data
                 </ModalHeader>
                 <ModalBody className="space-y-6">
-                    <form className="flex flex-col gap-y-6 mt-3 px-8" onSubmit={handleSubmit}>
+                    <form id={formId} className="flex flex-col gap-y-6 mt-3 px-8" onSubmit={handleSubmit}>
                         {/* Timeline */}
                         <Timeline horizontal>
                             <TimelineItem>
@@ -211,27 +250,34 @@ export function CSVImport({ columnsTable, modelLabel, refetch }: CSVImportProps)
                             </div>
                         )}
 
-                        {/* Action Buttons */}
-                        <div className="flex gap-2">
-                            {selectedFile && (
-                                <>
-                                    <Button
-                                        color="gray"
-                                        onClick={() => {
-                                            setSelectedFile(null);
-                                            setData([]);
-                                        }}
-                                    >
-                                        Choose Another File
-                                    </Button><Button type="submit" color="green" disabled={loading}>
-                                        {loading ? "Importing..." : "Submit"}
-                                    </Button>
-                                </>
-                            )}
-
-                        </div>
                     </form>
                 </ModalBody>
+                {/* 2. Move Actions to ModalFooter */}
+                <ModalFooter className="flex justify-end gap-2">
+                    {selectedFile && (
+                        <>
+                            <Button
+                                color="alternative"
+                                onClick={() => {
+                                    setSelectedFile(null);
+                                    setData([]);
+                                }}
+                            >
+                                Choose Another File
+                            </Button>
+
+                            {/* 3. Use the form attribute to link to the ID above */}
+                            <Button
+                                type="submit"
+                                form={formId}
+                                color="green"
+                                disabled={loading}
+                            >
+                                {loading ? "Importing..." : `Save ${data.length} Records`}
+                            </Button>
+                        </>
+                    )}
+                </ModalFooter>
             </Modal>
         </>
     );

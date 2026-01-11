@@ -12,6 +12,7 @@ export const categoryFormFields: FormFieldGroup[] = [
                 errorMsg: '',
                 required: true,
                 placeholder: 'Category title',
+                isTranslatable: true
             },
             {
                 id: 'icon',
@@ -29,6 +30,8 @@ export const categoryFormFields: FormFieldGroup[] = [
                 errorMsg: '',
                 required: true,
                 placeholder: 'Category description',
+                isTranslatable: true
+
             },
 
         ]

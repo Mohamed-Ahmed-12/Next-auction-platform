@@ -1,100 +1,98 @@
 "use client";
 
 import { AuctionStatus } from "@/lib/data";
-import React, { useEffect, useState } from "react";
-
-// Define the three possible states for the auction
+import React, { useEffect, useState, useCallback } from "react";
+import { useTranslations } from "next-intl";
 
 interface TimerProps {
   start_date: string;
-  end_date: string;
-  status: AuctionStatus; 
+  end_date: string; // This should be the extended 'ended_at' from your API
+  status: AuctionStatus;
 }
 
-export default function Timer({ start_date, end_date, status }: TimerProps) {
-  
-  const calculateTime = () => {
-    // If the auction has ended, immediately return zeros
-    if (status === "ended") {
-      return { d: 0, h: 0, m: 0, s: 0 };
-    }
+export default function Timer({ start_date, end_date }: TimerProps) {
+  const t = useTranslations("Timer");
 
+  // Memoize calculateTime so it can be used safely in useEffect
+  const calculateTime = useCallback(() => {
     const now = new Date().getTime();
-    let target: number;
+    const start = new Date(start_date).getTime();
+    const end = new Date(end_date).getTime();
 
-    if (status === "upcoming") {
-      // 1. UPCOMING: Countdown to the START date
-      target = new Date(start_date).getTime();
-    } else if (status === "live") {
-      // 2. LIVE: Countdown to the END date
-      target = new Date(end_date).getTime();
+    let target = 0;
+    let labelKey = "";
+
+    if (now < start) {
+      // Upcoming
+      target = start;
+      labelKey = "upcoming";
+    } else if (now < end) {
+      // Live
+      target = end;
+      labelKey = "live";
     } else {
-      // Fallback for unexpected status (shouldn't happen with the type guard)
-      return { d: 0, h: 0, m: 0, s: 0 };
+      // Ended
+      return { d: 0, h: 0, m: 0, s: 0, label: t("ended") };
     }
 
-    let distance = target - now;
-
-    // If the target date has passed, but status wasn't 'ended',
-    // return zeros to prevent negative display. (The parent component should update 'status')
-    if (distance <= 0) return { d: 0, h: 0, m: 0, s: 0 };
+    const distance = target - now;
 
     return {
       d: Math.floor(distance / (1000 * 60 * 60 * 24)),
       h: Math.floor((distance / (1000 * 60 * 60)) % 24),
       m: Math.floor((distance / (1000 * 60)) % 60),
       s: Math.floor((distance / 1000) % 60),
+      label: t(labelKey),
     };
-  };
+  }, [start_date, end_date, t]);
 
   const [timeLeft, setTimeLeft] = useState(calculateTime());
 
-  // Recalculate time every second (1000ms)
   useEffect(() => {
-    // Only set up the interval if the auction is not yet "ended"
-    if (status === "ended") return;
-
+    // Update every second
     const interval = setInterval(() => {
-      setTimeLeft(calculateTime());
+      const newTime = calculateTime();
+      setTimeLeft(newTime);
+      
+      // If we just hit zero, clear the interval
+      if (newTime.d === 0 && newTime.h === 0 && newTime.m === 0 && newTime.s === 0) {
+        clearInterval(interval);
+      }
     }, 1000);
 
     return () => clearInterval(interval);
-    
-    // Rerun effect if 'status' or date props change (e.g., component updates)
-  }, [status, start_date, end_date]);
+  }, [calculateTime]);
 
-  const { d, h, m, s } = timeLeft;
-  
-  // Determine the label text based on the status
-  const timerLabel = 
-    status === "upcoming" ? "START AFTER" : 
-    status === "live" ? "END AFTER" : 
-    "AUCTION ENDED";
+  const { d, h, m, s, label } = timeLeft;
 
   return (
-    <div className="w-full p-2 flex flex-col items-center bg-[#faf9f5]">
-      {/* Optional Label Block */}
-      <div className="text-sm font-semibold mb-3 text-gray-700">
-        {timerLabel}
+    <div className="w-full py-3 px-4 rounded-xl bg-indigo-50/50 border border-indigo-100/50 mt-2">
+      <div className="text-[10px] font-bold uppercase tracking-widest mb-3 text-indigo-400 text-center">
+        {label}
       </div>
 
-      {/* Timer Display Blocks */}
-      <div className="flex justify-around w-full">
-        <TimerBlock label="Days" value={d} />
-        <TimerBlock label="Hours" value={h} />
-        <TimerBlock label="Minutes" value={m} />
-        <TimerBlock label="Seconds" value={s} />
+      <div className="flex justify-between items-center">
+        <TimerBlock label={t("days")} value={d} />
+        <span className="text-indigo-200 font-bold mb-5">:</span>
+        <TimerBlock label={t("hours")} value={h} />
+        <span className="text-indigo-200 font-bold mb-5">:</span>
+        <TimerBlock label={t("minutes")} value={m} />
+        <span className="text-indigo-200 font-bold mb-5">:</span>
+        <TimerBlock label={t("seconds")} value={s} />
       </div>
     </div>
   );
 }
 
-// TimerBlock component remains the same
 function TimerBlock({ label, value }: { label: string; value: number }) {
   return (
-    <div className="flex flex-col gap-0.5 text-center">
-      <span className="digital-number text-xl">{value.toString().padStart(2, "0")}</span>
-      <span className="text-sm">{label}</span>
+    <div className="flex flex-col items-center flex-1">
+      <span className="digital-number text-xl font-bold text-gray-800 tabular-nums">
+        {value.toString().padStart(2, "0")}
+      </span>
+      <span className="text-[10px] text-gray-500 font-medium uppercase tracking-tighter">
+        {label}
+      </span>
     </div>
   );
 }

@@ -7,14 +7,11 @@ import { HiCog, HiLogout, HiViewGrid } from "react-icons/hi";
 
 export function UserComponent() {
     const t = useTranslations('dashboard')
-    const { logout } = useAuth();
+    const { logout , user} = useAuth();
 
     return (
-        <Dropdown label="Welcome" inline>
-            <DropdownHeader>
-                <span className="block text-sm">Bonnie Green</span>
-                <span className="block truncate text-sm font-medium">bonnie@flowbite.com</span>
-            </DropdownHeader>
+        <Dropdown label={t("welcome") + ` ${user?.username}` } inline>
+
             <DropdownItem icon={HiViewGrid} href="/dashboard" as={Link}>{t("dashboard")}</DropdownItem>
             <DropdownItem icon={HiCog}>{t("settings")}</DropdownItem>
             <DropdownDivider />

@@ -71,7 +71,7 @@ export default function UsersPage() {
         <>
             <PageHeader title={t('users')}>
                 <div className="flex gap-2">
-                    <CSVExport columns={userColumns} modelLabel={'authen.CustomUser'} filters={filterModel} />
+                    <CSVExport disabled={!(!!rowData.length)} columns={userColumns} modelLabel={'authen.CustomUser'} filters={filterModel} />
                     <CSVImport columnsTable={userColumns} modelLabel={'authen.CustomUser'} refetch={refetch} />
                     <Link href="/dashboard/users/create">
                         <Button size="sm" className="cursor-pointer">

@@ -8,8 +8,7 @@ import { User } from "@/types/auth"
 export default function CreateUserPage() {
     return (
         <>
-            <PageHeader title="New User" />
-            <FormBuilder<User> formFields={UserFormFields} onSubmit={createUser} successRedirect="/dashboard/users" />
+            <FormBuilder<User> title="New User" formFields={UserFormFields} onSubmit={createUser} successRedirect="/dashboard/users" />
         </>
     )
 }

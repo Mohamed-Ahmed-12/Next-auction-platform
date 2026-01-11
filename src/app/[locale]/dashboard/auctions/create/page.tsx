@@ -8,8 +8,7 @@ import { Auction } from "@/types/main"
 export default function CreateCategoryPage() {
     return (
         <>
-            <PageHeader title="New Auction" />
-            <FormBuilder<Auction> formFields = {AuctionFormFields} onSubmit={createAuction} successRedirect="/dashboard/auctions"/>
+            <FormBuilder<Auction> title="New Auction" formFields = {AuctionFormFields} onSubmit={createAuction} successRedirect="/dashboard/auctions"/>
         </>
     )
 }

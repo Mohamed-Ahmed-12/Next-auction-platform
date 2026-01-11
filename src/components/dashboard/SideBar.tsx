@@ -1,7 +1,6 @@
 "use client";
 
 import { Sidebar, SidebarCollapse, SidebarItem, SidebarItemGroup, SidebarItems } from "flowbite-react";
-import { usePathname } from "next/navigation";
 import { HiArrowSmRight, HiChartPie, HiUser, HiViewBoards } from "react-icons/hi";
 import { IoSettings } from "react-icons/io5";
 import { RiAuctionLine } from "react-icons/ri";
@@ -13,7 +12,7 @@ import { ImBlogger } from "react-icons/im";
 import { IoIosInformationCircle } from "react-icons/io";
 import { BiCalendar } from "react-icons/bi";
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
+import { Link ,usePathname} from "@/i18n/navigation";
 
 interface MenuItem {
   label: string;

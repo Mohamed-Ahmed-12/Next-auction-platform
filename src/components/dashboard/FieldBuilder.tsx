@@ -5,12 +5,24 @@ import { Controller } from "react-hook-form";
 import Editor, { EditorProvider } from "react-simple-wysiwyg"
 
 export const FieldBuilder: React.FC<FieldBuilderProps> = ({ fieldType, ...props }) => {
-    const { register, id, options, control } = props;
+    // 1. Destructure the custom props so they AREN'T in 'inputProps'
+    const { 
+        register, 
+        id, 
+        options, 
+        control, 
+        requireTextEditor, 
+        ...inputProps // This now only contains placeholder, required, color, disabled, etc.
+    } = props;
+
     const registrationProps = register(id);
+
+    // 2. Combine only valid input attributes with hook-form's ref/onChange/name
     const combinedProps = {
-        ...props,
+        ...inputProps,
         ...registrationProps
     };
+
     switch (fieldType) {
         case 'text':
         case 'email':
@@ -18,8 +30,8 @@ export const FieldBuilder: React.FC<FieldBuilderProps> = ({ fieldType, ...props 
         case 'number':
         case 'datetime-local':
             return <TextInput type={fieldType} {...combinedProps} />;
+
         case 'textarea':
-            const { requireTextEditor } = props;
             if (requireTextEditor) {
                 return (
                     <Controller
@@ -29,26 +41,34 @@ export const FieldBuilder: React.FC<FieldBuilderProps> = ({ fieldType, ...props 
                             <EditorProvider>
                                 <Editor
                                     {...field}
-                                    {...combinedProps}
+                                    {...inputProps} // Use clean props here
                                 />
                             </EditorProvider>
                         )}
                     />
-                )
+                );
             }
             return <Textarea {...combinedProps} rows={5} />;
+
         case 'file':
+            // Note: For files, we usually only spread registrationProps.ref separately 
+            // but combinedProps is generally fine for standard FileInput
             return <FileInput {...combinedProps} accept="image/*" />;
+
         case 'select':
             return (
                 <Controller
                     name={registrationProps.name}
                     control={control}
                     render={({ field }) => (
-                        <SelectWithOptions {...combinedProps} {...field} fetchedData={options}> </SelectWithOptions>
+                        <SelectWithOptions 
+                            {...inputProps} 
+                            {...field} 
+                            fetchedData={options}
+                        />
                     )}
                 />
-            )
+            );
 
         default:
             console.warn(`Unknown fieldType: ${fieldType}`);

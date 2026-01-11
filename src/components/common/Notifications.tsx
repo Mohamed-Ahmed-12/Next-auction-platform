@@ -44,7 +44,7 @@ const NotificationsComponent = () => {
             }
         };
 
-        socket.onerror = (e) => console.error("WebSocket error occurred:", e);
+        socket.onerror = (e) => console.log("WebSocket error occurred:", e);
 
         // Cleanup function
         return () => {
