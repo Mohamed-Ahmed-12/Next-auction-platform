@@ -1,5 +1,5 @@
 import { FieldBuilderProps } from "@/types/formfield";
-import { FileInput, Select, Textarea, TextInput } from "flowbite-react"
+import { FileInput, Textarea, TextInput } from "flowbite-react"
 import SelectWithOptions from "./SelectWithOptions";
 import { Controller } from "react-hook-form";
 import Editor, { EditorProvider } from "react-simple-wysiwyg"

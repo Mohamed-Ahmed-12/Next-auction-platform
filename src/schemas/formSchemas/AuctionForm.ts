@@ -12,6 +12,7 @@ export const AuctionFormFields: FormFieldGroup[] = [
                 errorMsg: '',
                 required: true,
                 placeholder: 'Auction title',
+                isTranslatable:true
             },
             {
                 id: 'category',

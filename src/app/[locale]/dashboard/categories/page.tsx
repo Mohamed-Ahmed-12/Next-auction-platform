@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { Category } from "@/types/main";
 import { getCategoryColumns } from "@/schemas/tableSchemas/categoriesSchema";
@@ -13,10 +13,11 @@ import PageHeader from "@/components/dashboard/PageHeader";
 import { Link } from "@/i18n/navigation";
 import { useFetch } from "@/hooks/useFetcher";
 import { useRouter } from "next/navigation";
-import { CSVExport } from "@/components/dashboard/CSVExport";
+import { UniversalExport } from "@/components/dashboard/UniversalExport";
 import { CSVImport } from "@/components/dashboard/CSVImport";
 import { useAgGridFilter } from "@/hooks/useAgGridFilter";
 import { useLocale, useTranslations } from "next-intl";
+import { useBreakpoint } from "@/hooks/useBreakPoint";
 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -27,6 +28,9 @@ export default function CategoriesPage() {
     const tCategory = useTranslations('categories')
     const { data: categories, error, loading, refetch } = useFetch<Category[]>(`category/`);
     const rowData = categories || []; // Use empty array if data is undefined
+    
+    // Breakpoint
+    const { isMobile } = useBreakpoint();
 
     // filtering
     const { filterModel, handleFilterChange } = useAgGridFilter();
@@ -67,7 +71,7 @@ export default function CategoriesPage() {
     };
 
     // --- COLUMNS WITH ACTIONS ---
-    const categoryColumns = useMemo(() => getCategoryColumns(tCategory), [tCategory]);
+    const categoryColumns = useMemo(() => getCategoryColumns(tCategory,isMobile), [tCategory]);
     const categoryColumnsWithActions = [
         ...categoryColumns,
         ...actionsColumn<Category>({
@@ -110,7 +114,7 @@ export default function CategoriesPage() {
         <>
             <PageHeader title={t('categories')}>
                 <div className="flex gap-2">
-                    <CSVExport disabled={!(!!rowData.length)} columns={categoryColumns} modelLabel={'main.Category'} filters={filterModel} />
+                    <UniversalExport disabled={!(!!rowData.length)} columns={categoryColumns} modelLabel={'main.Category'} filters={filterModel} />
                     <CSVImport columnsTable={categoryColumns} modelLabel="main.Category" refetch={refetch} />
                     <Link href="/dashboard/categories/create">
                         <Button size="sm" className="cursor-pointer">
@@ -130,7 +134,7 @@ export default function CategoriesPage() {
                     rowSelection={rowSelection}
                     onCellValueChanged={handleCellValueChanged}
                     onFilterChanged={handleFilterChange}
-                    enableRtl={locale=="ar"}
+                    enableRtl={locale == "ar"}
                 />
             </div>
         </>

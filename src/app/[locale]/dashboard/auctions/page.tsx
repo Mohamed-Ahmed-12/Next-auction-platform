@@ -1,17 +1,17 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { Auction } from "@/types/main";
 import { AllCommunityModule, ModuleRegistry, RowSelectionOptions } from 'ag-grid-community';
-import { Button, Spinner } from "flowbite-react";
+import { Button } from "flowbite-react";
 import { actionsColumn } from "@/components/dashboard/actionsColumn";
 import { auctionColumns } from "@/schemas/tableSchemas/auctionsSchema";
-import {Link} from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import PageHeader from "@/components/dashboard/PageHeader";
 import { useFetch } from "@/hooks/useFetcher";
 import { useRouter } from "next/navigation";
-import { CSVExport } from "@/components/dashboard/CSVExport";
+import { UniversalExport } from "@/components/dashboard/UniversalExport";
 import { useLocale, useTranslations } from "next-intl";
 
 // Register all Community features
@@ -57,12 +57,26 @@ export default function AuctionsPage() {
 
     return (
         <>
-            <PageHeader title={t('auctions')}>
-                <div className="flex gap-2">
-                    <CSVExport disabled={isExportDisabled} columns={auctionColumns} modelLabel={'main.Auction'} />
+            <PageHeader
+                title={t('auctions')}
+                breadcrumbs={[
+                    { label: 'Auctions', href: '/dashboard/auctions' },
+                    { label: 'Live Listings' }
+                ]}
+                description="Manage your active listings, monitor real-time bidding activity, and export performance reports."
+            >
+                <div className="flex items-center gap-3 bg-white p-1 rounded-xl">
+                    <UniversalExport
+                        disabled={isExportDisabled}
+                        columns={auctionColumns}
+                        modelLabel={'main.Auction'}
+                    />
                     <Link href="/dashboard/auctions/create">
-                        <Button>
-                            {t("createNew")}
+                        <Button className="bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-200 transition-all duration-300">
+                            <span className="flex items-center gap-2">
+                                <span className="text-xl font-light">+</span>
+                                {t("createNew")}
+                            </span>
                         </Button>
                     </Link>
                 </div>
@@ -78,7 +92,7 @@ export default function AuctionsPage() {
                     pagination={true}
                     defaultColDef={defaultColDef}
                     rowSelection={rowSelection}
-                    enableRtl={locale=="ar"}
+                    enableRtl={locale == "ar"}
                 />
             </div>
         </>

@@ -1,6 +1,5 @@
 import Auctions from "@/components/auction/Auctions";
 import Categories from "@/components/auction/Categories"
-import NavBar from "@/components/common/Header";
 import Hero from "@/components/home/Hero";
 import TrustedBy from "@/components/home/TrustedBy";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
@@ -11,7 +10,6 @@ export default function Home() {
         <Categories />
         <Auctions status={'live'} />
         <Auctions status={'upcoming'} />
-        <Auctions status={'ended'} />
         <TrustedBy />
         <WhyChooseUs />
       </div>

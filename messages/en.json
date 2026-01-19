@@ -1,4 +1,18 @@
 {
+    "Auth": {
+        "signInTitle": "Welcome Back",
+        "signInSub": "Please enter your details to access your bids.",
+        "usernameLabel": "Username",
+        "passwordLabel": "Password",
+        "rememberMe": "Keep me logged in",
+        "loginBtn": "Sign In",
+        "loggingIn": "Verifying...",
+        "noAccount": "New to the platform?",
+        "signUp": "Create an account",
+        "usernameReq": "Username is required",
+        "passwordReq": "Password is required",
+        "welcomeMsg": "👋 Welcome back!"
+    },
     "dashboard": {
         "welcome": "Welcome",
         "dashboard": "Dashboard",
@@ -24,7 +38,9 @@
         "logout": "Logout",
         "export": "Export Data",
         "import": "Import Data",
-        "createNew": "Create New"
+        "createNew": "Create New",
+        "mainMenu": "Main Menu",
+        "account":" Account"
     },
     "header": {
         "home": "Home",
@@ -50,9 +66,91 @@
         "ended": "Ended",
         "upcoming": "Upcoming"
     },
+    "Auction": {
+        "loading": "Loading Auction Details...",
+        "notFound": "Auction not found.",
+        "verified": "Verified Auction",
+        "description": "Item Description",
+        "duration": "Total Duration",
+        "days": "{count} Days",
+        "startingAt": "Starting At",
+        "minIncrement": "Min Increment",
+        "remainingTime": "Time Remaining",
+        "currentBid": "Current Bid",
+        "startingPrice": "Starting Price",
+        "totalBids": "Total Bids",
+        "yourOffer": "Your Offer",
+        "placeBid": "Place Bid",
+        "enterLiveRoom": "Enter Live Bidding Room",
+        "signInToBid": "Sign In to Place Bid",
+        "closed": "Bidding is closed for this item.",
+        "bidHistory": "Bid History",
+        "beFirst": "Be the first to bid!",
+        "minBidError": "Minimum bid is ${amount}",
+        "requiredIncrNote": "Required increment: ${amount}"
+    },
     "AuctionCard": {
         "category": "Category",
         "entryFee": "Entry Fee",
         "currency": "EGP"
+    },
+    "AuctionBid": {
+        "liveConnection": "Live Connection",
+        "offline": "Offline",
+        "auctionId": "Auction ID",
+        "endedAlert": "This auction has concluded. No further bidding is permitted.",
+        "currentHighestBid": "Current Highest Bid",
+        "heldBy": "Held by",
+        "startingPrice": "Starting price",
+        "minIncrement": "Min Increment",
+        "totalBids": "Total Bids",
+        "placeYourBid": "Place Your Bid",
+        "confirmBid": "Confirm Bid",
+        "bidHistory": "Bid History",
+        "live": "LIVE",
+        "noActivity": "No activity yet. Be the first!",
+        "minBidError": "Min bid: ${amount}",
+        "connectionLost": "Connection lost. Please try again.",
+        "antiSniping": "Anti-sniping: Auction Extended!",
+        "notFound": "Auction not found."
+    },
+    "FormBuilder": {
+        "back": "Back",
+        "create": "create",
+        "update": "update",
+        "description": "Fill in the details below to {action} your record.",
+        "translate": "Translate",
+        "status": "Status",
+        "syncing": "Syncing data...",
+        "draft": "Draft unsaved",
+        "cancel": "Cancel",
+        "saveBtn": "Save Record",
+        "updateBtn": "Update Entry",
+        "successCreate": "Created successfully",
+        "successUpdate": "Changes saved",
+        "errorGeneric": "An error occurred"
+    },
+    "TranslationModal": {
+        "title": "Translate",
+        "done": "Done",
+        "placeholder": "Enter {lang} translation...",
+        "langEn": "English",
+        "langAr": "Arabic"
+    },
+    "Exporter": {
+    "export_button": "Export",
+    "modal_title": "Configure Export",
+    "export_success": "Data exported successfully",
+    "export_error": "An error occurred during export",
+    "section_format": "1. Select File Format",
+    "section_columns": "2. Select Columns",
+    "columns_hint": "If no columns are selected, all available fields will be included.",
+    "cancel": "Cancel",
+    "generate_btn": "Generate {format}",
+    "formats": {
+      "xlsx": "Excel (.xlsx)",
+      "csv": "CSV (.csv)",
+      "json": "JSON (.json)"
     }
+  }
 }

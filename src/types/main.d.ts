@@ -16,8 +16,17 @@ export type Bids = {
     created_at: string;
 
 }
+export type AuctionResult = {
+    winner: number,
+    winner_name: string,
+    winning_bid: number,
+    final_price: string,
+    reserve_met: boolean,
+    finalized_at: string
+
+}
 export type Auction = {
-    [x: string]: any;
+    // [x: string]: any;
     id: number;
     title: string;
     slug: string;
@@ -28,7 +37,6 @@ export type Auction = {
     ended_at: string;
     status: AuctionStatus;
     category: Category;
-
     start_price: number;
     reserve_price: number;
     min_increment: number;
@@ -37,7 +45,7 @@ export type Auction = {
     created_by: number;
     created_at: string;
     updated_at: string;
-
+    result?: AuctionResult;
 }
 
 export { AuctionStatus };

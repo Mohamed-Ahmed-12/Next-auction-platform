@@ -41,7 +41,7 @@ export default function Dashboard() {
     useEffect(() => {
         if (!token) return;
 
-        const socket = new WebSocket(`ws://127.0.0.1:8000/ws/dashboard/updates/?token=${token}`)
+        const socket = new WebSocket(`ws://192.168.1.8:8000/ws/dashboard/updates/?token=${token}`)
 
         socketRef.current = socket;
 
@@ -70,7 +70,7 @@ export default function Dashboard() {
                 }
 
             } catch (err) {
-                console.error("Invalid WebSocket message:", event.data);
+                console.error("Invalid WebSocket message:", event.data || err);
             }
         };
 
@@ -78,7 +78,10 @@ export default function Dashboard() {
 
         return () => socket.close();
     }, [token]);
-
+    
+    if (loading) {
+        return <p>Loading dashboard...</p>
+    }
     return (
         <>
             <PageHeader title={t('dashboard')} />
@@ -89,7 +92,7 @@ export default function Dashboard() {
                         <RiAuctionLine className="text-5xl text-violet-600" />
                     </div>
                     <h5 className="font-bold">
-                         {t('totalAuction')}
+                        {t('totalAuction')}
                     </h5>
                     <span className='font-semibold'>{data?.auction_count ?? 0} </span>
                 </Card>

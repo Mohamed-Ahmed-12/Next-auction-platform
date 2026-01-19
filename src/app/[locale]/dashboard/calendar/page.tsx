@@ -4,10 +4,8 @@ import { useFetch } from '@/hooks/useFetcher'
 import React from 'react'
 
 export default function AuctionCalendarPage() {
-  const [date, setDate] = React.useState<string>(
-    new Date().toISOString().split('T')[0]
-  );
-
+  const date = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+  
   const { data, error, loading } = useFetch<any[]>(
     `dashboard/auctions-bydate/?date=${date}`
   );

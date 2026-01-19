@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import React from 'react'
 
 export default function WhyChooseUs() {
@@ -52,7 +51,7 @@ export default function WhyChooseUs() {
         <div className="flex flex-col my-20 ">
             <h1 className="font-bold text-3xl mb-5">Why Choose Us</h1>
             <div className="flex justify-between items-center mb-10">
-                <span className="w-[70%]">Explore on the world's best & largest Bidding marketplace with our beautiful Bidding products. We want to be a part of your smile, success and future growth.</span>
+                <span className="w-[70%]">Explore on the world{"'"}s best & largest Bidding marketplace with our beautiful Bidding products. We want to be a part of your smile, success and future growth.</span>
             </div>
             <div className='grid md:grid-cols-3 grid-cols-1 gap-8'>
                 {features.map((item) => (

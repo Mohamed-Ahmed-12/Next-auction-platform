@@ -5,7 +5,7 @@ import { SelectOption } from "@/types/formfield";
 import { Select } from "flowbite-react";
 import { useEffect, useState } from "react";
 
-export default function SelectWithOptions({ fetchedData, ...props }: { fetchedData: string }) {
+export default function SelectWithOptions({ fetchedData, ...props }: { fetchedData: string| undefined }) {
     const [options, setOptions] = useState<SelectOption[]>([])
 
     useEffect(() => {

@@ -33,5 +33,5 @@ export const fetchCategoriesForSelect = async (): Promise<SelectOption[]> => {
 };
 
 export const deleteCategory = async (id: number): Promise<void> => {
-    const response = await axiosInstance.delete(`category/${id}/`);
+    await axiosInstance.delete(`category/${id}/`);
 }

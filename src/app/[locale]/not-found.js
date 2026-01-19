@@ -21,7 +21,7 @@ export default function NotFound() {
         
         {/* Subtitle/Explanation */}
         <p className="text-lg text-gray-600 mb-8 max-w-md mx-auto">
-          Oops! It looks like you've followed a broken link or entered a URL that doesn't exist on this site.
+          Oops! It looks like you{"'"}ve followed a broken link or entered a URL that doesn{"'"}t exist on this site.
         </p>
 
         {/* Action Buttons */}

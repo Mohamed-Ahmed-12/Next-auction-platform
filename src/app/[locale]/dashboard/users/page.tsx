@@ -9,7 +9,7 @@ import PageHeader from "@/components/dashboard/PageHeader";
 import { Link } from "@/i18n/navigation";
 import { useFetch } from "@/hooks/useFetcher";
 import { useRouter } from "next/navigation";
-import { CSVExport } from "@/components/dashboard/CSVExport";
+import { UniversalExport } from "@/components/dashboard/UniversalExport";
 import { User } from "@/types/auth";
 import { userColumns } from "@/schemas/tableSchemas/authSchemas";
 import { CSVImport } from "@/components/dashboard/CSVImport";
@@ -71,7 +71,7 @@ export default function UsersPage() {
         <>
             <PageHeader title={t('users')}>
                 <div className="flex gap-2">
-                    <CSVExport disabled={!(!!rowData.length)} columns={userColumns} modelLabel={'authen.CustomUser'} filters={filterModel} />
+                    <UniversalExport disabled={!(!!rowData.length)} columns={userColumns} modelLabel={'authen.CustomUser'} filters={filterModel} />
                     <CSVImport columnsTable={userColumns} modelLabel={'authen.CustomUser'} refetch={refetch} />
                     <Link href="/dashboard/users/create">
                         <Button size="sm" className="cursor-pointer">

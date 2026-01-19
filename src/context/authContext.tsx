@@ -8,7 +8,6 @@ import React, {
     useEffect,
     useCallback,
     useMemo,
-    ReactNode
 } from 'react';
 
 interface AuthContextType {
@@ -45,16 +44,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }, []);
 
 
-    const login = async (data: LoginCredentials): Promise<void> => {
+    const login = useCallback(async (data: LoginCredentials): Promise<void> => {
         setIsLoading(true)
         const response = await axiosInstance.post<User>('auth/login/', data);
         setUser(response.data)
         const user = JSON.stringify(response.data);
         localStorage.setItem("user", user);
         setIsLoading(false)
-    };
-    
-    const logout = () => {
+    }, []);
+
+    const logout = useCallback(() => {
         setIsLoading(true)
         try {
             localStorage.removeItem('user')
@@ -67,7 +66,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             setIsLoading(false)
         }
 
-    }
+    }, [router]);
     // Memoize the context value to prevent unnecessary re-renders
     const contextValue = useMemo(() => ({
         user,
@@ -75,7 +74,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         isLoading,
         login,
         logout,
-    }), [user, isAuthenticated, isLoading]);
+    }), [user, isAuthenticated, isLoading, login, logout,]);
 
     return (
         <AuthContext.Provider value={contextValue}>

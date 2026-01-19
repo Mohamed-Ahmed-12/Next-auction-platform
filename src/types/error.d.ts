@@ -6,7 +6,7 @@ export interface ErrorData {
     message?: string;
     error?: string;
     errors?: any; // For validation errors (e.g., status 400)
-    [key: string]: any;
+    // [key: string]: any;
 }
 
 /**

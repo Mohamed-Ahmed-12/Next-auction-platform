@@ -2,8 +2,8 @@
 import { useAuth } from "@/context/authContext";
 import { useFetch } from "@/hooks/useFetcher";
 import { NotificationPagination } from "@/types/notification";
-import { Badge, Button, Dropdown, DropdownHeader, DropdownItem} from "flowbite-react";
-import { useEffect, useRef, useState } from "react";
+import { Badge, Dropdown, DropdownHeader, DropdownItem } from "flowbite-react";
+import { useEffect, useRef } from "react";
 import { BiBell } from "react-icons/bi";
 import { HiViewGrid } from "react-icons/hi";
 import { toast } from "react-toastify";
@@ -12,7 +12,7 @@ const NotificationsComponent = () => {
     const { data: notificationsData, error, loading } = useFetch<NotificationPagination>('notifications/');
 
     // Use state to track if the dropdown is open/closed
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const socketRef = useRef<WebSocket | null>(null);
     const { user } = useAuth();
@@ -25,7 +25,7 @@ const NotificationsComponent = () => {
     useEffect(() => {
         if (!token) return;
 
-        const socket = new WebSocket(`ws://127.0.0.1:8000/ws/notifications/?token=${token}`);
+        const socket = new WebSocket(`ws://192.168.1.8:8000/ws/notifications/?token=${token}`);
         socketRef.current = socket;
 
         socket.onopen = () => console.log("WebSocket Connected");
@@ -40,7 +40,7 @@ const NotificationsComponent = () => {
                 }
                 // You would typically need logic here to update the notificationsData state
             } catch (err) {
-                console.error("Invalid WebSocket message:", event.data);
+                console.error("Invalid WebSocket message:", event.data || err);
             }
         };
 
@@ -64,7 +64,7 @@ const NotificationsComponent = () => {
 
             renderTrigger={() => (
                 <div className="relative cursor-pointer">
-                    <BiBell className="text-2xl p-1 bg-indigo-50 rounded-xl" />
+                    <BiBell size={25} className="p-1 bg-indigo-50 rounded-xl" />
                     {/* Display actual unread count */}
                     {unreadCount > 0 && (
                         <Badge

@@ -6,7 +6,7 @@ export const categoryFormFields: FormFieldGroup[] = [
         fields: [
             {
                 id: 'title',
-                label: 'Title',
+                label: {'en': 'Title', 'ar': 'العنوان'},
                 fieldType: 'text',
                 helpTxt: '',
                 errorMsg: '',
@@ -26,7 +26,7 @@ export const categoryFormFields: FormFieldGroup[] = [
                 id: 'desc',
                 label: 'Description',
                 fieldType: 'textarea',
-                helpTxt: '',
+                helpTxt: 'Enter category description',
                 errorMsg: '',
                 required: true,
                 placeholder: 'Category description',

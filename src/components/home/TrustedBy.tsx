@@ -15,7 +15,7 @@ export default function TrustedBy() {
         <div className="flex flex-col my-20 ">
             <h1 className="font-bold text-3xl mb-5">Trusted By 500+ Businesses.</h1>
             <div className="flex justify-between items-center mb-10">
-                <span className="w-[70%]">Explore on the world's best & largest Bidding marketplace with our beautiful Bidding products. We want to be a part of your smile, success and future growth.</span>
+                <span className="w-[70%]">Explore on the world{"'"}s best & largest Bidding marketplace with our beautiful Bidding products. We want to be a part of your smile, success and future growth.</span>
             </div>
              <Swiper
                 slidesPerView={10}

@@ -2,7 +2,7 @@
 import { NavBarDashboard } from '@/components/dashboard/Navbar';
 import { SideBarDashboard } from '@/components/dashboard/SideBar'
 import ProtectedRoute from '@/guards/ProotectedRoute'
-import React, { useState } from 'react'
+import React from 'react'
 
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {

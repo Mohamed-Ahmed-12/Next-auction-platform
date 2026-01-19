@@ -1,6 +1,5 @@
 'use client'
 import FormBuilder from "@/components/dashboard/FormBuilder";
-import PageHeader from "@/components/dashboard/PageHeader";
 import { useFetch } from "@/hooks/useFetcher";
 import { Auction } from "@/types/main";
 import { useParams } from "next/navigation"
@@ -10,7 +9,7 @@ import { updateAuction } from "@/services/AuctionService";
 export default function EditAuctionPage() {
     const { slug } = useParams();
     const shouldFetch = slug && typeof slug === 'string';
-    const { data: auction, loading, error, refetch } = useFetch<Auction>(shouldFetch ? `auction/${slug}/get-update/` : '');
+    const { data: auction, loading, error } = useFetch<Auction>(shouldFetch ? `auction/${slug}/get-update/` : '');
 
     // --- RENDER LOGIC ---
 

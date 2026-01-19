@@ -5,7 +5,7 @@ import axios, { AxiosHeaders, AxiosError } from "axios";
  * The core Axios instance configured for the Django API.
  */
 export const axiosInstance = axios.create({
-    baseURL: "http://127.0.0.1:8000/api/",
+    baseURL: "http://192.168.1.8:8000/api/",
     headers: {
         "Content-Type": "application/json"
     }

@@ -14,8 +14,11 @@ import { formatTimestamp } from "@/helpers/dates";
 import ProtectedRoute from "@/guards/ProotectedRoute";
 import Timer from "@/components/common/Timer";
 import { toast } from "react-toastify";
+import { useLocale, useTranslations } from 'next-intl';
 
 export default function AuctionBidPage() {
+    const t = useTranslations("AuctionBid");
+    const locale = useLocale();
     const { slug } = useParams() as { slug: string };
     const { data: initialData, error, loading } = useFetch<Auction>(`auction/${slug}/`);
     const { user } = useAuth();
@@ -26,7 +29,7 @@ export default function AuctionBidPage() {
     const [bids, setBids] = useState<Bids[]>([]);
     const [errorMessage, setErrorMessage] = useState("");
     const [isConnected, setIsConnected] = useState(false);
-    
+
     // Create a local tick to keep the UI reactive to time changes
     const [now, setNow] = useState(new Date());
 
@@ -38,11 +41,12 @@ export default function AuctionBidPage() {
         if (isConnected && prefillAmount && socketRef.current) {
             // Option A: Automatically send the bid as soon as connected
             socketRef.current.send(JSON.stringify({ amount: Number(prefillAmount) }));
-            
+
             // Clean up the URL so a page refresh doesn't re-bid
             window.history.replaceState(null, '', window.location.pathname);
+
         }
-    }, [isConnected]); // Only trigger once the socket is ready
+    }, [isConnected,prefillAmount]); // Only trigger once the socket is ready
 
 
     useEffect(() => {
@@ -79,13 +83,13 @@ export default function AuctionBidPage() {
             const errors: { amount?: string } = {};
             const minAcceptable = Number(lastBidAmount) + Number(auction?.min_increment || 0);
             if (values.amount < minAcceptable) {
-                errors.amount = `Min bid: $${minAcceptable}`;
+                errors.amount = t('minBidError', { amount: minAcceptable });
             }
             return errors;
         },
         onSubmit: (values) => {
             if (!socketRef.current || socketRef.current.readyState !== WebSocket.OPEN) {
-                setErrorMessage("Connection lost. Please try again.");
+                setErrorMessage(t('connectionLost'));
                 return;
             }
             socketRef.current.send(JSON.stringify({ amount: values.amount }));
@@ -94,7 +98,7 @@ export default function AuctionBidPage() {
 
     useEffect(() => {
         if (!auction?.id || !token) return;
-        const socket = new WebSocket(`ws://127.0.0.1:8000/ws/place-bid/${auction.id}/?token=${token}`);
+        const socket = new WebSocket(`ws://192.168.1.8:8000/ws/place-bid/${auction.id}/?token=${token}`);
         socketRef.current = socket;
         socket.onopen = () => setIsConnected(true);
         socket.onclose = () => setIsConnected(false);
@@ -117,16 +121,16 @@ export default function AuctionBidPage() {
 
                 if (message.new_end_time) {
                     setAuction((prev) => prev ? { ...prev, ended_at: message.new_end_time } : null);
-                    toast.info("Anti-sniping: Auction Extended!");
+                    toast.info(t('antiSniping'));
                 }
             }
         };
-        
+
         return () => socket.close();
     }, [auction?.id, token]);
 
     if (loading) return <div className="p-20 text-center"><RiAuctionLine className="animate-spin text-4xl mx-auto text-indigo-600" /></div>;
-    if (error || !auction) return <div className="p-20 text-center text-red-500 font-bold">Auction not found.</div>;
+    if (error || !auction) return <div className="p-20 text-center text-red-500 font-bold">{t('notFound')}</div>;
 
     return (
         <ProtectedRoute>
@@ -137,9 +141,9 @@ export default function AuctionBidPage() {
                             <div className="flex items-center gap-2 mb-1">
                                 <Badge color={isConnected ? "success" : "failure"} className="rounded-full px-2">
                                     <span className={`mr-1 inline-block w-2 h-2 rounded-full ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></span>
-                                    {isConnected ? "Live Connection" : "Offline"}
+                                    {isConnected ? t('liveConnection') : t('offline')}
                                 </Badge>
-                                <span className="text-xs font-bold uppercase tracking-widest text-slate-400">Auction ID: {auction.id}</span>
+                                <span className="text-xs font-bold uppercase tracking-widest text-slate-400">{t('auctionId')}: {auction.id}</span>
                             </div>
                             <h1 className="text-3xl font-black text-slate-900 tracking-tight">{auction.title}</h1>
                         </div>
@@ -152,8 +156,8 @@ export default function AuctionBidPage() {
 
             <main className="container mx-auto px-4 my-10 max-w-7xl">
                 {isActuallyEnded && (
-                    <Alert color="failure" icon={HiInformationCircle} className="mb-8 rounded-2xl border border-red-100 shadow-sm">
-                        <span className="font-bold">This auction has concluded.</span> No further bidding is permitted.
+                    <Alert color="failure" icon={HiInformationCircle} withBorderAccent className="mb-6" >
+                        <span className="font-bold">{t('endedAlert')}</span>
                     </Alert>
                 )}
 
@@ -165,7 +169,7 @@ export default function AuctionBidPage() {
                             </div>
 
                             <div className="flex flex-col items-center text-center">
-                                <p className="text-xs font-bold uppercase tracking-[0.2em] text-indigo-600 mb-2">Current Highest Bid</p>
+                                <p className="text-xs font-bold uppercase tracking-[0.2em] text-indigo-600 mb-2">{t('currentHighestBid')}</p>
                                 <h2 className="text-7xl font-black text-slate-900 mb-2">
                                     <span className="text-4xl font-light text-slate-400">$</span>
                                     {Number(lastBidAmount).toLocaleString()}
@@ -173,20 +177,20 @@ export default function AuctionBidPage() {
                                 {bids[0] ? (
                                     <div className="flex items-center gap-2 bg-indigo-50 px-4 py-1 rounded-full border border-indigo-100">
                                         <div className="w-2 h-2 rounded-full bg-indigo-500"></div>
-                                        <span className="text-sm font-medium text-indigo-700">Held by <strong>{bids[0].created_by}</strong></span>
+                                        <span className="text-sm font-medium text-indigo-700">{t('heldBy')} <strong>{bids[0].created_by}</strong></span>
                                     </div>
                                 ) : (
-                                    <span className="text-slate-400 text-sm italic">Starting price</span>
+                                    <span className="text-slate-400 text-sm italic">{t('startingPrice')}</span>
                                 )}
                             </div>
 
                             <div className="grid grid-cols-2 gap-4 mt-10 pt-8 border-t border-slate-50">
                                 <div className="text-center">
-                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Min Increment</p>
+                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{t('minIncrement')}</p>
                                     <p className="text-lg font-bold text-slate-700">${auction.min_increment}</p>
                                 </div>
                                 <div className="text-center border-l border-slate-100">
-                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Bids</p>
+                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{t('totalBids')}</p>
                                     <p className="text-lg font-bold text-slate-700">{bids.length}</p>
                                 </div>
                             </div>
@@ -196,7 +200,7 @@ export default function AuctionBidPage() {
                             <div className="bg-slate-900 rounded-3xl p-8 text-white shadow-2xl shadow-indigo-200">
                                 <div className="flex items-center gap-2 mb-6">
                                     <SlEnergy className="text-yellow-400" />
-                                    <h2 className="text-lg font-bold tracking-tight">Place Your Bid</h2>
+                                    <h2 className="text-lg font-bold tracking-tight">{t('placeYourBid')}</h2>
                                 </div>
 
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
@@ -234,7 +238,7 @@ export default function AuctionBidPage() {
                                         className="w-full bg-indigo-600 hover:bg-indigo-700 py-2 rounded-2xl transition-transform active:scale-95"
                                     >
                                         <span className="flex items-center gap-2 text-lg font-black uppercase tracking-wider">
-                                            Confirm Bid <HiTrendingUp />
+                                            {t('confirmBid')} <HiTrendingUp />
                                         </span>
                                     </Button>
                                 </form>
@@ -246,9 +250,9 @@ export default function AuctionBidPage() {
                         <div className="bg-white rounded-3xl border border-slate-200 p-6 sticky top-24">
                             <div className="flex items-center justify-between mb-6">
                                 <h2 className="text-sm font-black uppercase tracking-widest text-slate-800 flex items-center gap-2">
-                                    <RiHistoryLine className="text-indigo-600" /> Bid History
+                                    <RiHistoryLine className="text-indigo-600" /> {t('bidHistory')}
                                 </h2>
-                                <span className="text-[10px] bg-slate-100 text-slate-500 px-2 py-1 rounded-full font-bold">LIVE</span>
+                                <span className="text-[10px] bg-slate-100 text-slate-500 px-2 py-1 rounded-full font-bold capitalize">{auction.status}</span>
                             </div>
 
                             <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
@@ -264,13 +268,13 @@ export default function AuctionBidPage() {
                                                     ${Number(bid.amount).toLocaleString()}
                                                 </span>
                                             </div>
-                                            <p className="text-[10px] text-slate-400 font-medium">{formatTimestamp(bid.created_at)}</p>
+                                            <p className="text-[10px] text-slate-400 font-medium">{formatTimestamp(bid.created_at,locale)}</p>
                                         </div>
                                     </div>
                                 ))}
                                 {bids.length === 0 && (
                                     <div className="text-center py-10">
-                                        <p className="text-slate-400 text-sm">No activity yet. Be the first!</p>
+                                        <p className="text-slate-400 text-sm">{t('noActivity')}</p>
                                     </div>
                                 )}
                             </div>

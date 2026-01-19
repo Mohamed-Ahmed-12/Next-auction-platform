@@ -11,7 +11,7 @@ export interface FieldBuilderProps {
 // this used for descripe field schema defination
 export interface FormField {
     id: string;
-    label: string;
+    label: { [key: string]: string } | string; // support translatable labels
     fieldType: HTMLInputTypeAttribute;
     placeholder: string;
     required: boolean;

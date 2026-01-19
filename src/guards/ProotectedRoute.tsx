@@ -10,9 +10,9 @@ export default function ProtectedRoute({ children,cls }: { children: React.React
     if (isLoading) {
         return (
             <>
-                {/* <div className="flex justify-center items-center w-full h-full absolute top-0">
+                <div className="flex justify-center items-center w-full h-full absolute top-0">
                 <Spinner color="purple" aria-label="loading" />
-            </div> */}
+            </div>
             </>
         );
     }

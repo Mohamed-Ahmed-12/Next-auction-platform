@@ -77,6 +77,7 @@ export async function readBlobError(errorBlob: Blob): Promise<ErrorData> {
                     resolve({ detail: "Server returned an empty error response." });
                 }
             } catch (e) {
+                console.error("Error parsing JSON from blob:", e);
                 resolve({ detail: "Server returned a non-JSON or invalid error response." });
             }
         };

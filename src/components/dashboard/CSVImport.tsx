@@ -15,7 +15,7 @@ import {
     TimelinePoint,
     TimelineTitle,
 } from "flowbite-react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { FaFileCsv, FaUpload } from "react-icons/fa6";
 import { FcProcess } from "react-icons/fc";
 import { VscOpenPreview } from "react-icons/vsc";
@@ -44,9 +44,9 @@ export function CSVImport({ columnsTable, modelLabel, refetch }: CSVImportProps)
     const [data, setData] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
 
-    const handleFileSelect = () => {
-        fileInputRef.current?.click();
-    };
+    // const handleFileSelect = () => {
+    //     fileInputRef.current?.click();
+    // };
 
     const validateHeaders = (sheetData: any[]) => {
         if (sheetData.length === 0) return false;
@@ -212,8 +212,9 @@ export function CSVImport({ columnsTable, modelLabel, refetch }: CSVImportProps)
                             </div>
                         )}
 
-                        {/* File Upload / Preview */}
+                        
                         {selectedFile ? (
+                            // Data Preview Table
                             <div className="h-[500px]">
                                 <AgGridReact
                                     rowData={data}
@@ -221,6 +222,7 @@ export function CSVImport({ columnsTable, modelLabel, refetch }: CSVImportProps)
                                 />
                             </div>
                         ) : (
+                            // Dropzone Area
                             <div
                                 role="button"
                                 tabIndex={0}

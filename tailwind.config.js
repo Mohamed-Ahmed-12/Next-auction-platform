@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+import flowbitePlugin from 'flowbite/plugin';
 export const content = [
     "./app/**/*.{js,ts,jsx,tsx}",
     "./pages/**/*.{js,ts,jsx,tsx}",
@@ -9,6 +10,10 @@ export const content = [
 export const theme = {
     extend: {},
 };
+// export const plugins = [
+//     require('flowbite/plugin')
+// ];
+
 export const plugins = [
-    require('flowbite/plugin')
+    flowbitePlugin
 ];

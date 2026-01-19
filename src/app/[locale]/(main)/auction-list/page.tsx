@@ -1,217 +1,153 @@
 "use client";
 
-import { AuctionCard } from "@/components/auction/AuctionCard";
-import { Auction, Category } from "@/types/main";
-import React, { useEffect, useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useFetch } from "@/hooks/useFetcher";
-import { Badge, Button, Checkbox, Label, Tooltip } from "flowbite-react";
-import { filterAuction } from "@/services/AuctionService";
-import { AUCTION_STATUS } from "@/lib/data";
-import { AuctionFilterFields } from "@/types/filters";
+import { Button, Badge, Drawer, DrawerHeader, DrawerItems } from "flowbite-react";
+import { HiFilter, HiRefresh, HiSearch, HiX } from "react-icons/hi";
+
+import { AuctionCard } from "@/components/auction/AuctionCard";
 import AuctionListSkelton from "@/components/skeltons/AuctionListSkelton";
 
+import { Auction, Category } from "@/types/main";
+import { AuctionFilterFields } from "@/types/filters";
+import FilterSidebar from "@/components/common/Filter";
 
-export default function Page() {
-    const { data, error, loading } = useFetch<Auction[]>("auction/");
-    console.log(data)
-    const { data: categories, error: errorCategories, loading: loadingCategories } = useFetch<Category[]>("category/");
-    const [filteredData, setFilteredData] = useState<Auction[]>([]);
-    const [displayAdvFilters, setDisplayAdvFilters] = useState<boolean>(false);
-    const [filtersData, setFiltersData] = useState<AuctionFilterFields>({
+export default function AuctionListPage() {
+    const [isOpen, setIsOpen] = useState(false); // Mobile Drawer State
+    const [showFilters, setShowFilters] = useState(true); // Desktop Sidebar State
+
+    const { data: auctions, loading, error } = useFetch<Auction[]>("auction/");
+    const { data: categories, loading: loadingCats } = useFetch<Category[]>("category/");
+
+    const [filters, setFilters] = useState<AuctionFilterFields>({
         category: [],
         status: [],
     });
-    const [loadingData, setIsLoadingData] = useState(false);
 
-    //💥 delete it in future
-    // useEffect(() => {
-    //     setIsLoadingData(true);
-    //     const timer = setTimeout(() => setIsLoadingData(false), 2000);
-    //     return () => clearTimeout(timer);
-    // }, []);
+    // Derived state for better performance
+    const filteredAuctions = useMemo(() => {
+        if (!auctions) return [];
+        return auctions.filter(item => {
+            const catMatch = filters.category.length === 0 || filters.category.includes(item.category.slug);
+            const statusMatch = filters.status.length === 0 || filters.status.includes(item.status);
+            return catMatch && statusMatch;
+        });
+    }, [auctions, filters]);
 
-    useEffect(() => {
-        // Set filteredData to the fetched data if available
-        if (data) {
-            setFilteredData(data);
-        }
-    }, [data]);
+    if (error) return <ErrorMessage message={error} />;
 
-    // Apply filters
-    useEffect(() => {
-        const hasFilters =
-            filtersData.category.length > 0 || filtersData.status.length > 0;
-
-        if (hasFilters) {
-            setIsLoadingData(true);
-            filterAuction(filtersData).then((auctions) => {
-                setFilteredData(auctions);
-            })
-                .catch((err) => {
-
-                })
-                .finally(() => {
-                    setIsLoadingData(false);
-                })
-        } else {
-            setFilteredData(data || []);
-        }
-    }, [filtersData, data]);
-
-    if (loading || loadingData) {
-        return (
-            <div className="container mx-auto px-4 sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl my-10">
-                <h1 className="font-bold text-3xl mb-5">Auction List</h1>
-                <AuctionListSkelton />
-            </div>
-        )
-    };
-    if (error) {
-        return (
-            <div className="container mx-auto px-4 sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl my-10">
-                <h1 className="font-bold text-3xl mb-5">Auction List</h1>
-                <h5>Error: {error}</h5>
-            </div>
-        )
-    }
-
-    if (!data || (data.length === 0 && filteredData.length === 0)) {
-        return (
-            <div className="container mx-auto px-4 sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl my-10">
-                <h1 className="font-bold text-3xl mb-5">Auction List</h1>
-                <h2>No Auction available..</h2>
-            </div>
-        )
-    }
     return (
-        <div className="container mx-auto px-4 sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl m-10">
-            <h1 className="font-bold text-3xl mb-5">Auction List</h1>
-
-            <div className="flex justify-between items-center mb-6">
-                <p>Showing {filteredData.length} results</p>
-                <Tooltip content="Advanced Filters">
-                    <Button
-                        onClick={() => setDisplayAdvFilters((prev) => !prev)}
-                        className="px-4 py-2 bg-indigo-100 hover:bg-indigo-200 text-indigo-900 rounded-md"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            fill="currentColor"
-                            className="bi bi-sliders2"
-                            viewBox="0 0 16 16"
-                        >
-                            <path
-                                fillRule="evenodd"
-                                d="M10.5 1a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4H1.5a.5.5 0 0 1 0-1H10V1.5a.5.5 0 0 1 .5-.5M12 3.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m-6.5 2A.5.5 0 0 1 6 6v1.5h8.5a.5.5 0 0 1 0 1H6V10a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5M1 8a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 1 8m9.5 2a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V13H1.5a.5.5 0 0 1 0-1H10v-1.5a.5.5 0 0 1 .5-.5m1.5 2.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5"
-                            />
-                        </svg>
-                    </Button>
-                </Tooltip>
-            </div>
-
-            <div className="grid grid-cols-4 gap-4">
-                {/* Auction List */}
-                <div
-                    className={`transition-all duration-500 col-span-4 ${displayAdvFilters ? "md:col-span-3" : "md:col-span-4"
-                        }`}
-                >
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-                        {filteredData.map((auction: Auction) => (
-                            <AuctionCard key={auction.id} auction={auction} />
-                        ))}
-                    </div>
+        <main className="container mx-auto px-4 py-8 lg:py-12">
+            {/* Header Section */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                <div>
+                    <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">Live Auctions</h1>
+                    <p className="text-gray-500 mt-1">Discover unique items and place your bid.</p>
                 </div>
 
-                {/* Sidebar Filters */}
-                <div
-                    className={`transition-all duration-500 overflow-hidden ${displayAdvFilters
-                        ? "opacity-100 translate-x-0 md:col-span-1"
-                        : "opacity-0 -translate-x-10 w-0 md:w-0"
-                        }`}
-                >
-                    {displayAdvFilters && (
-                        <div className="bg-gray-100 p-5 rounded shadow">
-                            <h2 className="font-bold mb-3">Advanced Filters</h2>
+                <div className="flex items-center gap-3">
+                    <p className="text-sm font-medium text-gray-600">
+                        {filteredAuctions.length} Results
+                    </p>
+                    {/* Mobile Filter Toggle */}
+                    <Button color="gray" className="md:hidden" onClick={() => setIsOpen(true)}>
+                        <HiFilter className="mr-2 h-5 w-5" /> Filters
+                    </Button>
+                    {/* Desktop Filter Toggle */}
+                    <Button
+                        color="light"
+                        className="hidden md:flex"
+                        onClick={() => setShowFilters(!showFilters)}
+                    >
+                        <HiFilter className={`mr-2 h-5 w-5 ${showFilters ? 'text-indigo-600' : ''}`} />
+                        {showFilters ? "Hide Filters" : "Show Filters"}
+                    </Button>
+                </div>
+            </div>
 
-                            {/* Category Filter */}
-                            <div className="my-5">
-                                <h4 className="mb-4">Category</h4>
-                                {loadingCategories && <p>Loading categories...</p>}
-                                {errorCategories && <p>Error loading categories</p>}
-                                <div className="flex max-w-md flex-col gap-4" id="checkbox">
-                                    {categories?.map((cate) => (
-                                        <div className="flex items-center gap-2" key={cate.id}>
-                                            <Checkbox
-                                                id={cate.title}
-                                                value={cate.slug}
-                                                checked={filtersData.category.includes(cate.slug)}
-                                                onChange={(e) => {
-                                                    const value = e.target.value;
-                                                    setFiltersData((prev) => {
-                                                        const newCategories = e.target.checked
-                                                            ? [...prev.category, value]
-                                                            : prev.category.filter((slug) => slug !== value);
-                                                        return { ...prev, category: newCategories };
-                                                    });
-                                                }}
-                                            />
-                                            <Label htmlFor={cate.title}>{cate.title}</Label>
-                                        </div>
-                                    ))}
+            <div className="flex flex-col md:flex-row gap-8">
+                {/* Desktop Sidebar */}
+                {showFilters && (
+                    <aside className="hidden md:block w-64 shrink-0 transition-all">
+                        <FilterSidebar
+                            categories={categories || []}
+                            filters={filters}
+                            setFilters={setFilters}
+                        />
+                    </aside>
+                )}
+
+                {/* Content Area */}
+                <div className="flex-1">
+                    {loading ? (
+                        <AuctionListSkelton />
+                    ) : filteredAuctions.length > 0 ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {filteredAuctions.map((auction) => (
+                                <AuctionCard key={auction.id} auction={auction} />
+                            ))}
+                        </div>
+                    ) : (
+
+                        <div className="flex flex-col items-center justify-center py-16 px-4 text-center bg-white border border-gray-100 rounded-3xl shadow-sm">
+                            {/* Visual Anchor */}
+                            <div className="relative mb-6">
+                                <div className="absolute inset-0 bg-indigo-100 rounded-full blur-2xl opacity-40 animate-pulse" />
+                                <div className="relative flex items-center justify-center w-20 h-20 bg-indigo-50 text-indigo-600 rounded-2xl shadow-inner">
+                                    <HiSearch className="w-10 h-10" />
                                 </div>
                             </div>
 
-                            {/* Status Filter */}
-                            <div>
-                                <h4 className="mb-4">Status</h4>
-                                <div className="flex max-w-md flex-col gap-4" id="checkbox">
-                                    {AUCTION_STATUS.map((stat) => (
-                                        <div className="flex items-center gap-2" key={stat}>
-                                            <Checkbox
-                                                id={stat}
-                                                value={stat}
-                                                checked={filtersData.status.includes(stat)}
-                                                onChange={(e) => {
-                                                    const value = e.target.value;
-                                                    setFiltersData((prev) => {
-                                                        const newStatus = e.target.checked
-                                                            ? [...prev.status, value]
-                                                            : prev.status.filter((slug) => slug !== value);
-                                                        return { ...prev, status: newStatus };
-                                                    });
-                                                }}
-                                            />
-                                            <Label htmlFor={stat}>{stat}</Label>
-                                        </div>
-                                    ))}
-                                </div>
+                            {/* Messaging */}
+                            <div className="max-w-xs mx-auto mb-8">
+                                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                                    No auctions found
+                                </h3>
+                                <p className="text-sm text-gray-500 leading-relaxed">
+                                    We couldn't find any live auctions matching your current filters. Try
+                                    broadening your search to see more items.
+                                </p>
                             </div>
 
-                            {/* Selected Filters Preview */}
-                            {(filtersData.category.length > 0 ||
-                                filtersData.status.length > 0) && (
-                                    <div className="mt-5">
-                                        <h4 className="mb-2">Selected Filters:</h4>
-                                        <div className="flex flex-wrap gap-2">
-                                            {filtersData.category.map((c) => (
-                                                <Badge key={c} color="info">
-                                                    {c}
-                                                </Badge>
-                                            ))}
-                                            {filtersData.status.map((s) => (
-                                                <Badge key={s} color="purple">
-                                                    {s}
-                                                </Badge>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
+                            {/* Primary Action */}
+                            <Button
+                                onClick={() => setFilters({ category: [], status: [] })}
+                                className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 transition-all shadow-lg hover:shadow-indigo-200"
+                            >
+                                <HiRefresh className="mr-2 h-5 w-5" />
+                                Clear All Filters
+                            </Button>
+
+                            {/* Helpful Hint */}
+                            <p className="mt-6 text-xs text-gray-400 font-medium">
+                                Tip: Try selecting "All Categories" to see the latest bids.
+                            </p>
                         </div>
                     )}
                 </div>
             </div>
-        </div>
+
+            {/* Mobile Drawer */}
+            <Drawer open={isOpen} onClose={() => setIsOpen(false)} position="right" className="p-4">
+                <DrawerHeader title="Filters" titleIcon={() => <HiFilter className="mr-2" />} />
+                <DrawerItems>
+                    <FilterSidebar
+                        categories={categories || []}
+                        filters={filters}
+                        setFilters={setFilters}
+                    />
+                    <Button className="w-full mt-6" onClick={() => setIsOpen(false)}>Apply Filters</Button>
+                </DrawerItems>
+            </Drawer>
+        </main>
     );
 }
+
+const ErrorMessage = ({ message }: { message: string }) => (
+    <div className="container mx-auto px-4 py-20 text-center">
+        <div className="bg-red-50 text-red-800 p-6 rounded-lg inline-block">
+            <h2 className="text-xl font-bold">Something went wrong</h2>
+            <p>{message}</p>
+        </div>
+    </div>
+);

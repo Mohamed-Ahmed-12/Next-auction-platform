@@ -11,12 +11,23 @@ import { axiosInstance } from "@/lib/network";
  * @param {string} [params.format='xlsx'] - The desired file format for the export ('csv' or 'xlsx'). Defaults to 'xlsx'.
  * @returns {Promise<void>} A promise that resolves when the download is initiated or rejects on API/download error.
  */
-export async function exportData({ modelLabel, columns, filters, format = 'xlsx' }: { modelLabel: string, columns: string[], filters?: any, format?: string }): Promise<void> {
+interface ExportParams {
+    modelLabel: string;
+    columns: string[];
+    filters?: Record<string, any>;
+    format?: 'json' | 'csv' | 'xlsx';
+}
+export async function exportData({
+    modelLabel,
+    columns,
+    filters,
+    format = 'json'
+}: ExportParams): Promise<void> {
     // 1. Prepare columns parameter string
     const columnString = columns.length > 0 ? columns.join(',') : '';
 
-      // Build filter params if they exist
-  const filterParams = buildFilterParams(filters);
+    // Build filter params if they exist
+    const filterParams = buildFilterParams(filters);
     // 2. Make the request, specifically asking for an 'arraybuffer' or 'blob' response type
     const response = await axiosInstance.get('export-data', {
         params: {

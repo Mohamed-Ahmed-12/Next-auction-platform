@@ -19,7 +19,7 @@ export const auctionColumns: (ColDef<Auction>)[] = [
     { field: "reserve_price", headerName: 'Reserve Price', flex: 1, valueFormatter: params => { return '$' + params.value.toLocaleString(); } },
     { field: "min_increment", headerName: 'Min Increment', flex: 1, valueFormatter: params => { return '$' + params.value.toLocaleString(); } },
     // --- Time/Audit Fields ---
-    { field: "end_at", headerName: 'End Time', flex: 1.2, valueFormatter: date => formatTimestamp(date.value) },
+    { field: "ended_at", headerName: 'End Time', flex: 1.2, valueFormatter: date => formatTimestamp(date.value) },
     { field: "created_at", headerName: 'Created At', flex: 1.2, valueFormatter: date => formatTimestamp(date.value) },
     { field: "updated_at", headerName: 'Updated At', flex: 1.2, valueFormatter: date => formatTimestamp(date.value) },
     { field: "entry_fee", headerName: "Entry Fee", flex: 1, valueFormatter: params => { return '$' + params.value.toLocaleString(); } },
