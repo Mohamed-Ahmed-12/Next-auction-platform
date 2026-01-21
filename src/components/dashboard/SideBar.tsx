@@ -2,7 +2,7 @@
 
 import { Sidebar, SidebarCollapse, SidebarItem, SidebarItemGroup, SidebarItems } from "flowbite-react";
 import { HiArrowSmRight, HiChartPie, HiUser, HiViewBoards } from "react-icons/hi";
-import { IoSettings } from "react-icons/io5";
+import { IoPeople, IoSettings } from "react-icons/io5";
 import { RiAuctionLine } from "react-icons/ri";
 import { SiGoogleanalytics } from "react-icons/si";
 import { IconType } from "react-icons";
@@ -12,7 +12,7 @@ import { ImBlogger } from "react-icons/im";
 import { IoIosInformationCircle } from "react-icons/io";
 import { BiCalendar } from "react-icons/bi";
 import { useTranslations } from "next-intl";
-import { Link ,usePathname} from "@/i18n/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
 
 interface MenuItem {
   label: string;
@@ -45,18 +45,27 @@ export function SideBarDashboard({ cls }: { cls?: string }) {
       label: t("pages"),
       icon: MdMiscellaneousServices,
       children: [
-        { label: t("about"), href: "#about", icon: IoIosInformationCircle },
-        { label: t("contact"), href: "#contact", icon: MdContactPhone },
-        { label: t("blog"), href: "#blog", icon: ImBlogger },
-        { label: t("faq"), href: "#faq", icon: FaQuestion },
-        { label: t("career"), href: "#career", icon: FaPeopleGroup },
+        // { label: t("about"), href: "#about", icon: IoIosInformationCircle },
+        // { label: t("contact"), href: "#contact", icon: MdContactPhone },
+        // { label: t("blog"), href: "#blog", icon: ImBlogger },
+        // { label: t("faq"), href: "#faq", icon: FaQuestion },
+        // { label: t("career"), href: "#career", icon: FaPeopleGroup },
       ]
     },
   ];
 
   const accountItems: MenuItem[] = [
+    {
+      label: t("settings"), children: [
+        {
+          label: "Roles & Permissions",
+          href: "/roles-and-perm",
+          icon: IoPeople
+        },
+      ], icon: IoSettings
+    },
     { label: t("profile"), href: "/dashboard/profile", icon: HiUser },
-    { label: t("settings"), href: "/dashboard/settings", icon: IoSettings },
+
     { label: t("logout"), href: "/logout", icon: HiArrowSmRight },
   ];
 

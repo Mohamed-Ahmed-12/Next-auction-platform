@@ -22,7 +22,7 @@ import { VscOpenPreview } from "react-icons/vsc";
 import { BiFile } from "react-icons/bi";
 import { AgGridReact } from "ag-grid-react";
 import { toast } from "react-toastify";
-import { importData } from "@/services/ImportDataService";
+import { importData, ParserFactory } from "@/services/ImportDataService";
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { useTranslations } from "next-intl";
 
@@ -78,55 +78,26 @@ export function CSVImport({ columnsTable, modelLabel, refetch }: CSVImportProps)
         return true;
     };
 
-    const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileUpload = async(event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (!file) return;
-
-        if (file.size > 25 * 1024 * 1024) {
-            toast.error("File size exceeds 25MB limit.");
-            return;
-        }
-
-        const validTypes = [
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            "application/vnd.ms-excel",
-            "text/csv",
-        ];
-        if (!validTypes.includes(file.type)) {
-            toast.error("Unsupported file type.");
-            return;
-        }
-
-        setSelectedFile(file);
-        const reader = new FileReader();
-
-        reader.onload = (e: ProgressEvent<FileReader>) => {
-            if (!e.target?.result) return;
-            try {
-                const arrayBuffer = e.target.result as ArrayBuffer;
-                const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: "array" });
-                const sheetName = workbook.SheetNames[0];
-                const worksheet = workbook.Sheets[sheetName];
-                const json: any[] = XLSX.utils.sheet_to_json(worksheet, {
-                    defval: ""
-                });
-
-                // --- VALIDATION STEP ---
-                if (!validateHeaders(json)) {
-                    setSelectedFile(null);
-                    setData([]);
-                    if (fileInputRef.current) fileInputRef.current.value = "";
-                    return;
-                }
-
-                setData(json);
-                toast.success("File parsed successfully!");
-            } catch {
-                toast.error("Invalid file format or corrupted file.");
+        try {
+            const parser = ParserFactory.getParser(file);
+            const json = await parser.parse(file);
+            if (!validateHeaders(json)) {
+                setSelectedFile(null);
+                setData([]);
+                if (fileInputRef.current) fileInputRef.current.value = ""; return;
             }
-        };
+            setSelectedFile(file);
+            setData(json);
+            toast.success("File parsed successfully!");
+        } catch (err: any) {
+            toast.error(err.message || "Invalid file format or corrupted file.");
+        }
 
-        reader.readAsArrayBuffer(file);
+
+       
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -180,7 +151,7 @@ export function CSVImport({ columnsTable, modelLabel, refetch }: CSVImportProps)
                                 <TimelineContent>
                                     <TimelineTitle>Upload File</TimelineTitle>
                                     <TimelineBody>
-                                        Upload an XLSX or CSV file containing data to import into the system.
+                                        Upload an XLSX, CSV or JSON file containing data to import into the system.
                                     </TimelineBody>
                                 </TimelineContent>
                             </TimelineItem>
@@ -212,7 +183,7 @@ export function CSVImport({ columnsTable, modelLabel, refetch }: CSVImportProps)
                             </div>
                         )}
 
-                        
+
                         {selectedFile ? (
                             // Data Preview Table
                             <div className="h-[500px]">
@@ -237,7 +208,7 @@ export function CSVImport({ columnsTable, modelLabel, refetch }: CSVImportProps)
                                         <p className="mb-2 text-sm text-gray-500">
                                             <span className="font-semibold">Click to upload</span> or drag and drop
                                         </p>
-                                        <p className="text-xs text-gray-500">xlsx , CSV (MAX 25mb)</p>
+                                        <p className="text-xs text-gray-500">XLSX, CSV or JSON (MAX 25mb)</p>
                                     </div>
                                     <FileInput
                                         id="dropzone-file"
@@ -246,7 +217,7 @@ export function CSVImport({ columnsTable, modelLabel, refetch }: CSVImportProps)
                                         name="file"
                                         ref={fileInputRef}
                                         multiple={false}
-                                        accept=".xlsx, .xls, .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                                        accept=".json, .xlsx, .xls, .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                                     />
                                 </Label>
                             </div>

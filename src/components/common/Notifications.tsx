@@ -25,7 +25,7 @@ const NotificationsComponent = () => {
     useEffect(() => {
         if (!token) return;
 
-        const socket = new WebSocket(`ws://192.168.1.8:8000/ws/notifications/?token=${token}`);
+        const socket = new WebSocket(`ws://192.168.1.5:8000/ws/notifications/?token=${token}`);
         socketRef.current = socket;
 
         socket.onopen = () => console.log("WebSocket Connected");

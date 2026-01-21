@@ -98,7 +98,7 @@ export default function AuctionBidPage() {
 
     useEffect(() => {
         if (!auction?.id || !token) return;
-        const socket = new WebSocket(`ws://192.168.1.8:8000/ws/place-bid/${auction.id}/?token=${token}`);
+        const socket = new WebSocket(`ws://192.168.1.5:8000/ws/place-bid/${auction.id}/?token=${token}`);
         socketRef.current = socket;
         socket.onopen = () => setIsConnected(true);
         socket.onclose = () => setIsConnected(false);

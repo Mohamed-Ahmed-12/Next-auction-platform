@@ -41,7 +41,7 @@ export default function Dashboard() {
     useEffect(() => {
         if (!token) return;
 
-        const socket = new WebSocket(`ws://192.168.1.8:8000/ws/dashboard/updates/?token=${token}`)
+        const socket = new WebSocket(`ws://192.168.1.5:8000/ws/dashboard/updates/?token=${token}`)
 
         socketRef.current = socket;
 
