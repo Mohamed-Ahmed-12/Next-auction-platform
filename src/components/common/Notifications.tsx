@@ -15,17 +15,13 @@ const NotificationsComponent = () => {
     // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const socketRef = useRef<WebSocket | null>(null);
-    const { user } = useAuth();
-    const token = user?.access || null;
 
     // Determine unread count from the fetched data
     const unreadCount = notificationsData?.results.filter(n => !n.is_read).length || 0;
 
     // --- 1. WebSocket Setup ---
     useEffect(() => {
-        if (!token) return;
-
-        const socket = new WebSocket(`ws://192.168.1.5:8000/ws/notifications/?token=${token}`);
+        const socket = new WebSocket(`ws://127.0.0.1:8000/ws/notifications/`);
         socketRef.current = socket;
 
         socket.onopen = () => console.log("WebSocket Connected");
@@ -52,7 +48,7 @@ const NotificationsComponent = () => {
                 socketRef.current.close();
             }
         };
-    }, [token]);
+    }, []);
 
     // --- 3. Render Component ---
     return (

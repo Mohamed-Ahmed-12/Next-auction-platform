@@ -12,15 +12,18 @@ import { LoginModal } from "../users/LoginModal";
 import NotificationsComponent from "./Notifications";
 import { UserComponent } from "../users/UserDropdown";
 import LanguageSwitch from "./LanguageSwitch";
+import { useSearchParams } from "next/navigation";
 
 const NavBar = () => {
     const t = useTranslations();
     const { isAuthenticated } = useAuth();
+    const searchParams = useSearchParams()
     const pathname = usePathname();
-
+    const triggerOpenLogin = Boolean(searchParams.get("login_modal") ?? false);
+    const callbackUrl = searchParams.get("callbackUrl") ?? undefined;
     // States
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-    const [openModal, setOpenModal] = useState(false);
+    const [openModal, setOpenModal] = useState(triggerOpenLogin ?? false);
 
     const NavLinks = [
         { label: t("header.home"), href: "/" },
@@ -98,7 +101,7 @@ const NavBar = () => {
                                 {t("header.login")}
                             </Button>
                         )}
-                        
+
                         <button
                             onClick={() => setIsDrawerOpen(true)}
                             className="lg:hidden p-2.5 rounded-xl bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-all active:scale-95"
@@ -107,7 +110,7 @@ const NavBar = () => {
                         </button>
                     </div>
 
-                    
+
 
 
                 </div>
@@ -143,7 +146,12 @@ const NavBar = () => {
                 </DrawerItems>
             </Drawer>
 
-            <LoginModal isOpen={openModal} onClose={() => setOpenModal(false)} />
+            {
+                !isAuthenticated && (
+                    <LoginModal isOpen={openModal} onClose={() => setOpenModal(false)} callbackUrl={callbackUrl} />
+
+                )
+            }
         </>
     );
 };

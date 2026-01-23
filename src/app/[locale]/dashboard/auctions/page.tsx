@@ -4,18 +4,16 @@ import React, { useMemo } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { Auction } from "@/types/main";
 import { AllCommunityModule, ModuleRegistry, RowSelectionOptions } from 'ag-grid-community';
-import { Button } from "flowbite-react";
 import { actionsColumn } from "@/components/dashboard/actionsColumn";
 import { auctionColumns } from "@/schemas/tableSchemas/auctionsSchema";
 import { Link } from "@/i18n/navigation";
 import PageHeader from "@/components/dashboard/PageHeader";
+import CreateNewBtn from "@/components/dashboard/CreateNewBtn";
 import { useFetch } from "@/hooks/useFetcher";
 import { useRouter } from "next/navigation";
 import { UniversalExport } from "@/components/dashboard/UniversalExport";
 import { useLocale, useTranslations } from "next-intl";
 
-// Register all Community features
-ModuleRegistry.registerModules([AllCommunityModule]);
 
 export default function AuctionsPage() {
     const locale = useLocale();
@@ -72,12 +70,7 @@ export default function AuctionsPage() {
                         modelLabel={'main.Auction'}
                     />
                     <Link href="/dashboard/auctions/create">
-                        <Button className="bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-200 transition-all duration-300">
-                            <span className="flex items-center gap-2">
-                                <span className="text-xl font-light">+</span>
-                                {t("createNew")}
-                            </span>
-                        </Button>
+                        <CreateNewBtn />
                     </Link>
                 </div>
             </PageHeader>

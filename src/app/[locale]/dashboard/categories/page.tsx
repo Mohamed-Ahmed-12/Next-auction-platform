@@ -18,9 +18,7 @@ import { CSVImport } from "@/components/dashboard/CSVImport";
 import { useAgGridFilter } from "@/hooks/useAgGridFilter";
 import { useLocale, useTranslations } from "next-intl";
 import { useBreakpoint } from "@/hooks/useBreakPoint";
-
-// Register all Community features
-ModuleRegistry.registerModules([AllCommunityModule]);
+import CreateNewBtn from "@/components/dashboard/CreateNewBtn";
 
 export default function CategoriesPage() {
     const locale = useLocale()
@@ -117,9 +115,7 @@ export default function CategoriesPage() {
                     <UniversalExport disabled={!(!!rowData.length)} columns={categoryColumns} modelLabel={'main.Category'} filters={filterModel} />
                     <CSVImport columnsTable={categoryColumns} modelLabel="main.Category" refetch={refetch} />
                     <Link href="/dashboard/categories/create">
-                        <Button size="sm" className="cursor-pointer">
-                            {t("createNew")}
-                        </Button>
+                        <CreateNewBtn />
                     </Link>
                 </div>
             </PageHeader>

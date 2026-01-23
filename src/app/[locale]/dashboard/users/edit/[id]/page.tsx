@@ -4,13 +4,13 @@ import FormBuilder from "@/components/dashboard/FormBuilder";
 import { useFetch } from "@/hooks/useFetcher";
 import { UserFormFields } from "@/schemas/formSchemas/userForm";
 import { updateUser } from "@/services/UsersService";
-import { User } from "@/types/auth";
+import { UserManagement } from "@/types/users";
 import { useParams } from "next/navigation"
 
 export default function EditUserPage() {
     const { id } = useParams();
     const shouldFetch = id && typeof id === 'string';
-    const { data: user, error, loading } = useFetch<User>(shouldFetch ? `auth/users/${id}/` : '')
+    const { data: user, error, loading } = useFetch<UserManagement>(shouldFetch ? `auth/users/${id}/` : '')
 
 
     // --- RENDER LOGIC ---

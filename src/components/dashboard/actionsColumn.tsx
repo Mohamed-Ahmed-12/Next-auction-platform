@@ -21,7 +21,7 @@ function ActionsCell<T>({ row, onView, onEdit, onDelete }: ActionsCellProps<T>) 
       {
         onView != undefined &&
         <button
-          className="text-gray-600 bg-gray-50 font-semibold cursor-pointer text-xl"
+          className="text-purple-600 bg-purple-50 font-semibold cursor-pointer text-xl"
           onClick={() => onView(row)}
         >
           <BsEye />

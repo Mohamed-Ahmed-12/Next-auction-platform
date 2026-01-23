@@ -10,19 +10,19 @@ import { Link } from "@/i18n/navigation";
 import { useFetch } from "@/hooks/useFetcher";
 import { useRouter } from "next/navigation";
 import { UniversalExport } from "@/components/dashboard/UniversalExport";
-import { User } from "@/types/auth";
 import { userColumns } from "@/schemas/tableSchemas/authSchemas";
 import { CSVImport } from "@/components/dashboard/CSVImport";
 import { useAgGridFilter } from "@/hooks/useAgGridFilter";
 import { useLocale, useTranslations } from "next-intl";
-
-// Register all Community features
-ModuleRegistry.registerModules([AllCommunityModule]);
+import CreateNewBtn from "@/components/dashboard/CreateNewBtn";
+import { UserManagement } from "@/types/users";
+import { usePermission } from "@/hooks/usePermissionBased";
+import { Guard } from "@/components/security/Guard";
 
 export default function UsersPage() {
     const locale = useLocale()
     const t = useTranslations('dashboard')
-    const { data: users, error, loading, refetch } = useFetch<User[]>(`auth/users/`);
+    const { data: users, error, loading, refetch } = useFetch<UserManagement[]>(`auth/users/`);
     const rowData = users || []; // Use empty array if data is undefined
 
     // filtering
@@ -44,7 +44,7 @@ export default function UsersPage() {
 
     // --- ACTION HANDLERS ---
 
-    const handleEdit = async (data: User) => {
+    const handleEdit = async (data: UserManagement) => {
         router.push(`/dashboard/users/edit/${data.id}`)
     };
 
@@ -52,7 +52,7 @@ export default function UsersPage() {
 
     const userColumnsWithActions = [
         ...userColumns,
-        ...actionsColumn<User>({
+        ...actionsColumn<UserManagement>({
             onEdit: handleEdit,
         }),
     ];
@@ -71,12 +71,16 @@ export default function UsersPage() {
         <>
             <PageHeader title={t('users')}>
                 <div className="flex gap-2">
-                    <UniversalExport disabled={!(!!rowData.length)} columns={userColumns} modelLabel={'authen.CustomUser'} filters={filterModel} />
-                    <CSVImport columnsTable={userColumns} modelLabel={'authen.CustomUser'} refetch={refetch} />
+                    <Guard permission="EXPORT_USERS">
+                        <UniversalExport disabled={!(!!rowData.length)} columns={userColumns} modelLabel={'authen.CustomUser'} filters={filterModel} />
+                    </Guard>
+
+                    <Guard permission="IMPORT_USERS">
+                        <CSVImport columnsTable={userColumns} modelLabel={'authen.CustomUser'} refetch={refetch} />
+                    </Guard>
+                    
                     <Link href="/dashboard/users/create">
-                        <Button size="sm" className="cursor-pointer">
-                            {t("createNew")}
-                        </Button>
+                        <CreateNewBtn />
                     </Link>
                 </div>
             </PageHeader>
@@ -90,7 +94,7 @@ export default function UsersPage() {
                     defaultColDef={defaultColDef}
                     rowSelection={rowSelection}
                     onFilterChanged={handleFilterChange}
-                    enableRtl={locale=="ar"}
+                    enableRtl={locale == "ar"}
 
                 />
             </div>

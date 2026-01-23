@@ -32,8 +32,6 @@ import AuctionStatusBadge from "@/components/common/AuctionStatusBadge";
 import { UniversalExport } from "@/components/dashboard/UniversalExport";
 import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
 
-// Register all Community features
-ModuleRegistry.registerModules([AllCommunityModule]);
 /**
  * MAIN COMPONENT: AuctionFullDetails
  * Orchestrates data fetching and tabbed layout

@@ -13,9 +13,10 @@ import { BiUser } from "react-icons/bi";
 interface LoginModalProps {
     isOpen: boolean;
     onClose: () => void;
+    callbackUrl: string | null | undefined;
 }
 
-export function LoginModal({ isOpen, onClose }: LoginModalProps) {
+export function LoginModal({ isOpen, onClose, callbackUrl }: LoginModalProps) {
     const t = useTranslations("Auth");
     const locale = useLocale();
     const isRTL = locale === 'ar';
@@ -27,7 +28,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
     const onSubmit: SubmitHandler<LoginCredentials> = (data) => {
         setLoading(true);
-        login(data)
+        login(data, callbackUrl)
             .then(() => {
                 toast.success(t('welcomeMsg'));
                 onCloseModal();

@@ -5,44 +5,34 @@ import axios, { AxiosHeaders, AxiosError } from "axios";
  * The core Axios instance configured for the Django API.
  */
 export const axiosInstance = axios.create({
-    baseURL: "http://192.168.1.5:8000/api/",
+    baseURL: process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/",
+    withCredentials: true,
+    xsrfCookieName: 'csrftoken',
+    xsrfHeaderName: 'X-CSRFToken',
     headers: {
         "Content-Type": "application/json"
     }
 });
+export const authEvents = new EventTarget();
 
-let logoutFn: () => void = () => { };
+// let logoutFn: () => void = () => { };
 
-export const setLogoutFunction = (fn: () => void) => {
-    logoutFn = fn;
-};
+// export const setLogoutFunction = (fn: () => void) => {
+//     logoutFn = fn;
+// };
 
 // REQUEST INTERCEPTOR
 axiosInstance.interceptors.request.use((config) => {
-    const userString = typeof window !== "undefined" ? localStorage.getItem("user") : null;
-    const userLang = localStorage.getItem("currentLang")
-        ?? document.documentElement.lang
-        ?? "en";
+    // 1. Language logic is fine to keep in localStorage
+    const userLang = typeof window !== "undefined"
+        ? (localStorage.getItem("currentLang") ?? document.documentElement.lang ?? "en")
+        : "en";
 
-    // Ensure headers exist
     if (!config.headers) {
         config.headers = new AxiosHeaders();
     }
 
-    // Set Accept-Language (Matches Django's LocaleMiddleware)
     config.headers.set("Accept-Language", userLang);
-
-    // Set Authorization if user exists
-    if (userString) {
-        try {
-            const { access: token } = JSON.parse(userString);
-            if (token) {
-                config.headers.set("Authorization", `Bearer ${token}`);
-            }
-        } catch (e) {
-            console.error("Error parsing user data:", e);
-        }
-    }
 
     return config;
 });
@@ -57,9 +47,8 @@ axiosInstance.interceptors.response.use(
 
         if (error.response) {
             const status = error.response.status;
+            const originalRequest = error.config as any;
 
-            // 🎯 FIX: Explicitly type responseData as 'any' or 'unknown' combined with 'ErrorData'
-            // We use `unknown` for safer initial typing, then assert it later.
             let responseData: unknown = error.response.data;
             let detail = "Server error occurred";
 
@@ -76,11 +65,17 @@ axiosInstance.interceptors.response.use(
             detail = errorBody.detail || errorBody.message || errorBody.error || detail;
             console.log("Response Status:", status);
             console.log("Response Detail:", detail);
+            // 1. Skip if the request explicitly asks to skip interceptors
+            if (originalRequest?._skipInterceptor) return Promise.reject(error);
 
-            // 2. HANDLE SPECIFIC STATUS CODES (401/403)
-            if (status === 401) {
-                console.log('401 Unauthorized: Initiating logout...');
-                logoutFn();
+            // 2. Define routes to ignore (preventing infinite loops)
+            const authUrls = ['auth/logout/', 'auth/login/', 'auth/verify/'];
+            const isAuthRequest = authUrls.some(url => originalRequest?.url?.includes(url));
+
+            if (status === 401 && !isAuthRequest) {
+                // Instead of calling a function directly, we dispatch a global event
+                authEvents.dispatchEvent(new Event('unauthorized'));
+                // 2. HANDLE SPECIFIC STATUS CODES (401/403)
                 // Reject with a standard Error object for session expiration
                 return Promise.reject(new Error(detail || "Session expired. Please log in again."));
 

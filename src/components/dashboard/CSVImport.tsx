@@ -26,9 +26,6 @@ import { importData, ParserFactory } from "@/services/ImportDataService";
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { useTranslations } from "next-intl";
 
-// Register all Community features
-ModuleRegistry.registerModules([AllCommunityModule]);
-
 type CSVImportProps = {
     columnsTable?: any;
     modelLabel: string;

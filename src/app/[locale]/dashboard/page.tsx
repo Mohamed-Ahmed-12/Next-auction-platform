@@ -17,10 +17,7 @@ export default function Dashboard() {
     const cardStyle = "shadow-none hover:shadow-md relative"
     const [loading, setIsLoading] = useState(false);
     const [data, setData] = useState<DashboardData | null>(null);
-
     const socketRef = useRef<WebSocket | null>(null);
-    const { user } = useAuth();
-    const token = user?.access;
 
     useEffect(() => {
         setIsLoading(true)
@@ -39,9 +36,7 @@ export default function Dashboard() {
 
     // Setup WebSocket
     useEffect(() => {
-        if (!token) return;
-
-        const socket = new WebSocket(`ws://192.168.1.5:8000/ws/dashboard/updates/?token=${token}`)
+        const socket = new WebSocket(`ws://127.0.0.1:8000/ws/dashboard/updates/`)
 
         socketRef.current = socket;
 
@@ -77,7 +72,7 @@ export default function Dashboard() {
         socket.onerror = () => console.log("WebSocket error occurred");
 
         return () => socket.close();
-    }, [token]);
+    }, []);
     
     if (loading) {
         return <p>Loading dashboard...</p>

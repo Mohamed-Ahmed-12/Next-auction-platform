@@ -11,7 +11,6 @@ import { useFetch } from "@/hooks/useFetcher";
 import { useAuth } from "@/context/authContext";
 import { useFormik } from "formik";
 import { formatTimestamp } from "@/helpers/dates";
-import ProtectedRoute from "@/guards/ProotectedRoute";
 import Timer from "@/components/common/Timer";
 import { toast } from "react-toastify";
 import { useLocale, useTranslations } from 'next-intl';
@@ -21,8 +20,6 @@ export default function AuctionBidPage() {
     const locale = useLocale();
     const { slug } = useParams() as { slug: string };
     const { data: initialData, error, loading } = useFetch<Auction>(`auction/${slug}/`);
-    const { user } = useAuth();
-    const token = user?.access || null;
     const socketRef = useRef<WebSocket | null>(null);
 
     const [auction, setAuction] = useState<Auction | null>(null);
@@ -97,8 +94,8 @@ export default function AuctionBidPage() {
     });
 
     useEffect(() => {
-        if (!auction?.id || !token) return;
-        const socket = new WebSocket(`ws://192.168.1.5:8000/ws/place-bid/${auction.id}/?token=${token}`);
+        if (!auction?.id) return;
+        const socket = new WebSocket(`ws://127.0.0.1:8000/ws/place-bid/${auction.id}/`);
         socketRef.current = socket;
         socket.onopen = () => setIsConnected(true);
         socket.onclose = () => setIsConnected(false);
@@ -127,13 +124,13 @@ export default function AuctionBidPage() {
         };
 
         return () => socket.close();
-    }, [auction?.id, token]);
+    }, [auction?.id]);
 
     if (loading) return <div className="p-20 text-center"><RiAuctionLine className="animate-spin text-4xl mx-auto text-indigo-600" /></div>;
     if (error || !auction) return <div className="p-20 text-center text-red-500 font-bold">{t('notFound')}</div>;
 
     return (
-        <ProtectedRoute>
+        <>
             <header className="bg-white border-b border-slate-100 py-8">
                 <div className="container mx-auto px-4 max-w-7xl">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -282,6 +279,6 @@ export default function AuctionBidPage() {
                     </div>
                 </div>
             </main>
-        </ProtectedRoute>
+        </>
     );
 }
