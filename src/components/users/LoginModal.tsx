@@ -104,7 +104,7 @@ export function LoginModal({ isOpen, onClose, callbackUrl }: LoginModalProps) {
 
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                            <Checkbox id="remember" className="text-indigo-600 focus:ring-indigo-500" />
+                            <Checkbox id="remember" className="text-indigo-600 focus:ring-indigo-500" defaultChecked  {...register("rememberMe")}/>
                             <Label htmlFor="remember" className="text-sm cursor-pointer">{t('rememberMe')}</Label>
                         </div>
                     </div>
