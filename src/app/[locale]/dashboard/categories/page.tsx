@@ -21,12 +21,14 @@ import { useBreakpoint } from "@/hooks/useBreakPoint";
 import CreateNewBtn from "@/components/dashboard/CreateNewBtn";
 
 export default function CategoriesPage() {
+    const { data: categories, error, loading, refetch } = useFetch<Category[]>(`category/`);
+    const rowData = categories || []; // Use empty array if data is undefined
+
+    // Translation
     const locale = useLocale()
     const t = useTranslations('dashboard')
     const tCategory = useTranslations('categories')
-    const { data: categories, error, loading, refetch } = useFetch<Category[]>(`category/`);
-    const rowData = categories || []; // Use empty array if data is undefined
-    
+
     // Breakpoint
     const { isMobile } = useBreakpoint();
 
@@ -69,7 +71,7 @@ export default function CategoriesPage() {
     };
 
     // --- COLUMNS WITH ACTIONS ---
-    const categoryColumns = useMemo(() => getCategoryColumns(tCategory,isMobile), [tCategory]);
+    const categoryColumns = useMemo(() => getCategoryColumns(tCategory, isMobile), [tCategory]);
     const categoryColumnsWithActions = [
         ...categoryColumns,
         ...actionsColumn<Category>({
@@ -124,14 +126,19 @@ export default function CategoriesPage() {
                 <AgGridReact
                     rowData={rowData}
                     columnDefs={categoryColumnsWithActions}
-                    loading={loading} // AG Grid will show its internal loading overlay if this is true
-                    pagination={true}
                     defaultColDef={defaultColDef}
                     rowSelection={rowSelection}
                     onCellValueChanged={handleCellValueChanged}
                     onFilterChanged={handleFilterChange}
                     enableRtl={locale == "ar"}
+                    localeText={{locale}}
+                    pagination={true}
+                    paginationPageSize={10}
+                    paginationPageSizeSelector={[10, 20, 50]}
+                    domLayout="autoHeight"
                 />
+
+
             </div>
         </>
     );

@@ -13,11 +13,10 @@ const nextConfig: NextConfig = {
         hostname: '127.0.0.1',
         port: '8000',
         pathname: '/media/**',
+        search: '',
       },
     ],
   },
-  /* other config options here */
 };
 
-// 2. Wrap the Flowbite config with the NextIntl config
-export default withNextIntl(withFlowbiteReact(nextConfig));
+export default withFlowbiteReact(withNextIntl(nextConfig));

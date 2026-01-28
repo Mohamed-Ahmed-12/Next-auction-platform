@@ -40,7 +40,7 @@
         "import": "Import Data",
         "createNew": "Create New",
         "mainMenu": "Main Menu",
-        "account":" Account"
+        "account": " Account"
     },
     "header": {
         "home": "Home",
@@ -138,19 +138,27 @@
         "langAr": "Arabic"
     },
     "Exporter": {
-    "export_button": "Export",
-    "modal_title": "Configure Export",
-    "export_success": "Data exported successfully",
-    "export_error": "An error occurred during export",
-    "section_format": "1. Select File Format",
-    "section_columns": "2. Select Columns",
-    "columns_hint": "If no columns are selected, all available fields will be included.",
-    "cancel": "Cancel",
-    "generate_btn": "Generate {format}",
-    "formats": {
-      "xlsx": "Excel (.xlsx)",
-      "csv": "CSV (.csv)",
-      "json": "JSON (.json)"
+        "export_button": "Export",
+        "modal_title": "Configure Export",
+        "export_success": "Data exported successfully",
+        "export_error": "An error occurred during export",
+        "section_format": "1. Select File Format",
+        "section_columns": "2. Select Columns",
+        "columns_hint": "If no columns are selected, all available fields will be included.",
+        "cancel": "Cancel",
+        "generate_btn": "Generate {format}",
+        "formats": {
+            "xlsx": "Excel (.xlsx)",
+            "csv": "CSV (.csv)",
+            "json": "JSON (.json)"
+        }
+    },
+    "UnauthorizedAccess": {
+        "title": "Access Restricted",
+        "description": "You've reached a secure area of the Auction Platform. Your account currently doesn't have the Admin or Staff privileges required to view this dashboard.",
+        "goBack": "Go Back",
+        "returnHome": "Return to Auctions",
+        "supportPrompt": "Need to upgrade your permissions?",
+        "contactSupport": "Contact Support"
     }
-  }
 }

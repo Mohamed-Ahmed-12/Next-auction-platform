@@ -102,6 +102,7 @@ export default function AuctionBidPage() {
 
         socket.onmessage = (event) => {
             const message = JSON.parse(event.data);
+            console.log(message)
 
             if (message.error) {
                 setErrorMessage(message.error);

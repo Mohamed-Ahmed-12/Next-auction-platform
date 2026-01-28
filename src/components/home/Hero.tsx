@@ -34,10 +34,10 @@ export default function Hero() {
               New: Rare Collectibles Live Now
             </span>
             
-            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black tracking-tight text-white lg:text-gray-900 leading-[1.1]">
+            <h2 className="text-4xl sm:text-5xl lg:text-7xl font-black tracking-tight text-white lg:text-gray-900 leading-[1.1]">
               Bid on <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent lg:inline hidden">Unique Items</span>
               <span className="text-indigo-400 lg:hidden">Unique Items</span>
-            </h1>
+            </h2>
             
             <p className="text-lg sm:text-xl text-gray-100 lg:text-gray-600 max-w-lg leading-relaxed">
               Join thousands of collectors bidding on rare and valuable auctions. 

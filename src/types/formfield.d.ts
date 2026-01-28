@@ -13,7 +13,7 @@ export interface FormField {
     id: string;
     label: { [key: string]: string } | string; // support translatable labels
     fieldType: HTMLInputTypeAttribute;
-    placeholder: string;
+    placeholder?: string;
     required: boolean;
     helpTxt?: string;
     errorMsg?: string;

@@ -104,95 +104,113 @@ export default function FormBuilder<TFormValues extends FieldValues>({
                         </div>
 
                         {/* Responsive Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
-                            {
-                                group.fields.map((field: FormField) => {
-                                    const fieldError = errors[field.id as keyof TFormValues];
-                                    const errorMsg = fieldError?.message as string | undefined;
-                                    const isDisabled = isEditing && Boolean(field.disabled);
+                        {/* Responsive wrapper: single field = auto width, multiple = grid */}
+                        <div
+                            className={
+                                group.fields.length === 1
+                                    ? "flex flex-col gap-y-8" // single field, full width
+                                    : "grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8" // multiple fields, responsive grid
+                            }
+                        >
+                            {group.fields.map((field: FormField) => {
+                                const fieldError = errors[field.id as keyof TFormValues];
+                                const errorMsg = fieldError?.message as string | undefined;
+                                const isDisabled = isEditing && Boolean(field.disabled);
 
-                                    return (
-                                        <div key={field.id} className="flex flex-col space-y-2">
-                                            <div className="flex items-center justify-between mb-2">
-                                                {/* Left Side: Identity & Requirement */}
-                                                <div className="flex items-center gap-1.5">
-                                                    <Label
-                                                        htmlFor={field.id}
-                                                        className="text-[11px] font-bold uppercase tracking-widest text-slate-500 flex items-center"
-                                                    >
-                                                        {displayLabel(field.label, locale)}
-                                                        {field.required && (
-                                                            <span className="ml-1 text-red-400 select-none" aria-hidden="true">
-                                                                *
-                                                            </span>
-                                                        )}
-                                                    </Label>
-
-                                                    {/* Info Tooltip: Placed right after label for context */}
-                                                    {field.helpTxt && (
-                                                        <Tooltip content={field.helpTxt} placement="top" className="transition-opacity">
-                                                            <IoInformationCircleOutline className="text-slate-400 hover:text-indigo-500 cursor-help text-sm" />
-                                                        </Tooltip>
-                                                    )}
-                                                </div>
-
-                                                {/* Right Side: Contextual Actions (Translation) */}
-                                                {field.isTranslatable && (
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => setActiveTranslationField(field)}
-                                                        className="group flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 transition-all"
-                                                    >
-                                                        <span className="text-[10px] font-bold uppercase tracking-tight text-slate-400 group-hover:text-indigo-600">
-                                                            {t('translate')}
+                                return (
+                                    <div key={field.id} className="flex flex-col space-y-2">
+                                        <div className="flex items-center justify-between mb-2">
+                                            {/* Left Side: Identity & Requirement */}
+                                            <div className="flex items-center gap-1.5">
+                                                <Label
+                                                    htmlFor={field.id}
+                                                    className="text-[11px] font-bold uppercase tracking-widest text-slate-500 flex items-center"
+                                                >
+                                                    {displayLabel(field.label, locale)}
+                                                    {field.required && (
+                                                        <span
+                                                            className="ml-1 text-red-400 select-none"
+                                                            aria-hidden="true"
+                                                        >
+                                                            *
                                                         </span>
-                                                        <MdOutlineTranslate className="text-slate-400 group-hover:text-indigo-600 text-xs" />
-                                                    </button>
+                                                    )}
+                                                </Label>
+
+                                                {/* Info Tooltip */}
+                                                {field.helpTxt && (
+                                                    <Tooltip
+                                                        content={field.helpTxt}
+                                                        placement="top"
+                                                        className="transition-opacity"
+                                                    >
+                                                        <IoInformationCircleOutline className="text-slate-400 hover:text-indigo-500 cursor-help text-sm" />
+                                                    </Tooltip>
                                                 )}
                                             </div>
 
-                                            <div className={`transition-all duration-300 ${errorMsg ? 'transform scale-[1.01]' : ''}`}>
-                                                <FieldBuilder
-                                                    fieldType={field.fieldType}
-                                                    id={field.id}
-                                                    placeholder={field.placeholder}
-                                                    required={field.required}
-                                                    color={errorMsg ? "failure" : "gray"}
-                                                    register={register}
-                                                    control={control}
-                                                    options={field.options || ""}
-                                                    disabled={isDisabled}
-                                                    requireTextEditor={field.textEditor || false}
-                                                />
-                                            </div>
-
-                                            {/* Feedback Area with Fixed Height to prevent layout jumping */}
-                                            <div className="min-h-[20px]">
-                                                {errorMsg && (
-                                                    <p className="text-[11px] font-bold text-red-500 flex items-center gap-1.5 animate-in slide-in-from-left-1">
-                                                        <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-                                                        {errorMsg}
-                                                    </p>
-                                                )}
-                                            </div>
-                                            {/* 2. THE MODAL INSTANCE */}
-                                            {activeTranslationField?.id === field.id && (
-                                                <TranslationModal
-                                                    isOpen={!!activeTranslationField}
-                                                    onClose={() => setActiveTranslationField(null)}
-                                                    field={field}
-                                                    register={register}
-                                                    errors={errors}
-                                                    disabled={isDisabled}
-                                                    control={control}
-                                                />
+                                            {/* Right Side: Translation Action */}
+                                            {field.isTranslatable && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setActiveTranslationField(field)}
+                                                    className="group flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 transition-all"
+                                                >
+                                                    <span className="text-[10px] font-bold uppercase tracking-tight text-slate-400 group-hover:text-indigo-600">
+                                                        {t("translate")}
+                                                    </span>
+                                                    <MdOutlineTranslate className="text-slate-400 group-hover:text-indigo-600 text-xs" />
+                                                </button>
                                             )}
                                         </div>
-                                    );
 
-                                })
-                            }
+                                        <div
+                                            className={`transition-all duration-300 ${errorMsg ? "transform scale-[1.01]" : ""
+                                                }`}
+                                        >
+                                            <FieldBuilder
+                                                fieldType={field.fieldType}
+                                                id={field.id}
+                                                placeholder={field.placeholder}
+                                                required={field.required}
+                                                color={errorMsg ? "failure" : "gray"}
+                                                register={register}
+                                                control={control}
+                                                options={field.options || ""}
+                                                disabled={isDisabled}
+                                                requireTextEditor={field.textEditor || false}
+                                                defaultValues={defaultValues}
+                                                isEditing={isEditing}
+                                            />
+                                        </div>
+
+                                        {/* Feedback Area */}
+                                        <div className="min-h-[20px]">
+                                            {errorMsg && (
+                                                <p className="text-[11px] font-bold text-red-500 flex items-center gap-1.5 animate-in slide-in-from-left-1">
+                                                    <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                                    {errorMsg}
+                                                </p>
+                                            )}
+                                        </div>
+
+                                        {/* Translation Modal */}
+                                        {activeTranslationField?.id === field.id && (
+                                            <TranslationModal
+                                                isOpen={!!activeTranslationField}
+                                                onClose={() => setActiveTranslationField(null)}
+                                                field={field}
+                                                register={register}
+                                                errors={errors}
+                                                disabled={isDisabled}
+                                                control={control}
+                                            />
+                                        )}
+                                    </div>
+                                );
+                            })}
                         </div>
+
                     </section>
                 ))}
 

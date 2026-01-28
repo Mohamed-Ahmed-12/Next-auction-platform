@@ -1,11 +1,12 @@
 import { readBlobError } from "@/helpers/apis";
 import { AxiosErrorWithData, ErrorData } from "@/types/error";
 import axios, { AxiosHeaders, AxiosError } from "axios";
+import Cookies from 'js-cookie';
 /**
  * The core Axios instance configured for the Django API.
  */
 export const axiosInstance = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/",
+    baseURL: process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000/api/",
     withCredentials: true,
     xsrfCookieName: 'csrftoken',
     xsrfHeaderName: 'X-CSRFToken',
@@ -23,7 +24,15 @@ export const authEvents = new EventTarget();
 
 // REQUEST INTERCEPTOR
 axiosInstance.interceptors.request.use((config) => {
-    // 1. Language logic is fine to keep in localStorage
+    // 1. Get the ID from the cookie (set by Next.js Middleware or previous logic)
+    const traceId = Cookies.get('gui_id');
+    if (traceId) {
+        // Match the header name to your DJANGO_GUID settings
+        // Usually 'Correlation-ID'
+        config.headers['Correlation-ID'] = traceId;
+    }
+
+    // 2. Language logic is fine to keep in localStorage
     const userLang = typeof window !== "undefined"
         ? (localStorage.getItem("currentLang") ?? document.documentElement.lang ?? "en")
         : "en";

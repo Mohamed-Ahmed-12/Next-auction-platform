@@ -26,6 +26,7 @@ export default function AuctionListPage() {
 
     // Derived state for better performance
     const filteredAuctions = useMemo(() => {
+        console.log(auctions)
         if (!auctions) return [];
         return auctions.filter(item => {
             const catMatch = filters.category.length === 0 || filters.category.includes(item.category.slug);

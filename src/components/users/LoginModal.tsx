@@ -45,8 +45,8 @@ export function LoginModal({ isOpen, onClose, callbackUrl }: LoginModalProps) {
     }
 
     return (
-        <Modal show={isOpen} onClose={onCloseModal} size="md" popup className="backdrop-blur-sm">
-            <ModalHeader dir="ltr" />
+        <Modal show={isOpen} onClose={onCloseModal} size="md"  popup className="backdrop-blur-sm">
+            <ModalHeader />
             <ModalBody className="px-8 pb-8">
                 <div className="text-center mb-8">
                     <h3 className="text-2xl font-black text-slate-900 dark:text-white">

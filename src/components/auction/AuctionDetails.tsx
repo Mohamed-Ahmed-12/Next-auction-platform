@@ -5,9 +5,6 @@ import { useFetch } from "@/hooks/useFetcher";
 import { Auction } from '@/types/main';
 import { Avatar, Button, Label, TextInput } from 'flowbite-react';
 import { FiClock, FiInfo, FiTrendingUp, FiMapPin } from 'react-icons/fi';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Navigation, Autoplay } from 'swiper/modules';
-import Image from 'next/image';
 import { RiAuctionLine } from 'react-icons/ri';
 import { BiLogIn, BiMoney, BiTrophy } from 'react-icons/bi';
 import { Link, useRouter } from "@/i18n/navigation";
@@ -18,10 +15,9 @@ import Timer from '../common/Timer';
 import AuctionStatusBadge from '../common/AuctionStatusBadge';
 import { toast } from 'react-toastify';
 
-import 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/navigation';
+
 import { useLocale, useTranslations } from 'next-intl';
+import AuctionGallery from './AuctionGallery';
 
 export default function AuctionDetails({ slug }: { slug: string }) {
     const { data, error, loading } = useFetch<Auction>(`auction/${slug}/`);
@@ -101,7 +97,7 @@ export default function AuctionDetails({ slug }: { slug: string }) {
                     <div className="lg:col-span-8 flex flex-col gap-8">
                         {/* Gallery */}
                         <div className="bg-white p-2 rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-                            <Gallery images={[{ image: "/imgs/placeholder.jpg" }]} />
+                            <AuctionGallery images={data.images}/>
                         </div>
 
                         {/* Description Box */}
@@ -262,7 +258,7 @@ export default function AuctionDetails({ slug }: { slug: string }) {
                 </div>
             </div>
 
-            <LoginModal isOpen={openModal} onClose={() => setOpenModal(false)} />
+            <LoginModal isOpen={openModal} onClose={() => setOpenModal(false)} callbackUrl={null}/>
         </div>
     );
 }
@@ -280,32 +276,5 @@ function DetailTile({ icon: Icon, label, value }: { icon: any, label: string, va
                 <p className="text-sm font-bold text-slate-900">{value}</p>
             </div>
         </div>
-    );
-}
-
-function Gallery({ images }: { images: any[] }) {
-    return (
-        <Swiper
-            pagination={{ clickable: true, dynamicBullets: true }}
-            navigation={true}
-            modules={[Pagination, Navigation, Autoplay]}
-            autoplay={{ delay: 5000 }}
-            className="rounded-xl aspect-[16/9]"
-            loop={images.length > 1}
-        >
-            {images.map((img, index) => (
-                <SwiperSlide key={index}>
-                    <div className='relative w-full h-full bg-slate-100'>
-                        <Image
-                            src={img.image || img.src} // Handle different API response shapes
-                            alt="Product Image"
-                            fill
-                            className="object-cover"
-                            priority={index === 0}
-                        />
-                    </div>
-                </SwiperSlide>
-            ))}
-        </Swiper>
     );
 }

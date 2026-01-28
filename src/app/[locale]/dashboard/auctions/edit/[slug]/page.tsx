@@ -10,7 +10,6 @@ export default function EditAuctionPage() {
     const { slug } = useParams();
     const shouldFetch = slug && typeof slug === 'string';
     const { data: auction, loading, error } = useFetch<Auction>(shouldFetch ? `auction/${slug}/get-update/` : '');
-
     // --- RENDER LOGIC ---
 
     if (!slug) {

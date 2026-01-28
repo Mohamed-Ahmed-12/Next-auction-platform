@@ -24,9 +24,6 @@ export const AuctionFormFields: FormFieldGroup[] = [
                 placeholder: '',
                 options: 'category'
             },
-
-
-
         ]
     },
     {
@@ -56,7 +53,7 @@ export const AuctionFormFields: FormFieldGroup[] = [
         ]
     },
     {
-        groupKey: 'g4',
+        groupKey: 'g3',
         groupTitle: 'Pricing',
         fields: [
             {
@@ -100,7 +97,7 @@ export const AuctionFormFields: FormFieldGroup[] = [
         ]
     },
     {
-        groupKey: 'g5',
+        groupKey: 'g4',
         groupTitle: 'Additional Information',
         fields: [
             {
@@ -114,6 +111,20 @@ export const AuctionFormFields: FormFieldGroup[] = [
                 textEditor:true
             },
 
+        ]
+    },
+    {
+        groupKey: 'g5',
+        groupTitle: 'Media',
+        fields: [
+            {
+                id: 'images',
+                label: 'Images',
+                fieldType: 'image',
+                helpTxt: 'upload max 5 images',
+                errorMsg: '',
+                required: false,
+            },
         ]
     },
 ]

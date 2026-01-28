@@ -1,20 +1,29 @@
 "use client";
 
 import React, { useMemo } from "react";
-import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 
+import Image from "next/image";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Thumbs } from "swiper/modules";
+import { Gallery, Item } from "react-photoswipe-gallery";
+
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/thumbs";
+import "photoswipe/dist/photoswipe.css";
+
 // UI Framework (Flowbite)
-import { 
-  Tabs, TabItem, Spinner, Card, Avatar, Badge 
+import {
+  Tabs, TabItem, Spinner, Card, Avatar, Badge
 } from "flowbite-react";
 
 // Icons
-import { 
-  HiInformationCircle, HiChartBar, HiClipboardList, 
-  HiTrendingUp, HiUsers, HiCurrencyDollar, HiCheckCircle, 
-  HiOutlineClock, HiTruck, HiReceiptTax 
+import {
+  HiInformationCircle, HiChartBar, HiClipboardList,
+  HiTrendingUp, HiUsers, HiCurrencyDollar, HiCheckCircle,
+  HiOutlineClock, HiTruck, HiReceiptTax
 } from "react-icons/hi";
 import { HiTrophy } from "react-icons/hi2";
 import { GiTrophyCup } from "react-icons/gi";
@@ -22,7 +31,7 @@ import { GiTrophyCup } from "react-icons/gi";
 // Data & Table
 import { AgGridReact } from "ag-grid-react";
 import { useFetch } from "@/hooks/useFetcher";
-import { Auction } from "@/types/main";
+import { Auction, AuctionImage } from "@/types/main";
 import { bidColumns } from "@/schemas/tableSchemas/bidSchemas";
 
 // Shared Logic & Components
@@ -31,6 +40,7 @@ import PageHeader from "@/components/dashboard/PageHeader";
 import AuctionStatusBadge from "@/components/common/AuctionStatusBadge";
 import { UniversalExport } from "@/components/dashboard/UniversalExport";
 import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
+import AuctionGallery from "@/components/auction/AuctionGallery";
 
 /**
  * MAIN COMPONENT: AuctionFullDetails
@@ -40,16 +50,16 @@ export default function AuctionFullDetails() {
   const { slug } = useParams();
   const locale = useLocale();
   const t = useTranslations("AuctionDetails");
-  
+
   const { data, error, loading } = useFetch<Auction>(`auction/${slug}`);
 
   const gridConfig = useMemo(() => ({
-    defaultColDef: { 
-      flex: 1, 
-      minWidth: 120, 
+    defaultColDef: {
+      flex: 1,
+      minWidth: 120,
       resizable: true,
       sortable: true,
-      filter: true 
+      filter: true
     },
     rowSelection: { mode: 'multiRow' as const },
   }), []);
@@ -70,7 +80,7 @@ export default function AuctionFullDetails() {
 
   return (
     <div className="space-y-6 max-w-[1600px] animate-in fade-in duration-700">
-      <PageHeader 
+      <PageHeader
         title={data.title}
         description={`Ref: BID-${data.id} • Started: ${new Date(data.start_date).toLocaleDateString()}`}
         breadcrumbs={[
@@ -78,7 +88,7 @@ export default function AuctionFullDetails() {
           { label: 'Management' }
         ]}
       >
-          <AuctionStatusBadge stat={data.status} />
+        <AuctionStatusBadge stat={data.status} />
       </PageHeader>
 
       <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
@@ -90,23 +100,23 @@ export default function AuctionFullDetails() {
           </TabItem>
 
           <TabItem title="Bidding History" icon={HiChartBar}>
-             <div className="animate-in slide-in-from-bottom-2 duration-500">
-                <BiddingHistoryTab bids={data.bids} gridConfig={gridConfig} locale={locale} />
-             </div>
+            <div className="animate-in slide-in-from-bottom-2 duration-500">
+              <BiddingHistoryTab bids={data.bids} gridConfig={gridConfig} locale={locale} />
+            </div>
           </TabItem>
 
           <TabItem title="Auction Result" icon={HiTrophy}>
-             <div className="animate-in slide-in-from-bottom-2 duration-500">
-                <AuctionResultTab data={data} />
-             </div>
+            <div className="animate-in slide-in-from-bottom-2 duration-500">
+              <AuctionResultTab data={data} />
+            </div>
           </TabItem>
 
           <TabItem title="Audit Log" icon={HiClipboardList}>
             <div className="p-20 text-center space-y-4">
-                <div className="mx-auto w-16 h-16 bg-indigo-50 text-indigo-400 rounded-full flex items-center justify-center">
-                    <HiClipboardList size={32} />
-                </div>
-                <p className="text-gray-400 font-medium italic">System activity logs are being synchronized...</p>
+              <div className="mx-auto w-16 h-16 bg-indigo-50 text-indigo-400 rounded-full flex items-center justify-center">
+                <HiClipboardList size={32} />
+              </div>
+              <p className="text-gray-400 font-medium italic">System activity logs are being synchronized...</p>
             </div>
           </TabItem>
         </Tabs>
@@ -118,49 +128,54 @@ export default function AuctionFullDetails() {
 /**
  * SUB-COMPONENT: General Details
  */
-function AuctionDetailsTab({ data, locale }: any) {
-  const Property = ({ label, value }: { label: string, value: string }) => (
+function AuctionDetailsTab({ data, locale }: { data: any; locale: string }) {
+  const Property = ({ label, value }: { label: string; value: string }) => (
     <div className="p-4 rounded-2xl bg-gray-50/50 border border-gray-100 hover:bg-white transition-colors">
-      <span className="text-[10px] uppercase font-black text-gray-400 tracking-widest">{label}</span>
+      <span className="text-[10px] uppercase font-black text-gray-400 tracking-widest">
+        {label}
+      </span>
       <p className="text-gray-900 font-bold mt-1 line-clamp-1">{value || "—"}</p>
     </div>
   );
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 p-6">
+      {/* Left column: Visual assets */}
       <div className="lg:col-span-5 space-y-6">
-        <h3 className="text-xs font-black text-indigo-600 uppercase tracking-widest">Visual Assets</h3>
-        <div className="space-y-4">
-          <div className="relative aspect-video rounded-3xl overflow-hidden border-4 border-white shadow-xl">
-            <Image fill src="/imgs/car.jpg" alt="Cover" className="object-cover" />
-          </div>
-          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-             {[1,2,3].map(i => (
-               <div key={i} className="relative h-20 w-28 shrink-0 rounded-xl overflow-hidden grayscale hover:grayscale-0 transition-all cursor-pointer border border-gray-100">
-                 <Image fill src="/imgs/car.jpg" alt="Thumb" className="object-cover" />
-               </div>
-             ))}
-          </div>
-        </div>
+        <h3 className="text-xs font-black text-indigo-600 uppercase tracking-widest">
+          Visual Assets
+        </h3>
+        <AuctionGallery images={data.images} />
+
+        {/* Description */}
         <div className="pt-2">
-          <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Listing Description</h3>
-          <div className="text-gray-600 text-sm leading-relaxed prose prose-indigo max-w-full" 
-               dangerouslySetInnerHTML={{ __html: data.desc }} />
+          <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-3">
+            Listing Description
+          </h3>
+          <div
+            className="text-gray-600 text-sm leading-relaxed prose prose-indigo max-w-full"
+            dangerouslySetInnerHTML={{ __html: data.desc }}
+          />
         </div>
       </div>
 
+      {/* Right column: Metadata */}
       <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-4 h-fit">
-         <h3 className="col-span-full text-xs font-black text-indigo-600 uppercase tracking-widest">Core Metadata</h3>
-         <Property label="Auction Title" value={data.title} />
-         <Property label="Category" value={data.category?.title} />
-         <Property label="Start Price" value={`${data.start_price} USD`} />
-         <Property label="Reserve Price" value={`${data.reserve_price || 'None'} USD`} />
-         <Property label="Start Date" value={formatTimestamp(data.start_date, locale)} />
-         <Property label="End Date" value={formatTimestamp(data.end_date, locale)} />
+        <h3 className="col-span-full text-xs font-black text-indigo-600 uppercase tracking-widest">
+          Core Metadata
+        </h3>
+        <Property label="Auction Title" value={data.title} />
+        <Property label="Category" value={data.category?.title} />
+        <Property label="Start Price" value={`${data.start_price} USD`} />
+        <Property label="Reserve Price" value={`${data.reserve_price || "None"} USD`} />
+        <Property label="Start Date" value={formatTimestamp(data.start_date, locale)} />
+        <Property label="End Date" value={formatTimestamp(data.end_date, locale)} />
       </div>
     </div>
   );
 }
+
+
 
 /**
  * SUB-COMPONENT: Bidding History
@@ -270,7 +285,7 @@ function AuctionResultTab({ data }: { data: any }) {
               {steps.map((step, idx) => (
                 <div key={idx} className="flex flex-1 flex-col items-center text-center z-10">
                   <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-3 shadow-md transition-all
-                    ${step.status === 'complete' ? 'bg-emerald-500 text-white' : 
+                    ${step.status === 'complete' ? 'bg-emerald-500 text-white' :
                       step.status === 'current' ? 'bg-indigo-600 text-white scale-110' : 'bg-gray-100 text-gray-400'}`}
                   >
                     <step.icon size={24} />
